@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vikas Kumar | Portfolio</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Animations -->
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 1s ease-out forwards;
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.8s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+  </style>
+</head>
+
+<body class="text-[#0f172a] dark:text-white bg-gradient-to-br from-[#f5f9ff] to-[#fdf7ed] dark:from-[#0d1117] dark:to-[#0d1117]">
+
+<!-- Fixed Navbar -->
+<header class="w-full fixed top-0 left-0 z-50 bg-white/80 backdrop-blur-md shadow-sm dark:bg-[#0d1117]/80">
+  <div class="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center h-16">
+    <div class="text-orange-500 font-bold text-xl">Vikas Kumar</div>
+    <nav class="flex space-x-6 text-sm md:text-base font-medium text-slate-700 dark:text-slate-200">
+      <a href="#home" class="hover:text-orange-500">Home</a>
+      <a href="#impact" class="hover:text-orange-500">Impact</a>
+      <a href="#education" class="hover:text-orange-500">Education</a>
+      <a href="#journey" class="hover:text-orange-500">Journey</a>
+      <a href="#projects" class="hover:text-orange-500">Projects</a>
+      <a href="#blog" class="hover:text-orange-500">Blog</a>
+      <a href="#achievements" class="hover:text-orange-500">Achievements</a>
+      <a href="#contact" class="hover:text-orange-500">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section id="home" class="pt-24 min-h-screen flex flex-col justify-center items-center text-center px-4 animate-fade-in">
+  <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold leading-tight opacity-0 animate-slide-up delay-1">
+    Turning data into <br />
+    <span class="text-orange-500">decisions.</span><br />
+    Building with <span class="text-orange-500">purpose.</span>
+  </h1>
+
+  <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 mt-6 max-w-2xl opacity-0 animate-slide-up delay-2">
+    Hi, I'm <span class="font-semibold text-[#0f172a] dark:text-white">Vikas</span> — a data-driven problem solver blending analytics, ML, and strategy to make things better.
+  </p>
+
+  <!-- Let's Connect Button -->
+  <a href="#contact" class="mt-8 px-6 py-3 rounded-md bg-orange-500 hover:bg-orange-600 text-white font-medium shadow-md opacity-0 animate-slide-up delay-3">
+    Let’s Connect
+  </a>
+
+  <!-- Social Icons -->
+  <div class="flex items-center justify-center gap-6 mt-6 text-2xl text-gray-700 dark:text-gray-300 opacity-0 animate-slide-up delay-4">
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/in/vikas-kumar45/" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="LinkedIn">
+      <i class="fab fa-linkedin-in"></i>
+    </a>
+
+    <!-- GitHub -->
+    <a href="https://github.com/thisisvk45" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="GitHub">
+      <i class="fab fa-github"></i>
+    </a>
+
+    <!-- Resume -->
+    <a href="https://yourdomain.com/Vikas_Kumar_Resume.pdf" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="Resume">
+      <i class="fas fa-file-alt"></i>
+    </a>
+
+    <!-- Email -->
+    <a href="mailto:kumav25@wfu.edu" class="hover:text-orange-500 transition hover:scale-110" aria-label="Email">
+      <i class="fas fa-envelope"></i>
+    </a>
+  </div>
+
+  <!-- Down Arrow -->
+  <div class="mt-12 text-slate-400 text-xl animate-bounce opacity-0 animate-slide-up delay-4">↓</div>
+</section>
+
+
+
+
+<!-- Impact Section -->
+ <section id="impact" class="py-20 px-4 md:px-16 bg-white text-gray-900">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <!-- Left: Impact Stats -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-green-100 p-6 rounded-xl shadow">
+          <div class="text-2xl font-bold">💸 ₹26 Crore</div>
+          <div class="text-sm text-gray-700 mt-1">Saved through route optimization</div>
+        </div>
+        <div class="bg-blue-100 p-6 rounded-xl shadow">
+          <div class="text-2xl font-bold">🤖 40%</div>
+          <div class="text-sm text-gray-700 mt-1">Increase in chatbot engagement</div>
+        </div>
+        <div class="bg-purple-100 p-6 rounded-xl shadow">
+          <div class="text-2xl font-bold">🏢 6+</div>
+          <div class="text-sm text-gray-700 mt-1">Internships across Fortune 500</div>
+        </div>
+        <div class="bg-yellow-100 p-6 rounded-xl shadow">
+          <div class="text-2xl font-bold">🧠 70+</div>
+          <div class="text-sm text-gray-700 mt-1">Entities in AI knowledge graphs</div>
+        </div>
+        <div class="bg-red-100 p-6 rounded-xl shadow">
+          <div class="text-2xl font-bold">🚚 23%</div>
+          <div class="text-sm text-gray-700 mt-1">Reduction in delivery times</div>
+        </div>
+        <div class="bg-cyan-100 p-6 rounded-xl shadow">
+          <div class="text-2xl font-bold">📈 88%</div>
+          <div class="text-sm text-gray-700 mt-1">Accuracy in predictive models</div>
+        </div>
+      </div>
+
+      <!-- Right: Text + Values -->
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold leading-tight">
+          Bridging the gap between <span class="text-blue-500">data</span> and <span class="text-green-500">decisions</span>
+        </h2>
+        <p class="text-base text-gray-700 mt-4">
+          With a unique blend of machine learning expertise and strategic problem solving,
+          I transform messy datasets into meaningful outcomes — whether it’s optimizing logistics across India
+          or automating chat interactions at scale.
+        </p>
+        <p class="text-base text-gray-700 mt-4">
+          From saving ₹26 crores with smart freight routing to improving user engagement through responsive NLP systems,
+          my journey cuts across industries, always anchored in one thing: real impact.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+          <div class="bg-gray-50 p-4 rounded-lg border">
+            <div class="font-semibold">🧠 Data-Driven Thinking</div>
+            <p class="text-sm text-gray-600">Every choice is backed by data. Every result is measured.</p>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-lg border">
+            <div class="font-semibold">⚡ Impact Focus</div>
+            <p class="text-sm text-gray-600">Solutions that drive clear business outcomes and real-world change.</p>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-lg border">
+            <div class="font-semibold">💡 Innovation Mindset</div>
+            <p class="text-sm text-gray-600">Pushing boundaries with new tech like GPT, LLMs, and graph AI.</p>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-lg border">
+            <div class="font-semibold">🤝 Collaborative Leadership</div>
+            <p class="text-sm text-gray-600">Leading teams, mentoring peers, and executing high-stakes deliverables.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Education Section -->
+<section id="education" class="bg-white dark:bg-[#0d1117] py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-6 text-gray-900 dark:text-white">Education</h2>
+    <p class="text-center text-gray-600 dark:text-gray-300 mb-12">
+      Where I’ve built my foundation in analytics, machine learning, and strategy.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-10">
+      <!-- Wake Forest -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-xl shadow-md hover:shadow-lg transition">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h3 class="text-xl font-semibold text-orange-500">Wake Forest University</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">MS in Business Analytics</p>
+          </div>
+          <span class="text-xs bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-full font-medium">2025 – 2026</span>
+        </div>
+        <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">Awarded 100% scholarship (worth $85,000+)</p>
+        <div class="space-y-3 text-sm text-gray-800 dark:text-gray-300">
+          <div>
+            <span class="font-medium text-orange-500">📚 Courses:</span><br>
+            ML for Business, Python, Data Engineering, Optimization, Visualization, Career Mgmt
+          </div>
+          <div>
+            <span class="font-medium text-orange-500">🧰 Tools:</span><br>
+            Python, SQL, Excel, Power BI, Tableau, Scikit-learn
+          </div>
+          <div>
+            <span class="font-medium text-orange-500">🎯 Focus:</span><br>
+            Solving real-world problems through data-driven decision making
+          </div>
+        </div>
+      </div>
+
+      <!-- Plaksha -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-xl shadow-md hover:shadow-lg transition">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h3 class="text-xl font-semibold text-orange-500">Plaksha University</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">B.Tech in Data Science, Economics & Business</p>
+          </div>
+          <span class="text-xs bg-green-100 dark:bg-green-800 text-green-900 dark:text-green-300 px-2 py-1 rounded-full font-medium">2020 – 2024</span>
+        </div>
+        <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">Recipient of full Bharati Scholarship ($42,000+)</p>
+        <div class="space-y-3 text-sm text-gray-800 dark:text-gray-300">
+          <div>
+            <span class="font-medium text-orange-500">📚 Courses:</span><br>
+            Deep Learning, Econometrics, Micro/Macro, Time Series, Finance, Design Thinking
+          </div>
+          <div>
+            <span class="font-medium text-orange-500">🛠 Projects:</span><br>
+            LSTM models, NLP chatbot, ESG-financial correlation, knowledge graphs
+          </div>
+          <div>
+            <span class="font-medium text-orange-500">⚙️ Tools:</span><br>
+            Python, PyTorch, TensorFlow, Selenium, Firebase, Git
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="bg-white dark:bg-[#0d1117] py-20" id="experience">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-4">Work Experience</h2>
+    <p class="text-center text-gray-600 dark:text-gray-300 mb-10">
+      From cutting-edge ML projects to real-world product impact — here's my journey so far.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Snapchat -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-orange-500">Snapchat</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">AR Extern – Lens Augmented</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jul 2025 – Aug 2025</p>
+        <p class="text-sm text-gray-800 dark:text-gray-300">
+          Worked on AR experiences at the intersection of ML and UX. Gained exposure to Lens Studio, creative pipelines, and product experimentation.
+        </p>
+      </div>
+
+      <!-- Aditya Birla Group -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-orange-500">Aditya Birla Group</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">AI Intern</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jan 2025 – Jun 2025</p>
+        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
+          <li>Saved ₹26 Cr by optimizing logistics with route clustering</li>
+          <li>Reduced delivery time by 23% using predictive modeling</li>
+          <li>Built an ontology of 70+ entities using Neo4j & LangChain</li>
+        </ul>
+      </div>
+
+      <!-- ISB -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-orange-500">Indian School of Business (ISB)</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Research Intern</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jun 2024 – Aug 2024</p>
+        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
+          <li>Built scalable data lake for India's digitization push</li>
+          <li>Improved pipeline speed by 15% via PostgreSQL + MongoDB</li>
+          <li>Used InceptionV3 & ResNet for document processing</li>
+        </ul>
+      </div>
+
+      <!-- Airtel -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-orange-500">Airtel</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Machine Learning Intern</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jun 2023 – Aug 2023</p>
+        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
+          <li>20% faster clustering pipeline in Python</li>
+          <li>30% boost in scraping speed using multithreading</li>
+          <li>Used Spark for GPU-based large-scale processing</li>
+        </ul>
+      </div>
+
+      <!-- HP -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-orange-500">Hewlett-Packard (HP)</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">CVC & Analytics Extern</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Apr 2024 – May 2024</p>
+        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
+          <li>Analyzed 20 startups for CVC investment strategy</li>
+          <li>Forecasted tech trends using Python & Excel</li>
+        </ul>
+      </div>
+
+      <!-- Omdena -->
+      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-orange-500">Omdena</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">ML Engineer Intern</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Feb 2024 – Apr 2024</p>
+        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
+          <li>Built GPT-3 chatbot to boost user engagement by 40%</li>
+          <li>Deployed NLP features with BERT & feedback loops</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="bg-[#f9fafb] dark:bg-[#0e1525] py-24 px-6 text-center">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Featured Projects</h2>
+    <p class="text-slate-600 dark:text-slate-300 mb-10">
+      Innovative solutions that solve real-world problems through data science and machine learning.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-6 text-left">
+      <!-- Repeating cards x6 -->
+      <!-- Card 1 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-sky-500 to-blue-500 p-4 text-white text-sm font-medium">
+          75% faster response time
+        </div>
+        <div class="p-5">
+          <p class="font-bold text-lg mb-1">AI Chatbot for United Airlines</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Developed an NLP-based chatbot that reduced response time by 75% and improved CSAT.</p>
+          <div class="flex flex-wrap gap-2 text-xs mb-4">
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">NLP</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">TensorFlow</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Flask</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">React</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
+            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white text-sm font-medium">
+          60% reduction in downtime
+        </div>
+        <div class="p-5">
+          <p class="font-bold text-lg mb-1">Predictive Maintenance System</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Built LSTM time series models to forecast failures, cutting downtime by 60%.</p>
+          <div class="flex flex-wrap gap-2 text-xs mb-4">
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">LSTM</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Time Series</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Pandas</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Scikit-learn</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
+            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-4 text-white text-sm font-medium">
+          S&P 500 analysis
+        </div>
+        <div class="p-5">
+          <p class="font-bold text-lg mb-1">ESG vs Financial Performance</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Used Python + Selenium to study ESG and stock performance correlation across S&P 500.</p>
+          <div class="flex flex-wrap gap-2 text-xs mb-4">
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Selenium</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Pandas</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Matplotlib</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Statistical Analysis</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
+            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-pink-500 to-red-500 p-4 text-white text-sm font-medium">
+          99.2% accuracy rate
+        </div>
+        <div class="p-5">
+          <p class="font-bold text-lg mb-1">Real-time Fraud Detection</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Implemented ensemble ML models for real-time credit fraud detection at 99.2% accuracy.</p>
+          <div class="flex flex-wrap gap-2 text-xs mb-4">
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">XGBoost</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Random Forest</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Apache Kafka</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Docker</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
+            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-yellow-600 to-orange-600 p-4 text-white text-sm font-medium">
+          $2M annual savings
+        </div>
+        <div class="p-5">
+          <p class="font-bold text-lg mb-1">Supply Chain Optimization</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Built optimization models saving $2M annually for a Fortune 500 supply chain client.</p>
+          <div class="flex flex-wrap gap-2 text-xs mb-4">
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">OR-Tools</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Linear Programming</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">PostgreSQL</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Dash</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
+            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-teal-500 to-sky-500 p-4 text-white text-sm font-medium">
+          45% better campaigns
+        </div>
+        <div class="p-5">
+          <p class="font-bold text-lg mb-1">Customer Segmentation Platform</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Built a clustering-based platform improving marketing campaign effectiveness by 45%.</p>
+          <div class="flex flex-wrap gap-2 text-xs mb-4">
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">K-Means</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">PCA</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Flask</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">D3.js</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">AWS</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
+            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Demo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Blog / Insights Section -->
+<section id="blog" class="bg-white dark:bg-[#0d1117] py-24 px-6 text-center">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Latest Insights</h2>
+    <p class="text-slate-600 dark:text-slate-300 mb-10">
+      Thoughts on data science, technology trends, and building impactful solutions.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-6 text-left">
+      <!-- Article 1 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow hover:shadow-lg transition">
+        <div class="bg-gradient-to-r from-sky-500 to-blue-500 p-3 text-white text-xs font-medium rounded-t-xl">
+          Data Science
+        </div>
+        <div class="p-5">
+          <div class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
+            <span>📅 Jan 14, 2024</span> • <span>⏱ 8 min read</span>
+          </div>
+          <p class="font-semibold text-base mb-1">The Future of Data Analytics in Business Decision Making</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+            Exploring how advanced analytics and AI are transforming the way businesses make strategic decisions.
+          </p>
+          <a href="#" class="text-sm text-orange-600 hover:underline flex items-center gap-1">Read More →</a>
+        </div>
+      </div>
+
+      <!-- Article 2 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow hover:shadow-lg transition">
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-3 text-white text-xs font-medium rounded-t-xl">
+          Machine Learning
+        </div>
+        <div class="p-5">
+          <div class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
+            <span>📅 Dec 9, 2023</span> • <span>⏱ 12 min read</span>
+          </div>
+          <p class="font-semibold text-base mb-1">Building Scalable ML Pipelines: Lessons from Production</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+            A guide to designing ML pipelines that scale, from data ingestion to deployment.
+          </p>
+          <a href="#" class="text-sm text-orange-600 hover:underline flex items-center gap-1">Read More →</a>
+        </div>
+      </div>
+
+      <!-- Article 3 -->
+      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow hover:shadow-lg transition">
+        <div class="bg-gradient-to-r from-emerald-500 to-green-500 p-3 text-white text-xs font-medium rounded-t-xl">
+          Finance
+        </div>
+        <div class="p-5">
+          <div class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
+            <span>📅 Nov 21, 2023</span> • <span>⏱ 10 min read</span>
+          </div>
+          <p class="font-semibold text-base mb-1">ESG Investing: Where Data Science Meets Sustainable Finance</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+            A deep dive into how ESG metrics are evaluated and connected to financial performance.
+          </p>
+          <a href="#" class="text-sm text-orange-600 hover:underline flex items-center gap-1">Read More →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <a href="#" class="inline-block border border-orange-500 text-orange-500 px-4 py-2 rounded hover:bg-orange-500 hover:text-white transition">
+        View All Articles
+      </a>
+    </div>
+  </div>
+</section>
+<!-- Key Achievements Section -->
+<section id="achievements" class="bg-[#f9fafb] dark:bg-[#0e1525] py-24 px-6 text-center">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Key Achievements</h2>
+    <p class="text-slate-600 dark:text-slate-300 mb-10">
+      Highlights of my professional and leadership accomplishments.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-6 text-left">
+      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+        <p class="text-orange-500 font-medium text-sm mb-1">Scholarship</p>
+        <p class="font-semibold">Awarded a fully funded scholarship to pursue the MSBA at Wake Forest University, valued at over $85,000.</p>
+      </div>
+
+      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+        <p class="text-orange-500 font-medium text-sm mb-1">Undergraduate Funding</p>
+        <p class="font-semibold">Awarded the prestigious Bharati Scholarship, worth over $42,000, covering the full cost of my undergraduate education.</p>
+      </div>
+
+      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+        <p class="text-orange-500 font-medium text-sm mb-1">International Recognition</p>
+        <p class="font-semibold">Recognized by the National Academy of Engineering (USA) for research on entrepreneurial mindset in engineering education.</p>
+      </div>
+
+      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+        <p class="text-orange-500 font-medium text-sm mb-1">Case Study Champion</p>
+        <p class="font-semibold">Gold Medalist at Caseify case study competition focused on guestimation, winning against 12 teams.</p>
+      </div>
+
+      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+        <p class="text-orange-500 font-medium text-sm mb-1">Engineering Innovation</p>
+        <p class="font-semibold">Gold Medalist at PSIP & SP Dutta for designing a wind turbine with 8% higher output, selected from 40 competing teams.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Contact Section -->
+<section class="bg-gradient-to-b from-white via-[#fffef8] to-[#fdfae6] py-20 px-6 text-center" id="contact">
+  <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Let's Build Something</h2>
+  <p class="text-orange-500 font-semibold text-lg mb-2">Meaningful Together</p>
+  <p class="text-gray-600 max-w-xl mx-auto mb-12">Have an interesting project or opportunity? I’d love to hear from you and explore how we can collaborate.</p>
+
+  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-start">
+    <!-- Form -->
+    <form class="bg-white shadow-lg rounded-lg p-6 space-y-4 text-left">
+      <h3 class="text-sm text-orange-500 font-bold">📤 Send a Message</h3>
+      <input class="w-full p-3 border rounded-md" type="text" placeholder="Your Name" required>
+      <input class="w-full p-3 border rounded-md" type="email" placeholder="Your Email" required>
+      <textarea class="w-full p-3 border rounded-md h-32" placeholder="Tell me about your project or idea..." required></textarea>
+      <button class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition-all">⚡ Send Message</button>
+    </form>
+
+    <!-- Contact Info -->
+    <div class="space-y-6 text-left">
+      <div>
+        <h4 class="text-sm font-bold text-gray-700">📧 Email</h4>
+        <p class="text-gray-800">kumav25@wfu.edu</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold text-gray-700">📍 Location</h4>
+        <p class="text-gray-800">Winston-Salem, NC</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold text-gray-700">📞 Available for</h4>
+        <p class="text-gray-800">Calls & Meetings</p>
+      </div>
+      <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg">
+        <p class="text-sm">
+          <strong>Currently Seeking</strong><br>
+          Full-time roles in Data Science, Analytics, and ML.<br>
+          Engineering roles starting May 2026.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-[#0d1117] text-gray-300 py-10 text-center">
+  <p class="text-lg font-semibold">Let's build something <span class="text-orange-500">meaningful</span>.</p>
+  <p class="text-sm mt-2 mb-6">Data science isn’t just about algorithms — it’s about creating solutions that make a real difference.</p>
+  <div class="flex justify-center space-x-4 text-xl mb-6">
+    <a href="#" class="hover:text-white">🔗</a>
+    <a href="#" class="hover:text-white">🐦</a>
+    <a href="#" class="hover:text-white">📸</a>
+  </div>
+  <p class="text-xs">Built with ❤️ by Vikas Kumar • MSBA '26 - Wake Forest University</p>
+  <p class="text-xs mt-1">© 2024 All rights reserved.</p>
+</footer>
+
+</body>
+</html>
