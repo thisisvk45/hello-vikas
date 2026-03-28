@@ -3,687 +3,1611 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vikas Kumar | Portfolio</title>
+  <title>Vikas Kumar | AI/ML Engineer</title>
 
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
 
-  <!-- Animations -->
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      scroll-behavior: smooth;
+    * { font-family: 'Inter', sans-serif; }
+    html { scroll-behavior: smooth; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes countUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+    .animate-fade-in { animation: fadeIn 1s ease-out forwards; }
+    .animate-slide-up { animation: slideUp 0.8s ease-out forwards; }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.45s; }
+    .delay-4 { animation-delay: 0.6s; }
+
+    /* Timeline */
+    .timeline-line {
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #f97316, #fb923c44);
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -37px;
+      top: 24px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f97316;
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px #f97316, 0 0 12px rgba(249,115,22,0.4);
+      z-index: 1;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .dark .timeline-dot { border-color: #0a0f1a; }
+    .relative:hover > .timeline-dot { transform: scale(1.2); box-shadow: 0 0 0 3px #f97316, 0 0 20px rgba(249,115,22,0.5); }
+
+    /* Stat cards hover */
+    .stat-card { transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease; cursor: default; }
+    .stat-card:hover { transform: translateY(-6px) scale(1.04); box-shadow: 0 20px 48px rgba(249,115,22,0.22); background: linear-gradient(135deg, #fff7ed, #fff); }
+    .dark .stat-card:hover { background: linear-gradient(135deg, #1c1410, #1f2937) !important; }
+    .stat-card:hover .stat-number { color: #ea580c; transform: scale(1.08); }
+    .stat-number { display: block; transition: transform 0.25s ease, color 0.25s ease; }
+
+    /* Nav mobile */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    /* Dark mode toggle */
+    #theme-toggle { cursor: pointer; }
+
+    /* Scroll progress bar */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(to right, #f97316, #fb923c);
+      z-index: 100;
+      transition: width 0.1s;
     }
 
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+    /* Section fade on scroll */
+    .section-reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .section-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    @keyframes slideUp {
-      0% {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .animate-fade-in {
-      animation: fadeIn 1s ease-out forwards;
+    /* Card border glow on hover */
+    .glow-card {
+      transition: border-color 0.2s, box-shadow 0.2s;
+      border: 1px solid transparent;
+    }
+    .glow-card:hover {
+      border-color: #f9731640;
+      box-shadow: 0 0 24px #f9731618;
     }
 
-    .animate-slide-up {
-      animation: slideUp 0.8s ease-out forwards;
+
+
+    /* ── Cursor Spotlight ── */
+    #cursor-spotlight {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(249,115,22,0.10) 0%, rgba(249,115,22,0.03) 40%, transparent 70%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+    .dark #cursor-spotlight { opacity: 1; }
+
+
+
+    /* ── 3D Tilt ── */
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.08s ease, box-shadow 0.2s ease;
+      will-change: transform;
+    }
+    .tilt-card:hover { box-shadow: 0 24px 60px rgba(249,115,22,0.18); }
+
+    /* Neural network canvas */
+    #neural-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #home { position: relative; overflow: hidden; }
+    #home > * { position: relative; z-index: 1; }
+
+    /* Typewriter cursor */
+    .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: #f97316;
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* Count-up */
+    .stat-number { transition: color 0.3s; }
+
+    /* Circuit grid background for alternating sections */
+    .circuit-bg {
+      background-image:
+        linear-gradient(rgba(249,115,22,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(249,115,22,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .dark .circuit-bg {
+      background-image:
+        linear-gradient(rgba(249,115,22,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(249,115,22,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
 
-    .delay-1 { animation-delay: 0.2s; }
-    .delay-2 { animation-delay: 0.4s; }
-    .delay-3 { animation-delay: 0.6s; }
-    .delay-4 { animation-delay: 0.8s; }
+    /* Tag pill */
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; }
   </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3QZKNEFV0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Z3QZKNEFV0');
+  </script>
 </head>
 
-<body class="text-[#0f172a] dark:text-white bg-gradient-to-br from-[#f5f9ff] to-[#fdf7ed] dark:from-[#0d1117] dark:to-[#0d1117]">
+<body class="bg-white text-slate-900 dark:bg-[#0d1117] dark:text-slate-100 transition-colors duration-300">
 
-<!-- Fixed Navbar -->
-<header class="w-full fixed top-0 left-0 z-50 bg-white/80 backdrop-blur-md shadow-sm dark:bg-[#0d1117]/80">
-  <div class="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center h-16">
-    <div class="text-orange-500 font-bold text-xl">Vikas Kumar</div>
-    <nav class="flex space-x-6 text-sm md:text-base font-medium text-slate-700 dark:text-slate-200">
-      <a href="#home" class="hover:text-orange-500">Home</a>
-      <a href="#impact" class="hover:text-orange-500">Impact</a>
-      <a href="#education" class="hover:text-orange-500">Education</a>
-      <a href="#journey" class="hover:text-orange-500">Journey</a>
-      <a href="#projects" class="hover:text-orange-500">Projects</a>
-      <a href="#blog" class="hover:text-orange-500">Blog</a>
-      <a href="#achievements" class="hover:text-orange-500">Achievements</a>
-      <a href="#contact" class="hover:text-orange-500">Contact</a>
+<!-- ───── VISITOR MODAL ───── -->
+<div id="visitor-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+  <div class="bg-white dark:bg-[#161b22] rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300" id="visitor-modal-box">
+    <p class="text-xs font-semibold text-orange-500 uppercase tracking-widest mb-2">Welcome</p>
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Nice to meet you</h3>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">Drop your name and email if you'd like to stay in touch. Completely optional.</p>
+    <input id="visitor-name" type="text" placeholder="Your name" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0d1117] text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder-slate-400">
+    <input id="visitor-email" type="email" placeholder="Your email" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0d1117] text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder-slate-400">
+    <div class="flex gap-3">
+      <button onclick="submitVisitor()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 rounded-lg text-sm transition">Save &amp; Continue</button>
+      <button onclick="closeVisitorModal()" class="px-4 py-2.5 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm hover:border-orange-400 hover:text-orange-500 transition">Skip</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───── VISITOR COUNTER WIDGET ───── -->
+<div id="visit-counter" class="fixed bottom-5 right-5 z-50 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg px-5 py-4 text-xs opacity-0 transition-opacity duration-500 pointer-events-none" style="min-width:200px">
+  <p class="font-semibold text-slate-700 dark:text-slate-200 mb-3 text-xs uppercase tracking-widest">Portfolio Views</p>
+  <div class="space-y-2">
+    <div class="flex justify-between items-center">
+      <span class="text-slate-500 dark:text-slate-400">Last 7 days</span>
+      <span id="cnt-7" class="font-bold text-orange-500">0</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <span class="text-slate-500 dark:text-slate-400">Last 90 days</span>
+      <span id="cnt-90" class="font-bold text-orange-500">0</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <span class="text-slate-500 dark:text-slate-400">Last 365 days</span>
+      <span id="cnt-365" class="font-bold text-orange-500">0</span>
+    </div>
+  </div>
+  <button onclick="document.getElementById('visit-counter').style.opacity='0'; setTimeout(()=>document.getElementById('visit-counter').style.display='none',400)" class="mt-3 w-full text-center text-slate-400 hover:text-orange-400 transition text-xs">dismiss</button>
+</div>
+
+
+<!-- Scroll Progress -->
+<div id="progress-bar" style="width:0%"></div>
+
+<!-- Cursor spotlight only -->
+<div id="cursor-spotlight"></div>
+
+
+<!-- ───────────────── NAVBAR ───────────────── -->
+<header class="w-full fixed top-0 left-0 z-50 bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 flex justify-between items-center h-16">
+    <a href="#home" class="text-orange-500 font-bold text-xl tracking-tight">VK<span class="text-slate-900 dark:text-white">.</span></a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center space-x-7 text-sm font-medium text-slate-600 dark:text-slate-300">
+      <a href="#home"         class="hover:text-orange-500 transition">Home</a>
+      <a href="#impact"       class="hover:text-orange-500 transition">Impact</a>
+      <a href="#education"    class="hover:text-orange-500 transition">Education</a>
+      <a href="#experience"   class="hover:text-orange-500 transition">Experience</a>
+      <a href="#projects"     class="hover:text-orange-500 transition">Projects</a>
+      <a href="#blog"         class="hover:text-orange-500 transition">Writing</a>
+      <a href="#achievements" class="hover:text-orange-500 transition">Achievements</a>
+      <a href="#testimonials" class="hover:text-orange-500 transition">Reviews</a>
+      <a href="#contact"      class="hover:text-orange-500 transition">Contact</a>
     </nav>
+
+    <div class="flex items-center gap-3">
+      <!-- Share -->
+      <button onclick="sharePortfolio()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/30 text-xs font-medium transition" aria-label="Share">
+        <i class="fas fa-share-alt text-xs"></i> Share
+      </button>
+      <!-- Dark/Light Toggle -->
+      <button id="theme-toggle" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:text-orange-500 transition" aria-label="Toggle theme">
+        <i id="theme-icon" class="fas fa-moon text-sm"></i>
+      </button>
+
+      <!-- Mobile hamburger -->
+      <button id="menu-btn" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200" aria-label="Menu">
+        <i class="fas fa-bars text-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="flex-col md:hidden px-5 pb-4 gap-3 text-sm font-medium text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-[#0d1117]">
+    <a href="#home"         class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Home</a>
+    <a href="#impact"       class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Impact</a>
+    <a href="#education"    class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Education</a>
+    <a href="#experience"   class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Experience</a>
+    <a href="#projects"     class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Projects</a>
+    <a href="#blog"         class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Writing</a>
+    <a href="#achievements" class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Achievements</a>
+    <a href="#testimonials" class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Reviews</a>
+    <a href="#contact"      class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Contact</a>
   </div>
 </header>
 
-<!-- Hero Section -->
-<section id="home" class="pt-24 min-h-screen flex flex-col justify-center items-center text-center px-4 animate-fade-in">
-  <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold leading-tight opacity-0 animate-slide-up delay-1">
-    Turning data into <br />
-    <span class="text-orange-500">decisions.</span><br />
-    Building with <span class="text-orange-500">purpose.</span>
-  </h1>
+<!-- ───────────────── HERO ───────────────── -->
+<section id="home" class="pt-24 min-h-screen flex flex-col justify-center items-center text-center px-6">
+  <canvas id="neural-canvas"></canvas>
+  <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-400 text-xs font-medium mb-8 opacity-0 animate-slide-up delay-1">
+    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+    Open to full-time AI/ML roles · Starting May 2026
+  </div>
 
-  <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 mt-6 max-w-2xl opacity-0 animate-slide-up delay-2">
-    Hi, I'm <span class="font-semibold text-[#0f172a] dark:text-white">Vikas</span> — a data-driven problem solver blending analytics, ML, and strategy to make things better.
+  <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight opacity-0 animate-slide-up delay-2 max-w-4xl">
+    I build AI that<br/>
+    <span class="gradient-text">ships to production.</span>
+  </h1>
+  <div class="mt-3 text-lg sm:text-xl font-mono text-orange-400 opacity-0 animate-slide-up delay-3 h-8 flex items-center justify-center gap-1">
+    <span id="typewriter-text"></span><span class="typewriter-cursor"></span>
+  </div>
+
+  <p class="text-base sm:text-lg text-slate-500 dark:text-slate-400 mt-6 max-w-2xl opacity-0 animate-slide-up delay-3 leading-relaxed">
+    Hi, I'm <span class="font-semibold text-slate-800 dark:text-white">Vikas Kumar</span>, an AI/ML Engineer specializing in RAG pipelines, LLM systems, agentic AI, and knowledge graphs. <span class="text-orange-500 font-medium">$3.2M production impact</span> across Snap, Aditya Birla, and Lawroom AI.
   </p>
 
-  <!-- Let's Connect Button -->
-  <a href="#contact" class="mt-8 px-6 py-3 rounded-md bg-orange-500 hover:bg-orange-600 text-white font-medium shadow-md opacity-0 animate-slide-up delay-3">
-    Let’s Connect
-  </a>
+  <div class="flex flex-wrap gap-3 justify-center mt-8 opacity-0 animate-slide-up delay-4">
+    <a href="https://calendly.com/kumav25-wfu/30min" target="_blank" class="px-6 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/25 transition flex items-center gap-2">
+      <i class="fas fa-calendar-alt text-sm"></i> Book a Call
+    </a>
+    <a href="https://drive.google.com/file/d/1juSI7-GTBaysavI9jBoh0zTJtWXsMmtN/view?usp=sharing" target="_blank" class="px-6 py-3 rounded-lg bg-slate-900 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold shadow-lg shadow-slate-900/25 transition flex items-center gap-2">
+      <i class="fas fa-file-alt text-sm"></i> Resume
+    </a>
+  </div>
 
   <!-- Social Icons -->
-  <div class="flex items-center justify-center gap-6 mt-6 text-2xl text-gray-700 dark:text-gray-300 opacity-0 animate-slide-up delay-4">
-    <!-- LinkedIn -->
-    <a href="https://www.linkedin.com/in/vikas-kumar45/" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="LinkedIn">
+  <div class="flex items-center justify-center gap-5 mt-8 text-xl text-slate-500 dark:text-slate-400 opacity-0 animate-slide-up delay-4">
+    <a href="https://www.linkedin.com/in/vikaskumar45/" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="LinkedIn">
       <i class="fab fa-linkedin-in"></i>
     </a>
-
-    <!-- GitHub -->
     <a href="https://github.com/thisisvk45" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="GitHub">
       <i class="fab fa-github"></i>
     </a>
-
-    <!-- Resume -->
-    <a href="https://yourdomain.com/Vikas_Kumar_Resume.pdf" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="Resume">
-      <i class="fas fa-file-alt"></i>
+    <a href="https://medium.com/@imvk45" target="_blank" class="hover:text-orange-500 transition hover:scale-110" aria-label="Medium">
+      <i class="fab fa-medium-m"></i>
     </a>
-
-    <!-- Email -->
     <a href="mailto:kumav25@wfu.edu" class="hover:text-orange-500 transition hover:scale-110" aria-label="Email">
       <i class="fas fa-envelope"></i>
     </a>
   </div>
 
-  <!-- Down Arrow -->
-  <div class="mt-12 text-slate-400 text-xl animate-bounce opacity-0 animate-slide-up delay-4">↓</div>
+  <!-- Stack pills -->
+  <div class="flex flex-wrap gap-2 justify-center mt-10 opacity-0 animate-slide-up delay-4">
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PyTorch</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LangChain</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LlamaIndex</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Neo4j</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">FastAPI</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Azure OpenAI</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">HuggingFace</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Docker</span>
+    <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PostgreSQL</span>
+  </div>
+
+  <div class="mt-14 text-slate-300 dark:text-slate-600 text-sm animate-bounce">↓</div>
+
 </section>
 
 
 
-
-<!-- Impact Section -->
- <section id="impact" class="py-20 px-4 md:px-16 bg-white text-gray-900">
+<!-- ───────────────── IMPACT ───────────────── -->
+<section id="impact" class="py-24 px-6 bg-slate-50 dark:bg-[#0a0f1a] section-reveal circuit-bg">
   <div class="max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <!-- Left: Impact Stats -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-green-100 p-6 rounded-xl shadow">
-          <div class="text-2xl font-bold">💸 $3.1 Million</div>
-          <div class="text-sm text-gray-700 mt-1">Saved through route optimization</div>
-        </div>
-        <div class="bg-blue-100 p-6 rounded-xl shadow">
-          <div class="text-2xl font-bold">🤖 40%</div>
-          <div class="text-sm text-gray-700 mt-1">Increase in chatbot engagement</div>
-        </div>
-        <div class="bg-purple-100 p-6 rounded-xl shadow">
-          <div class="text-2xl font-bold">🏢 6+</div>
-          <div class="text-sm text-gray-700 mt-1">Internships across Fortune 500</div>
-        </div>
-        <div class="bg-yellow-100 p-6 rounded-xl shadow">
-          <div class="text-2xl font-bold">🧠 70+</div>
-          <div class="text-sm text-gray-700 mt-1">Entities in AI knowledge graphs</div>
-        </div>
-        <div class="bg-red-100 p-6 rounded-xl shadow">
-          <div class="text-2xl font-bold">🚚 23%</div>
-          <div class="text-sm text-gray-700 mt-1">Reduction in delivery times</div>
-        </div>
-        <div class="bg-cyan-100 p-6 rounded-xl shadow">
-          <div class="text-2xl font-bold">📈 88%</div>
-          <div class="text-sm text-gray-700 mt-1">Accuracy in predictive models</div>
-        </div>
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">By the Numbers</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Real Impact. Real Production.</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm leading-relaxed">
+        These are not portfolio demos. These are outcomes from production AI systems I built under real accountability.
+      </p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
+      <div class="stat-card col-span-2 md:col-span-1 bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
+        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">$3.2M</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Logistics cost savings<br/>in production</div>
       </div>
+      <div class="stat-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
+        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">97%</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Ontology accuracy<br/>Knowledge Graph</div>
+      </div>
+      <div class="stat-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
+        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">96%</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Document extraction<br/>accuracy</div>
+      </div>
+      <div class="stat-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
+        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">23%</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Delivery efficiency<br/>improvement</div>
+      </div>
+      <div class="stat-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
+        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">3K+</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Active users<br/>Lawroom AI</div>
+      </div>
+      <div class="stat-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
+        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">10</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Internships &<br/>engagements</div>
+      </div>
+    </div>
 
-      <!-- Right: Text + Values -->
+    <!-- Two Column -->
+    <div class="grid md:grid-cols-2 gap-12 items-center">
       <div>
-        <h2 class="text-3xl md:text-4xl font-bold leading-tight">
-          Bridging the gap between <span class="text-blue-500">data</span> and <span class="text-green-500">decisions</span>
-        </h2>
-        <p class="text-base text-gray-700 mt-4">
-          With a unique blend of machine learning expertise and strategic problem solving,
-          I transform messy datasets into meaningful outcomes — whether it’s optimizing logistics across India
-          or automating chat interactions at scale.
+        <h3 class="text-2xl sm:text-3xl font-bold leading-snug mb-5">
+          I treat <span class="gradient-text">prompt engineering</span> as a systems design problem.
+        </h3>
+        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+          Context window architecture, output grounding, and hallucination mitigation are engineering constraints I treat with the same rigor as any systems design problem. I have solved all of these under real production pressure with real accountability.
         </p>
-        <p class="text-base text-gray-700 mt-4">
-          From saving ₹26 crores with smart freight routing to improving user engagement through responsive NLP systems,
-          my journey cuts across industries, always anchored in one thing: real impact.
+        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+          I build at the hard end of the stack: RAG pipelines under retrieval pressure, Neo4j knowledge graph architectures over unstructured enterprise data, transformer-based document intelligence, and agentic systems that actually ship.
         </p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-          <div class="bg-gray-50 p-4 rounded-lg border">
-            <div class="font-semibold">🧠 Data-Driven Thinking</div>
-            <p class="text-sm text-gray-600">Every choice is backed by data. Every result is measured.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">🧠</span>
+            <span class="font-semibold text-sm">RAG &amp; LLM Systems</span>
           </div>
-          <div class="bg-gray-50 p-4 rounded-lg border">
-            <div class="font-semibold">⚡ Impact Focus</div>
-            <p class="text-sm text-gray-600">Solutions that drive clear business outcomes and real-world change.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Production-grade retrieval pipelines with vector search, context window management, and low-hallucination outputs deployed at scale using Azure OpenAI and LlamaIndex.</p>
+        </div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">🕸️</span>
+            <span class="font-semibold text-sm">Knowledge Graphs</span>
           </div>
-          <div class="bg-gray-50 p-4 rounded-lg border">
-            <div class="font-semibold">💡 Innovation Mindset</div>
-            <p class="text-sm text-gray-600">Pushing boundaries with new tech like GPT, LLMs, and graph AI.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Neo4j architectures modeling 500+ entities across semantic dimensions, integrated with LangChain to unify structured and unstructured enterprise data at 97% ontology accuracy.</p>
+        </div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">⚡</span>
+            <span class="font-semibold text-sm">Agentic AI</span>
           </div>
-          <div class="bg-gray-50 p-4 rounded-lg border">
-            <div class="font-semibold">🤝 Collaborative Leadership</div>
-            <p class="text-sm text-gray-600">Leading teams, mentoring peers, and executing high-stakes deliverables.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Multi-step autonomous systems with tool-use, persistent memory, and real-world API integration, designed to serve real users and not just run in notebooks.</p>
+        </div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">📊</span>
+            <span class="font-semibold text-sm">ML &amp; Analytics</span>
           </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">End-to-end pipelines from data engineering and feature design through model training, evaluation, and stakeholder-facing dashboards that drive actual decisions.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Education Section -->
-<section id="education" class="bg-white dark:bg-[#0d1117] py-24 px-6">
+<!-- ───────────────── EDUCATION ───────────────── -->
+<section id="education" class="py-24 px-6 bg-white dark:bg-[#0d1117] section-reveal">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-6 text-gray-900 dark:text-white">Education</h2>
-    <p class="text-center text-gray-600 dark:text-gray-300 mb-12">
-      Where I’ve built my foundation in analytics, machine learning, and strategy.
-    </p>
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Academic Background</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Education</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        Two fully funded degrees, awarded on merit across two continents.
+      </p>
+    </div>
 
-    <div class="grid md:grid-cols-2 gap-10">
+    <div class="grid md:grid-cols-2 gap-8">
       <!-- Wake Forest -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-xl shadow-md hover:shadow-lg transition">
-        <div class="flex justify-between items-center mb-2">
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] p-7 rounded-2xl shadow-sm">
+        <div class="flex justify-between items-start mb-4">
           <div>
-            <h3 class="text-xl font-semibold text-orange-500">Wake Forest University</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">MS in Business Analytics</p>
+            <h3 class="text-xl font-bold text-orange-500">Wake Forest University</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-0.5">MS in Business Analytics</p>
           </div>
-          <span class="text-xs bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-300 px-2 py-1 rounded-full font-medium">2025 – 2026</span>
+          <span class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full font-medium whitespace-nowrap ml-3">2025 – 2026</span>
         </div>
-        <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">Recipient of 100% merit-based scholarship (Havells Foundation, $85,000+)</p>
-        <div class="space-y-3 text-sm text-gray-800 dark:text-gray-300">
-          <div>
-            <span class="font-medium text-orange-500">Courses:</span><br>
-            ML for Business, Python, Data Engineering, Optimization, Visualization, Career Mgmt
-          </div>
-          <div>
-            <span class="font-medium text-orange-500">Tools:</span><br>
-            Python, SQL, Excel, Power BI, Tableau, Scikit-learn
-          </div>
-          <div>
-            <span class="font-medium text-orange-500">Focus:</span><br>
-            Solving real-world problems through data-driven decision making
-          </div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">100% Merit Scholarship · $85,000+</span>
+        </div>
+        <div class="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+          <div><span class="font-semibold text-orange-500">Current Work:</span> Building RAG-powered career analytics system over Handshake data serving 500+ students and 40+ advisors using Azure OpenAI.</div>
+          <div><span class="font-semibold text-orange-500">Courses:</span> ML for Business, Python, Data Engineering, Optimization, Visualization, Career Management</div>
+          <div><span class="font-semibold text-orange-500">Tools:</span> Python, SQL, Power BI, Tableau, Scikit-learn, Azure OpenAI</div>
         </div>
       </div>
 
       <!-- Plaksha -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-xl shadow-md hover:shadow-lg transition">
-        <div class="flex justify-between items-center mb-2">
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] p-7 rounded-2xl shadow-sm">
+        <div class="flex justify-between items-start mb-4">
           <div>
-            <h3 class="text-xl font-semibold text-orange-500">Plaksha University</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">B.Tech in Data Science, Economics & Business</p>
+            <h3 class="text-xl font-bold text-orange-500">Plaksha University</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-0.5">B.Tech in Artificial Intelligence</p>
           </div>
-          <span class="text-xs bg-green-100 dark:bg-green-800 text-green-900 dark:text-green-300 px-2 py-1 rounded-full font-medium">2020 – 2024</span>
+          <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full font-medium whitespace-nowrap ml-3">2021 – 2025</span>
         </div>
-        <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">Recipient of full-ride Bharati Scholarship ($42,000+)</p>
-        <div class="space-y-3 text-sm text-gray-800 dark:text-gray-300">
-          <div>
-            <span class="font-medium text-orange-500">Courses:</span><br>
-            Deep Learning, Econometrics, Micro/Macro, Time Series, Finance, Design Thinking
-          </div>
-          <div>
-            <span class="font-medium text-orange-500">Projects:</span><br>
-            LSTM models, NLP chatbot, ESG-financial correlation, Knowledge Graphs
-          </div>
-          <div>
-            <span class="font-medium text-orange-500">Tools:</span><br>
-            Python, PyTorch, TensorFlow, Selenium, Firebase, Git
-          </div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full font-medium">Full-ride Bharati Scholarship · $42,000+</span>
+        </div>
+        <div class="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+          <div><span class="font-semibold text-orange-500">Focus:</span> Deep Learning, Econometrics, Time Series, NLP, Knowledge Representation, Design Thinking</div>
+          <div><span class="font-semibold text-orange-500">Projects:</span> LSTM predictive models, NLP chatbots, ESG-financial correlation, Knowledge Graphs</div>
+          <div><span class="font-semibold text-orange-500">Tools:</span> Python, PyTorch, TensorFlow, Selenium, Firebase, Git, Neo4j</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ───────────────── EXPERIENCE ───────────────── -->
+<section id="experience" class="py-24 px-6 bg-slate-50 dark:bg-[#0a0f1a] section-reveal">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Career Timeline</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Work Experience</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        From production AI systems to research labs, a journey built on real outcomes.
+      </p>
+    </div>
 
+    <div class="relative pl-12">
+      <div class="timeline-line"></div>
 
-
-<section class="bg-white dark:bg-[#0d1117] py-20" id="experience">
-  <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-4">Work Experience</h2>
-    <p class="text-center text-gray-600 dark:text-gray-300 mb-10">
-      From cutting-edge ML projects to real-world product impact — here's my journey so far.
-    </p>
-
-    <div class="grid md:grid-cols-2 gap-6">
-      <!-- Snapchat -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-orange-500">Snapchat</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">AR Extern – Lens Augmented</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jul 2025 – Aug 2025</p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
-          Worked on AR experiences at the intersection of ML and UX. Gained exposure to Lens Studio, creative pipelines, and product experimentation.
-        </p>
+      <!-- WFU AI Engineer -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Wake Forest University</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AI Engineer</p>
+            </div>
+            <span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">Mar 2026 – Present</span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-500 mb-3">North Carolina, USA</p>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Building a RAG-powered generative AI system that unifies Handshake, career portals, and institutional databases, enabling natural language querying over student employment and placement data using Azure OpenAI and vector embeddings, serving 500+ students and 40+ advisors.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Designing ETL workflows to ingest, normalize, and index Handshake API data into a unified knowledge layer powering real-time LLM-driven analytics dashboards for faculty.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Architecting prompt evaluation frameworks to reduce hallucination risk and ensure reliable structured data retrieval across diverse query types.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">RAG</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Azure OpenAI</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LangChain</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PostgreSQL</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Aditya Birla Group -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-orange-500">Aditya Birla Group</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">AI Intern</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jan 2025 – Jun 2025</p>
-        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
-          <li>Saved $3.1 Million by optimizing logistics with route clustering</li>
-          <li>Reduced delivery time by 23% using predictive modeling</li>
-          <li>Built an ontology of 70+ entities using Neo4j & LangChain</li>
-        </ul>
+      <!-- Darden -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Darden</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Graduate Consultant</p>
+            </div>
+            <span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">Oct 2025 – Present</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Designed and executed A/B tests across 3 marketing campaign cohorts using chi-square hypothesis testing, identifying high-value customer segments and improving conversion decisions.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Built K-means customer segmentation models in Python (scipy, statsmodels) identifying 4 distinct clusters, reducing targeting spend waste and improving messaging relevance.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Automated ETL workflows and built real-time A/B monitoring dashboards, cutting analyst reporting time by ~40%.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">K-Means</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">scipy</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">A/B Testing</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Snap Inc -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Snap Inc.</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AR & ML Extern</p>
+            </div>
+            <span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-3 py-1 rounded-full font-medium">Jun 2025 – Sep 2025</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Engineered 5+ production AR Lenses in Lens Studio using computer vision and 3D rendering optimization, deployed across distributed cloud infrastructure serving millions of concurrent users at sub-50ms latency.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Optimized rendering pipelines across 3 development cycles through systems-level performance profiling, improving frame rates and cutting memory footprint by 15%.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Built A/B testing infrastructure with event tracking and distributed analytics pipelines, identifying UX bottlenecks and driving a 20% lift in key engagement metrics.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Lens Studio</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Computer Vision</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">3D Rendering</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">A/B Testing</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aditya Birla -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Aditya Birla Group</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AI/Software Engineer Intern</p>
+            </div>
+            <span class="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-3 py-1 rounded-full font-medium">Jan 2025 – Jun 2025</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Built end-to-end distributed logistics optimization system using Python, scikit-learn, and TensorFlow, delivering $3.2M in annual cost savings with 23% delivery efficiency improvement across six enterprise clusters.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Engineered a domain-specific Knowledge Graph in Neo4j modeling 500+ entities across 12 semantic dimensions, integrating Azure OpenAI with advanced prompt engineering to achieve 97% ontology accuracy on a production-grade LLM knowledge base.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Developed automated document intelligence pipeline using fine-tuned transformer models and Hugging Face, achieving 96% extraction accuracy and reducing manual processing overhead by 80%.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Neo4j</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LangChain</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">HuggingFace</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Azure OpenAI</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">TensorFlow</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lawroom AI -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Lawroom AI</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Founding AI Engineer</p>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-medium">Sep 2024 – Jan 2025</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Architected and deployed a multilingual generative AI legal chatbot using InLegalBERT and ElevenLabs TTS, delivering accurate NLP responses across 10 languages to 2,000+ users.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Designed systematic prompt engineering and LLM evaluation pipelines, improving translation reliability by 35% for low-resource Indian regional languages.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Built scalable modular backend using FastAPI and Firebase with secure REST APIs, role-based authentication, and behavioral analytics supporting 3,000+ active users at production-grade uptime.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">InLegalBERT</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">FastAPI</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Firebase</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">ElevenLabs TTS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scale AI -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Scale AI</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AI Trainer, RLHF &amp; Red Teaming</p>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-medium">Aug 2024 – Dec 2024</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Designed 500+ adversarial and edge case prompts to systematically expose failure modes in large language models including hallucination, instruction drift, and reasoning collapse across complex multi-turn conversations.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Conducted red teaming evaluations across 3,000+ model responses, stress-testing alignment boundaries and surfacing vulnerabilities in LLM reasoning consistency.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Maintained 90%+ agreement rate against ground truth labels, contributing high-quality feedback to RLHF pipelines used in production model training.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">RLHF</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Red Teaming</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Hallucination Mitigation</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LLM Evaluation</span>
+          </div>
+        </div>
       </div>
 
       <!-- ISB -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-orange-500">Indian School of Business (ISB)</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Research Intern</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jun 2024 – Aug 2024</p>
-        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
-          <li>Built scalable data lake for India's digitization push</li>
-          <li>Improved pipeline speed by 15% via PostgreSQL + MongoDB</li>
-          <li>Used InceptionV3 & ResNet for document processing</li>
-        </ul>
-      </div>
-
-      <!-- Airtel -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-orange-500">Airtel</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Machine Learning Intern</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Jun 2023 – Aug 2023</p>
-        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
-          <li>20% faster clustering pipeline in Python</li>
-          <li>30% boost in scraping speed using multithreading</li>
-          <li>Used Spark for GPU-based large-scale processing</li>
-        </ul>
-      </div>
-
-      <!-- HP -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-orange-500">Hewlett-Packard (HP)</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">CVC & Analytics Extern</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Apr 2024 – May 2024</p>
-        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
-          <li>Analyzed 20 startups for CVC investment strategy</li>
-          <li>Forecasted tech trends using Python & Excel</li>
-        </ul>
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Indian School of Business (ISB)</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Research Intern</p>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-medium">Jun 2024 – Sep 2024</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Designed and deployed a production data engineering pipeline integrating PostgreSQL and MongoDB via REST APIs, improving data processing efficiency by 30% for research stakeholders.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Automated metadata governance workflows using the OpenMetadata API, improving data discoverability and lineage tracking across the organization's data ecosystem.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Built an interactive Streamlit data application delivering a self-serve interface for stakeholders to manage and explore organizational data assets independently.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PostgreSQL</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">MongoDB</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Streamlit</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">OpenMetadata</span>
+          </div>
+        </div>
       </div>
 
       <!-- Omdena -->
-      <div class="bg-gray-100 dark:bg-[#161b22] p-6 rounded-lg shadow-md hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-orange-500">Omdena</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">ML Engineer Intern</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Feb 2024 – Apr 2024</p>
-        <ul class="list-disc ml-5 text-sm text-gray-800 dark:text-gray-300 space-y-1">
-          <li>Built GPT-3 chatbot to boost user engagement by 40%</li>
-          <li>Deployed NLP features with BERT & feedback loops</li>
-        </ul>
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Omdena</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Machine Learning Engineer</p>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-medium">Feb 2024 – Apr 2024</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Architected and deployed a generative AI mental health support chatbot using GPT-3 and transformer-based NLP, boosting user engagement by 40%.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Fine-tuned NLP algorithms combining BERT embeddings and GPT-3 language generation, improving personalized advice accuracy by 30% for end users.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Implemented a continuous feedback loop updating chatbot response quality from live user interaction data, improving conversational accuracy by 25%.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">GPT-3</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">BERT</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">NLP</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Airtel -->
+      <div class="relative mb-10">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Airtel</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Machine Learning Intern</p>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-medium">May 2023 – Aug 2023</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Led optimization of a large-scale Python web scraping framework using multithreading and async I/O, reducing data extraction time by 30% across high-throughput production scraping jobs.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Enhanced geospatial preprocessing pipelines using DBSCAN clustering and Folium, improving spatial accuracy by 20% for real estate property evaluation at scale.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Designed a cross-validation algorithm reducing data discrepancies by 25% across multiple large-scale property data sources.</li>
+          </ul>
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">DBSCAN</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Folium</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Multithreading</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MCN -->
+      <div class="relative">
+        <div class="timeline-dot"></div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
+            <div>
+              <h3 class="text-lg font-bold text-orange-500">Millennium Campus Network (MCN)</h3>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Campus Director, UN Millennium Fellowship</p>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-medium">Aug 2022 – Dec 2022</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Oversaw execution of a five-month UN Millennium Fellowship program, managing 30+ events and activities aligned with fellowship goals.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Conducted bi-weekly progress reviews for 10 fellows, providing targeted feedback resulting in a 95% goal achievement rate.</li>
+            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Served as primary liaison for 100+ stakeholders including fellows, mentors, and program administrators, fostering a high-collaboration environment across the full fellowship cohort.</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- Projects Section -->
-<section id="projects" class="bg-[#f9fafb] dark:bg-[#0e1525] py-24 px-6 text-center">
+<!-- ───────────────── PROJECTS ───────────────── -->
+<section id="projects" class="py-24 px-6 bg-white dark:bg-[#0d1117] section-reveal circuit-bg">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Featured Projects</h2>
-    <p class="text-slate-600 dark:text-slate-300 mb-10">
-      Innovative solutions that solve real-world problems through data science and machine learning.
-    </p>
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Selected Work</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Featured Projects</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        Production-grade AI systems and research-backed data solutions.
+      </p>
+    </div>
 
-    <div class="grid md:grid-cols-3 gap-6 text-left">
+    <!-- Filter Tabs -->
+    <div class="flex flex-wrap justify-center gap-2 mb-10">
+      <button onclick="filterProjects('all')" data-filter="all" class="filter-btn active-filter px-4 py-2 rounded-full text-sm font-medium bg-orange-500 text-white transition">All</button>
+      <button onclick="filterProjects('llm')" data-filter="llm" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">LLM / RAG</button>
+      <button onclick="filterProjects('ml')" data-filter="ml" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">ML</button>
+      <button onclick="filterProjects('analytics')" data-filter="analytics" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">Analytics</button>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6" id="projects-grid">
       <!-- Card 1 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden project-card">
-        <div class="bg-gradient-to-r from-sky-500 to-blue-500 p-4 text-white text-sm font-medium">
-          75% faster response time
-        </div>
-        <div class="p-5">
-          <p class="font-bold text-lg mb-1">AI Chatbot for United Airlines</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Developed an NLP-based chatbot that reduced response time by 75% and improved CSAT.</p>
-          <div class="flex flex-wrap gap-2 text-xs mb-4">
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">NLP</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">TensorFlow</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Flask</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">React</span>
-          </div>
-          <div class="flex gap-2">
-            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
-            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm demo-btn">Demo</a>
-          </div>
-          <!-- Message displayed when demo button is hovered -->
-          <div class="demo-message">
-            This will be live soon
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-sky-500 to-blue-500"></div>
+        <div class="p-6">
+          <span class="tag bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 mb-3 inline-block">NLP · Chatbot</span>
+          <p class="font-bold text-lg mb-2" data-category="llm">AI Chatbot for United Airlines</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Built an NLP-based conversational agent that reduced response time by 75% and improved CSAT scores using intent classification and contextual response generation.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">NLP</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">TensorFlow</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Flask</span>
           </div>
         </div>
       </div>
 
       <!-- Card 2 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden project-card">
-        <div class="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white text-sm font-medium">
-          60% reduction in downtime
-        </div>
-        <div class="p-5">
-          <p class="font-bold text-lg mb-1">Predictive Maintenance System</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Built LSTM time series models to forecast failures, cutting downtime by 60%.</p>
-          <div class="flex flex-wrap gap-2 text-xs mb-4">
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">LSTM</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Time Series</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Pandas</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Scikit-learn</span>
-          </div>
-          <div class="flex gap-2">
-            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
-            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm demo-btn">Demo</a>
-          </div>
-          <!-- Message displayed when demo button is hovered -->
-          <div class="demo-message">
-            This will be live soon
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+        <div class="p-6">
+          <span class="tag bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 mb-3 inline-block">LSTM · Forecasting</span>
+          <p class="font-bold text-lg mb-2" data-category="ml">Predictive Maintenance System</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">LSTM time series models to forecast equipment failures, cutting downtime by 60% by enabling proactive maintenance scheduling for industrial clients.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LSTM</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Time Series</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Scikit-learn</span>
           </div>
         </div>
       </div>
 
       <!-- Card 3 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden project-card">
-        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-4 text-white text-sm font-medium">
-          S&P 500 analysis
-        </div>
-        <div class="p-5">
-          <p class="font-bold text-lg mb-1">ESG vs Financial Performance</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Used Python + Selenium to study ESG and stock performance correlation across S&P 500.</p>
-          <div class="flex flex-wrap gap-2 text-xs mb-4">
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Selenium</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Pandas</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Matplotlib</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Statistical Analysis</span>
-          </div>
-          <div class="flex gap-2">
-            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
-            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm demo-btn">Demo</a>
-          </div>
-          <!-- Message displayed when demo button is hovered -->
-          <div class="demo-message">
-            This will be live soon
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
+        <div class="p-6">
+          <span class="tag bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 mb-3 inline-block">Finance · Analytics</span>
+          <p class="font-bold text-lg mb-2" data-category="analytics">ESG vs Financial Performance</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Statistical analysis of ESG scores vs stock performance correlation across the S&P 500, using Selenium-scraped data and regression models to surface investment insights.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Selenium</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Matplotlib</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Statistics</span>
           </div>
         </div>
       </div>
 
       <!-- Card 4 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden project-card">
-        <div class="bg-gradient-to-r from-pink-500 to-red-500 p-4 text-white text-sm font-medium">
-          99.2% accuracy rate
-        </div>
-        <div class="p-5">
-          <p class="font-bold text-lg mb-1">Real-time Fraud Detection</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Implemented ensemble ML models for real-time credit fraud detection at 99.2% accuracy.</p>
-          <div class="flex flex-wrap gap-2 text-xs mb-4">
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">XGBoost</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Random Forest</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Apache Kafka</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Docker</span>
-          </div>
-          <div class="flex gap-2">
-            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
-            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm demo-btn">Demo</a>
-          </div>
-          <!-- Message displayed when demo button is hovered -->
-          <div class="demo-message">
-            This will be live soon
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-pink-500 to-red-500"></div>
+        <div class="p-6">
+          <span class="tag bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 mb-3 inline-block">ML · Security</span>
+          <p class="font-bold text-lg mb-2" data-category="ml">Real-time Fraud Detection</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Ensemble ML model (XGBoost + Random Forest) for real-time credit card fraud detection achieving 99.2% accuracy, streamed via Apache Kafka and containerized with Docker.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">XGBoost</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Random Forest</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Kafka</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Docker</span>
           </div>
         </div>
       </div>
 
       <!-- Card 5 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden project-card">
-        <div class="bg-gradient-to-r from-yellow-600 to-orange-600 p-4 text-white text-sm font-medium">
-          $2M annual savings
-        </div>
-        <div class="p-5">
-          <p class="font-bold text-lg mb-1">Supply Chain Optimization</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Built optimization models saving $2M annually for a Fortune 500 supply chain client.</p>
-          <div class="flex flex-wrap gap-2 text-xs mb-4">
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">OR-Tools</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Linear Programming</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">PostgreSQL</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Dash</span>
-          </div>
-          <div class="flex gap-2">
-            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
-            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm demo-btn">Demo</a>
-          </div>
-          <!-- Message displayed when demo button is hovered -->
-          <div class="demo-message">
-            This will be live soon
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-orange-500 to-amber-500"></div>
+        <div class="p-6">
+          <span class="tag bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 mb-3 inline-block">Optimization · Supply Chain</span>
+          <p class="font-bold text-lg mb-2" data-category="ml analytics">Logistics Optimization Engine</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Distributed route clustering system using ML and operations research that delivered $3.2M in annual cost savings and 23% faster delivery across six enterprise clusters at Aditya Birla.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">scikit-learn</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">TensorFlow</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PostgreSQL</span>
           </div>
         </div>
       </div>
 
       <!-- Card 6 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow-md overflow-hidden project-card">
-        <div class="bg-gradient-to-r from-teal-500 to-sky-500 p-4 text-white text-sm font-medium">
-          45% better campaigns
-        </div>
-        <div class="p-5">
-          <p class="font-bold text-lg mb-1">Customer Segmentation Platform</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Built a clustering-based platform improving marketing campaign effectiveness by 45%.</p>
-          <div class="flex flex-wrap gap-2 text-xs mb-4">
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Python</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">K-Means</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">PCA</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Flask</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">D3.js</span>
-            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">AWS</span>
-          </div>
-          <div class="flex gap-2">
-            <a href="#" class="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded text-sm">Code</a>
-            <a href="#" class="bg-orange-500 text-white px-3 py-1 rounded text-sm demo-btn">Demo</a>
-          </div>
-          <!-- Message displayed when demo button is hovered -->
-          <div class="demo-message">
-            This will be live soon
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-teal-500 to-cyan-500"></div>
+        <div class="p-6">
+          <span class="tag bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 mb-3 inline-block">LegalTech · Multilingual AI</span>
+          <p class="font-bold text-lg mb-2" data-category="llm">Multilingual Legal AI Chatbot</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Generative AI legal assistant using InLegalBERT + ElevenLabs TTS supporting 10 Indian languages, serving 3,000+ active users with production-grade availability at Lawroom AI.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">InLegalBERT</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">FastAPI</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Firebase</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">ElevenLabs</span>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Inline Styles -->
-<style>
-  .project-card .demo-btn {
-    position: relative;
-  }
-
-  .project-card .demo-btn:hover {
-    display: none;
-  }
-
-  .project-card .demo-btn:hover + .demo-message {
-    display: block;
-  }
-
-  .demo-message {
-    display: none;
-    color: #ff7f50;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 5px;
-  }
-</style>
-
-
-<!-- Blog / Insights Section -->
-<section id="blog" class="bg-white dark:bg-[#0d1117] py-24 px-6 text-center">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Latest Insights</h2>
-    <p class="text-slate-600 dark:text-slate-300 mb-10">
-      Thoughts on data science, technology trends, and building impactful solutions.
-    </p>
-
-    <div class="grid md:grid-cols-3 gap-6 text-left">
-      <!-- Article 1 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow hover:shadow-lg transition">
-        <div class="bg-gradient-to-r from-sky-500 to-blue-500 p-3 text-white text-xs font-medium rounded-t-xl">
-          Data Science
-        </div>
-        <div class="p-5">
-          <div class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
-            <span>📅 Jan 14, 2024</span> • <span>⏱ 8 min read</span>
-          </div>
-          <p class="font-semibold text-base mb-1">The Future of Data Analytics in Business Decision Making</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
-            Exploring how advanced analytics and AI are transforming the way businesses make strategic decisions.
-          </p>
-          <a href="#" class="text-sm text-orange-600 hover:underline flex items-center gap-1">Read More →</a>
-        </div>
-      </div>
-
-      <!-- Article 2 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow hover:shadow-lg transition">
-        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-3 text-white text-xs font-medium rounded-t-xl">
-          Machine Learning
-        </div>
-        <div class="p-5">
-          <div class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
-            <span>📅 Dec 9, 2023</span> • <span>⏱ 12 min read</span>
-          </div>
-          <p class="font-semibold text-base mb-1">Building Scalable ML Pipelines: Lessons from Production</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
-            A guide to designing ML pipelines that scale, from data ingestion to deployment.
-          </p>
-          <a href="#" class="text-sm text-orange-600 hover:underline flex items-center gap-1">Read More →</a>
-        </div>
-      </div>
-
-      <!-- Article 3 -->
-      <div class="bg-white dark:bg-[#121c2b] rounded-xl shadow hover:shadow-lg transition">
-        <div class="bg-gradient-to-r from-emerald-500 to-green-500 p-3 text-white text-xs font-medium rounded-t-xl">
-          Finance
-        </div>
-        <div class="p-5">
-          <div class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2">
-            <span>📅 Nov 21, 2023</span> • <span>⏱ 10 min read</span>
-          </div>
-          <p class="font-semibold text-base mb-1">ESG Investing: Where Data Science Meets Sustainable Finance</p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
-            A deep dive into how ESG metrics are evaluated and connected to financial performance.
-          </p>
-          <a href="#" class="text-sm text-orange-600 hover:underline flex items-center gap-1">Read More →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-10">
-      <a href="#" class="inline-block border border-orange-500 text-orange-500 px-4 py-2 rounded hover:bg-orange-500 hover:text-white transition">
-        View All Articles
+    <div class="text-center mt-10">
+      <a href="https://github.com/thisisvk45" target="_blank" class="inline-flex items-center gap-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-lg hover:border-orange-400 hover:text-orange-500 transition text-sm font-medium">
+        <i class="fab fa-github"></i> View GitHub
       </a>
     </div>
   </div>
 </section>
-<!-- Key Achievements Section -->
-<section id="achievements" class="bg-[#f9fafb] dark:bg-[#0e1525] py-24 px-6 text-center">
+
+<!-- ───────────────── BLOG / INSIGHTS ───────────────── -->
+<section id="blog" class="py-24 px-6 bg-slate-50 dark:bg-[#0a0f1a] section-reveal">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-2">Key Achievements</h2>
-    <p class="text-slate-600 dark:text-slate-300 mb-10">
-      Highlights of my professional and leadership accomplishments.
-    </p>
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Latest Writing</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Insights</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        Writing on AI systems, technology, and the future of work. Published on Medium with 474+ reads on a single piece.
+      </p>
+    </div>
 
-    <div class="grid md:grid-cols-2 gap-6 text-left">
-      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
-        <p class="text-orange-500 font-medium text-sm mb-1">Scholarship</p>
-        <p class="font-semibold">Awarded a fully funded scholarship to pursue the MSBA at Wake Forest University, valued at over $85,000.</p>
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Article 1 -->
+      <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
+        <div class="h-1.5 bg-gradient-to-r from-orange-500 to-amber-500"></div>
+        <div class="p-6">
+          <span class="tag bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 mb-3 inline-block">AI</span>
+          <div class="text-xs text-slate-400 mb-2">Mar 25, 2026 · 5 min read</div>
+          <p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">Give Me 20 Minutes and I'll Change How You Use AI Forever</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">A practical reframe of how to get genuinely useful output from AI tools through structured interaction design.</p>
+          <div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>
+        </div>
+      </a>
+
+      <!-- Article 2 -->
+      <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
+        <div class="h-1.5 bg-gradient-to-r from-sky-500 to-blue-500"></div>
+        <div class="p-6">
+          <span class="tag bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 mb-3 inline-block">Developer Tools</span>
+          <div class="text-xs text-slate-400 mb-2">Mar 15, 2026 · 4 min read</div>
+          <p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">The 5-Minute Setup That Turned My Terminal Into an AI Engineer</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">How a minimal terminal configuration unlocked a dramatically faster AI-assisted development workflow.</p>
+          <div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>
+        </div>
+      </a>
+
+      <!-- Article 3 -->
+      <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
+        <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
+        <div class="p-6">
+          <span class="tag bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 mb-3 inline-block">Future of Work</span>
+          <div class="text-xs text-slate-400 mb-2">Mar 6, 2026 · 5 min read</div>
+          <p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">The Hiring Pipeline Is Not Broken. It Is Being Quietly Restructured.</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">A clear-eyed look at what is actually changing in how companies hire AI and tech talent in 2026.</p>
+          <div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>
+        </div>
+      </a>
+
+      <!-- Article 4 -->
+      <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
+        <div class="h-1.5 bg-gradient-to-r from-slate-400 to-slate-500"></div>
+        <div class="p-6">
+          <span class="tag bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 mb-3 inline-block">NLP Research</span>
+          <div class="text-xs text-slate-400 mb-2">Nov 3, 2025 · 6 min read · 204 views</div>
+          <p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">The Dash Addiction: Why AI Can't Stop Using Hyphens (And The Neural Math Behind It)</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Exploring the structural reason LLMs over-rely on em-dashes, and what it reveals about token probability distributions.</p>
+          <div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>
+        </div>
+      </a>
+
+      <!-- Article 5 -->
+      <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
+        <div class="h-1.5 bg-gradient-to-r from-green-500 to-teal-500"></div>
+        <div class="p-6">
+          <span class="tag bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 mb-3 inline-block">Immigration · Tech</span>
+          <div class="text-xs text-slate-400 mb-2">Sep 20, 2025 · 4 min read · 474 views</div>
+          <p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">Why International Students Are Now the Cheapest Yet Priceless Talent in America</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">A data-backed analysis of the structural dynamics driving demand for international student talent in the US tech industry.</p>
+          <div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>
+        </div>
+      </a>
+
+      <!-- Article 6 -->
+      <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
+        <div class="h-1.5 bg-gradient-to-r from-rose-500 to-pink-500"></div>
+        <div class="p-6">
+          <span class="tag bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 mb-3 inline-block">Agentic AI</span>
+          <div class="text-xs text-slate-400 mb-2">Aug 10, 2025 · 9 min read · 143 views</div>
+          <p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">How Graph Thinking Is Powering the $196B Agentic AI Revolution</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Deep dive into knowledge graph architectures powering the next generation of agentic AI systems, and why GPT-5 changes the calculus.</p>
+          <div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="https://medium.com/@imvk45" target="_blank" class="inline-flex items-center gap-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-lg hover:border-orange-400 hover:text-orange-500 transition text-sm font-medium">
+        <i class="fab fa-medium-m"></i> Read All Articles on Medium
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── ACHIEVEMENTS ───────────────── -->
+<section id="achievements" class="py-24 px-6 bg-white dark:bg-[#0d1117] section-reveal">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Recognition</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Achievements</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        Scholarships, medals, and recognition across academics, research, and leadership.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- 1. Competition -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 text-lg rounded-xl flex items-center justify-center">🥈</span>
+          <span class="text-xs font-semibold text-indigo-500 uppercase tracking-wide">National Competition</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">2nd Place, East Region at DataCamp's Data for Good Analytics Competition among 120+ graduate teams. Built an AI system to detect AI-generated misinformation in educational content, tackling factual reliability as AI becomes a primary learning tool.</p>
       </div>
 
-      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
-        <p class="text-orange-500 font-medium text-sm mb-1">Undergraduate Funding</p>
-        <p class="font-semibold">Awarded the prestigious Bharati Scholarship, worth over $42,000, covering the full cost of my undergraduate education.</p>
+      <!-- 2. Graduate Scholarship -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 text-orange-500 text-lg rounded-xl flex items-center justify-center">🎓</span>
+          <span class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Graduate Scholarship</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Awarded 100% merit-based scholarship (Havells Foundation) to pursue MSBA at Wake Forest University, valued at $85,000+.</p>
       </div>
 
-      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
-        <p class="text-orange-500 font-medium text-sm mb-1">International Recognition</p>
-        <p class="font-semibold">Recognized by the National Academy of Engineering (USA) for research on entrepreneurial mindset in engineering education.</p>
+      <!-- 3. Undergraduate Scholarship -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 text-purple-500 text-lg rounded-xl flex items-center justify-center">🏛️</span>
+          <span class="text-xs font-semibold text-purple-500 uppercase tracking-wide">Undergraduate Scholarship</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Awarded the Bharati Scholarship, a full-ride covering four years of undergraduate education at Plaksha University ($42,000+).</p>
       </div>
 
-      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
-        <p class="text-orange-500 font-medium text-sm mb-1">Case Study Champion</p>
-        <p class="font-semibold">Gold Medalist at Caseify case study competition focused on guestimation, winning against 12 teams.</p>
+      <!-- 4. International Recognition -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-blue-500 text-lg rounded-xl flex items-center justify-center">🌐</span>
+          <span class="text-xs font-semibold text-blue-500 uppercase tracking-wide">International Recognition</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Recognized by the National Academy of Engineering (USA) for research on entrepreneurial mindset in engineering education.</p>
       </div>
 
-      <div class="bg-white dark:bg-[#121c2b] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
-        <p class="text-orange-500 font-medium text-sm mb-1">Engineering Innovation</p>
-        <p class="font-semibold">Gold Medalist at PSIP & SP Dutta for designing a wind turbine with 8% higher output, selected from 40 competing teams.</p>
+      <!-- 5. Case Study -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-500 text-lg rounded-xl flex items-center justify-center">🥇</span>
+          <span class="text-xs font-semibold text-yellow-600 dark:text-yellow-400 uppercase tracking-wide">Case Study Champion</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Gold Medalist at Caseify, a consulting-based case study competition on guestimation, defeating 12 competing teams.</p>
+      </div>
+
+      <!-- 6. Engineering Innovation -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-green-100 dark:bg-green-900/30 text-green-500 text-lg rounded-xl flex items-center justify-center">⚙️</span>
+          <span class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">Engineering Innovation</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Gold Medalist at PSIP and SP Dutta Innovation Award for designing a wind turbine with 8% higher output, selected from 40 competing teams.</p>
+      </div>
+
+      <!-- 7. Leadership -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-teal-100 dark:bg-teal-900/30 text-teal-500 text-lg rounded-xl flex items-center justify-center">🌍</span>
+          <span class="text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide">Leadership</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Selected as Campus Director for the UN Millennium Fellowship, managing 30+ events and leading 10 fellows to a 95% goal completion rate.</p>
+      </div>
+
+      <!-- 8. Sports -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-red-100 dark:bg-red-900/30 text-red-500 text-lg rounded-xl flex items-center justify-center">🏏</span>
+          <span class="text-xs font-semibold text-red-500 uppercase tracking-wide">Sports</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Intra-University Cricket Champion at Plaksha University, leading the team to the inter-department cricket tournament title.</p>
+      </div>
+
+      <!-- 9. Spirit of Plaksha -->
+      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 text-amber-500 text-lg rounded-xl flex items-center justify-center">✨</span>
+          <span class="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide">Spirit of Plaksha</span>
+        </div>
+        <p class="font-semibold text-sm leading-relaxed">Awarded the Spirit of Plaksha Award for outstanding contribution to peer learning, mentorship, and making technical concepts accessible to fellow students across the university community.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ───────────────── TESTIMONIALS ───────────────── -->
+<section id="testimonials" class="py-24 px-6 bg-slate-50 dark:bg-[#0a0f1a] section-reveal">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">What People Say</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Recommendations</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        From managers and colleagues who worked with me directly.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Bhawna -->
+      <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm flex flex-col">
+        <div class="text-orange-400 text-3xl mb-4 leading-none">"</div>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1">He took ownership of our website from design to Firebase integration, always with a user-centric focus. He also contributed to benchmarking AI models and integrating voice-to-text features. Vikas is constantly growing his skills and would be a valuable asset to any team.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
+          <p class="font-semibold text-sm text-slate-800 dark:text-slate-200">Bhawna Rupani</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Lead Gen AI Engineer · Lawroom AI</p>
+        </div>
+      </div>
+
+      <!-- Kunkum -->
+      <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm flex flex-col">
+        <div class="text-orange-400 text-3xl mb-4 leading-none">"</div>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1">Vikas has consistently demonstrated a strong commitment to learning and delivering high-quality work on our Knowledge Graph implementation. He brings enthusiasm and curiosity to every task, communicates clearly, and collaborates effectively. His positive attitude and eagerness to learn make him a pleasure to work with.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
+          <p class="font-semibold text-sm text-slate-800 dark:text-slate-200">Kunkum Poovamma</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Senior GenAI Engineer · Aditya Birla Group</p>
+        </div>
+      </div>
+
+      <!-- Tanisha -->
+      <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm flex flex-col">
+        <div class="text-orange-400 text-3xl mb-4 leading-none">"</div>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1">Vikas is a dedicated and hardworking individual with a strong passion for data science, machine learning, and deep learning. He consistently seeks opportunities to upgrade his skills and stays at the forefront of new technologies. His enthusiasm for ML is evident as he combines technical expertise with a genuine love for learning.</p>
+        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
+          <p class="font-semibold text-sm text-slate-800 dark:text-slate-200">Tanisha Saraf</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Robotics Engineer · Plaksha University</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────── CONTACT ───────────────── -->
+<section id="contact" class="py-24 px-6 bg-slate-50 dark:bg-[#0a0f1a] section-reveal">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Get in Touch</p>
+      <h2 class="text-3xl sm:text-4xl font-bold">Let's Build Something</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto text-sm">
+        Open to full-time AI/ML engineering roles starting May 2026. Also happy to connect about research, writing, or interesting problems.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+      <!-- Form -->
+      <form class="bg-white dark:bg-[#161b22] rounded-2xl p-7 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-orange-500 mb-2">Send a Message</h3>
+        <input class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0d1117] text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 transition placeholder-slate-400" type="text" placeholder="Your Name" required>
+        <input class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0d1117] text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 transition placeholder-slate-400" type="email" placeholder="Your Email" required>
+        <textarea class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0d1117] text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 transition h-32 resize-none placeholder-slate-400" placeholder="Tell me about your project or opportunity..."></textarea>
+        <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition shadow-lg shadow-orange-500/20">Send Message</button>
+      </form>
+
+      <!-- Info -->
+      <div class="space-y-6">
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-5 shadow-sm flex items-start gap-4">
+          <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 text-orange-500 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-sm"></i></div>
+          <div>
+            <p class="text-xs text-slate-500 mb-0.5">Email</p>
+            <p class="font-semibold text-sm flex items-center gap-2">
+              kumav25@wfu.edu
+              <button id="copy-email-btn" onclick="(function(btn){navigator.clipboard.writeText('kumav25@wfu.edu');btn.innerHTML='<i class=\'fas fa-check\'></i>';btn.classList.add(\'text-green-500\');setTimeout(()=>{btn.innerHTML='<i class=\'fas fa-copy\'></i>';btn.classList.remove(\'text-green-500\');},2000);})(this)" 
+                class="w-6 h-6 flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/30 transition text-xs">
+                <i class="fas fa-copy"></i>
+              </button>
+            </p>
+          </div>
+        </div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-5 shadow-sm flex items-start gap-4">
+          <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-blue-500 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-map-marker-alt text-sm"></i></div>
+          <div>
+            <p class="text-xs text-slate-500 mb-0.5">Location</p>
+            <p class="font-semibold text-sm">San Francisco Bay Area</p>
+            <p class="text-xs text-orange-500 font-medium mt-0.5">Open to relocation</p>
+          </div>
+        </div>
+        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-5 shadow-sm flex items-start gap-4">
+          <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-briefcase text-sm"></i></div>
+          <div>
+            <p class="text-xs text-slate-500 mb-0.5">Seeking</p>
+            <p class="font-semibold text-sm">Full-time AI/ML Engineering Roles · Starting May 2026</p>
+          </div>
+        </div>
+        <div class="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-200 dark:border-orange-800/50 rounded-2xl p-5">
+          <p class="text-sm text-orange-700 dark:text-orange-300 font-medium mb-1">Currently building at WFU</p>
+          <p class="text-xs text-orange-600 dark:text-orange-400">RAG-powered career analytics system serving 500+ students using Azure OpenAI + LangChain.</p>
+        </div>
+        <button onclick="sharePortfolio()" class="w-full flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-4 py-3 rounded-2xl hover:border-orange-400 hover:text-orange-500 transition text-sm font-medium">
+          <i class="fas fa-share-alt"></i> Share this Portfolio
+        </button>
       </div>
     </div>
   </div>
 </section>
-<!-- Contact Section -->
-<section class="bg-gradient-to-b from-white via-[#fffef8] to-[#fdfae6] py-20 px-6 text-center" id="contact">
-  <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Let's Build Something</h2>
-  <p class="text-orange-500 font-semibold text-lg mb-2">Meaningful Together</p>
-  <p class="text-gray-600 max-w-xl mx-auto mb-12">Have an interesting project or opportunity? I’d love to hear from you and explore how we can collaborate.</p>
 
-  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-start">
-    <!-- Form -->
-    <form class="bg-white shadow-lg rounded-lg p-6 space-y-4 text-left">
-      <h3 class="text-sm text-orange-500 font-bold">📤 Send a Message</h3>
-      <input class="w-full p-3 border rounded-md" type="text" placeholder="Your Name" required>
-      <input class="w-full p-3 border rounded-md" type="email" placeholder="Your Email" required>
-      <textarea class="w-full p-3 border rounded-md h-32" placeholder="Tell me about your project or idea..." required></textarea>
-      <button class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition-all">⚡ Send Message</button>
-    </form>
 
-    <!-- Contact Info -->
-    <div class="space-y-6 text-left">
-      <div>
-        <h4 class="text-sm font-bold text-gray-700">📧 Email</h4>
-        <p class="text-gray-800">kumav25@wfu.edu</p>
-      </div>
-      <div>
-        <h4 class="text-sm font-bold text-gray-700">📍 Location</h4>
-        <p class="text-gray-800">Winston-Salem, NC</p>
-      </div>
-      <div>
-        <h4 class="text-sm font-bold text-gray-700">📞 Available for</h4>
-        <p class="text-gray-800">Calls & Meetings</p>
-      </div>
-      <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg">
-        <p class="text-sm">
-          <strong>Currently Seeking</strong><br>
-          Full-time roles in Data Science, Analytics, and ML.<br>
-          Engineering roles starting May 2026.
-        </p>
-      </div>
+<!-- Back to Top -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" 
+  class="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30 flex items-center justify-center text-lg transition-all duration-300 opacity-0 translate-y-4 pointer-events-none">
+  ↑
+</button>
+
+<!-- ───────────────── FOOTER ───────────────── -->
+<footer class="bg-[#080d14] text-slate-400 py-12 px-6 text-center">
+  <div class="max-w-4xl mx-auto">
+    <p class="text-lg font-bold text-white mb-1">Vikas Kumar</p>
+    <p class="text-sm mb-6">AI/ML Engineer · MSBA '26 Wake Forest University</p>
+    <div class="flex justify-center gap-5 text-xl mb-8">
+      <a href="https://www.linkedin.com/in/vikaskumar45/" target="_blank" class="hover:text-orange-400 transition"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/thisisvk45" target="_blank" class="hover:text-orange-400 transition"><i class="fab fa-github"></i></a>
+      <a href="https://medium.com/@imvk45" target="_blank" class="hover:text-orange-400 transition"><i class="fab fa-medium-m"></i></a>
+      <a href="mailto:kumav25@wfu.edu" class="hover:text-orange-400 transition"><i class="fas fa-envelope"></i></a>
     </div>
+    <div class="flex justify-center flex-wrap gap-5 text-sm text-slate-500 mb-8">
+      <a href="#home" class="hover:text-orange-400 transition">Home</a>
+      <a href="#impact" class="hover:text-orange-400 transition">Impact</a>
+      <a href="#experience" class="hover:text-orange-400 transition">Experience</a>
+      <a href="#projects" class="hover:text-orange-400 transition">Projects</a>
+      <a href="#blog" class="hover:text-orange-400 transition">Writing</a>
+      <a href="#achievements" class="hover:text-orange-400 transition">Achievements</a>
+      <a href="#testimonials" class="hover:text-orange-400 transition">Reviews</a>
+      <a href="#contact" class="hover:text-orange-400 transition">Contact</a>
+    </div>
+    <p class="text-xs text-slate-600">© 2026 Vikas Kumar · Built with care.</p>
   </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-[#0d1117] text-gray-300 py-10 text-center">
-  <p class="text-lg font-semibold">Let's build something <span class="text-orange-500">meaningful</span>.</p>
-  <p class="text-sm mt-2 mb-6">Data science isn’t just about algorithms — it’s about creating solutions that make a real difference.</p>
-  <div class="flex justify-center space-x-4 text-xl mb-6">
-    <a href="#" class="hover:text-white">🔗</a>
-    <a href="#" class="hover:text-white">🐦</a>
-    <a href="#" class="hover:text-white">📸</a>
-  </div>
-  <p class="text-xs">Built with ❤️ by Vikas Kumar • MSBA '26 - Wake Forest University</p>
-  <p class="text-xs mt-1">© 2024 All rights reserved.</p>
 </footer>
+
+<!-- ───────────────── SCRIPTS ───────────────── -->
+<script>
+  // Dark/Light Mode Toggle
+  const html = document.documentElement;
+  const toggle = document.getElementById('theme-toggle');
+  const icon = document.getElementById('theme-icon');
+
+  // Load saved preference
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') {
+    html.classList.remove('dark');
+    icon.className = 'fas fa-sun text-sm';
+  } else {
+    html.classList.add('dark');
+    icon.className = 'fas fa-moon text-sm';
+  }
+
+  toggle.addEventListener('click', () => {
+    const isDark = html.classList.toggle('dark');
+    icon.className = isDark ? 'fas fa-moon text-sm' : 'fas fa-sun text-sm';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+
+  // Mobile Menu
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  function closeMobileMenu() { mobileMenu.classList.remove('open'); }
+
+  // Scroll Progress Bar
+  window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / height * 100) + '%';
+  });
+
+  // Section Reveal on Scroll
+  const reveals = document.querySelectorAll('.section-reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Active nav link highlight
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('text-orange-500', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // ───── VISITOR COUNTER ─────
+  (function() {
+    const KEY = 'vk_visits';
+    const now = Date.now();
+    let visits = JSON.parse(localStorage.getItem(KEY) || '[]');
+    visits.push(now);
+    // Keep only last 365 days worth
+    visits = visits.filter(t => now - t < 366 * 86400000);
+    localStorage.setItem(KEY, JSON.stringify(visits));
+
+    const cnt7   = visits.filter(t => now - t < 7   * 86400000).length;
+    const cnt90  = visits.filter(t => now - t < 90  * 86400000).length;
+    const cnt365 = visits.length;
+
+    // Seed base numbers — real visits accumulate on top
+    document.getElementById('cnt-7').textContent   = cnt7   + 38;
+    document.getElementById('cnt-90').textContent  = cnt90  + 274;
+    document.getElementById('cnt-365').textContent = cnt365 + 891;
+
+    // Show counter widget after 3s
+    setTimeout(() => {
+      const w = document.getElementById('visit-counter');
+      w.style.pointerEvents = 'auto';
+      w.style.opacity = '1';
+    }, 3000);
+  })();
+
+  // ───── VISITOR MODAL ─────
+  (function() {
+    const SEEN_KEY = 'vk_visitor_seen';
+    if (!localStorage.getItem(SEEN_KEY)) {
+      setTimeout(() => {
+        const modal = document.getElementById('visitor-modal');
+        const box   = document.getElementById('visitor-modal-box');
+        modal.style.pointerEvents = 'auto';
+        modal.style.opacity = '1';
+        box.style.transform = 'scale(1)';
+      }, 1800);
+    }
+  })();
+
+  function submitVisitor() {
+    const name  = document.getElementById('visitor-name').value.trim();
+    const email = document.getElementById('visitor-email').value.trim();
+    if (name || email) {
+      const log = JSON.parse(localStorage.getItem('vk_visitor_log') || '[]');
+      log.push({ name, email, ts: new Date().toISOString() });
+      localStorage.setItem('vk_visitor_log', JSON.stringify(log));
+      fetch('https://formspree.io/f/mkopobdz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name: name || '(not provided)', email: email || '(not provided)', source: 'portfolio-visitor-modal' })
+      }).catch(() => {});
+    }
+    closeVisitorModal();
+  }
+
+  function closeVisitorModal() {
+    const modal = document.getElementById('visitor-modal');
+    const box   = document.getElementById('visitor-modal-box');
+    modal.style.opacity = '0';
+    box.style.transform = 'scale(0.95)';
+    setTimeout(() => { modal.style.pointerEvents = 'none'; }, 300);
+    localStorage.setItem('vk_visitor_seen', '1');
+  }
+
+
+  // ───── NEURAL NETWORK CANVAS ─────
+  (function() {
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, nodes = [], animId;
+    const NODE_COUNT = 60;
+    const MAX_DIST = 160;
+    const isDark = () => document.documentElement.classList.contains('dark');
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+
+    function initNodes() {
+      nodes = Array.from({ length: NODE_COUNT }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2 + 1.2
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      const dark = isDark();
+      const nodeColor  = dark ? 'rgba(249,115,22,0.55)' : 'rgba(249,115,22,0.35)';
+      const lineBase   = dark ? '249,115,22' : '249,115,22';
+
+      // update
+      nodes.forEach(n => {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      });
+
+      // lines
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < MAX_DIST) {
+            const alpha = (1 - dist / MAX_DIST) * (dark ? 0.25 : 0.12);
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${lineBase},${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // nodes
+      nodes.forEach(n => {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = nodeColor;
+        ctx.fill();
+      });
+
+      if (!window._neuralPaused) animId = requestAnimationFrame(draw);
+    }
+
+    function start() {
+      resize();
+      initNodes();
+      if (animId) cancelAnimationFrame(animId);
+      draw();
+    }
+
+    window.addEventListener('resize', () => { resize(); });
+    // Restart on theme toggle to pick up color
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      setTimeout(() => {}, 50);
+    });
+
+    start();
+
+    window._neuralPaused = false;
+    window.toggleNeural = function() {
+      window._neuralPaused = !window._neuralPaused;
+      const label = document.getElementById('neural-label');
+      const icon  = document.getElementById('neural-icon');
+      if (window._neuralPaused) {
+        cancelAnimationFrame(animId);
+        label.textContent = 'Network paused';
+        icon.classList.remove('bg-orange-400', 'animate-pulse');
+        icon.classList.add('bg-slate-400');
+      } else {
+        label.textContent = 'Network live';
+        icon.classList.add('bg-orange-400', 'animate-pulse');
+        icon.classList.remove('bg-slate-400');
+        draw();
+      }
+    };
+  })();
+
+  // ───── TYPEWRITER — KEEP ADDING, NEVER ERASE ─────
+  (function() {
+    const roles = [
+      'RAG Architect',
+      'LLM Engineer',
+      'Knowledge Graph Builder',
+      'Agentic AI Developer',
+      'Prompt Engineer',
+      'ML Systems Builder'
+    ];
+    const el = document.getElementById('typewriter-text');
+    let roleIdx = 0, charIdx = 0, built = '';
+
+    function tick() {
+      const current = roles[roleIdx];
+      charIdx++;
+      el.textContent = built + current.slice(0, charIdx);
+      if (charIdx < current.length) {
+        setTimeout(tick, 68);
+      } else {
+        // Role fully typed — lock it in, pause, then start next
+        built += current;
+        roleIdx++;
+        if (roleIdx < roles.length) {
+          built += ' · ';
+          el.textContent = built;
+          charIdx = 0;
+          setTimeout(tick, 600);
+        }
+        // All roles done — just leave it as is
+      }
+    }
+    setTimeout(tick, 1200);
+  })();
+
+  // ───── ANIMATED COUNT-UP ON IMPACT SECTION ─────
+  (function() {
+    const targets = [
+      { id: 'cnt-stat-0', end: 3.2,  suffix: 'M',  prefix: '$', decimals: 1 },
+      { id: 'cnt-stat-1', end: 97,   suffix: '%',  prefix: '',  decimals: 0 },
+      { id: 'cnt-stat-2', end: 96,   suffix: '%',  prefix: '',  decimals: 0 },
+      { id: 'cnt-stat-3', end: 23,   suffix: '%',  prefix: '',  decimals: 0 },
+      { id: 'cnt-stat-4', end: 3,    suffix: 'K+', prefix: '',  decimals: 0 },
+      { id: 'cnt-stat-5', end: 10,   suffix: '',   prefix: '',  decimals: 0 },
+    ];
+
+    // Add IDs to stat-number divs
+    // (done via JS since they are already rendered)
+    function addIds() {
+      const nums = document.querySelectorAll('.stat-number');
+      nums.forEach((el, i) => { if (targets[i]) el.id = targets[i].id; });
+    }
+
+    function animateCount(el, target) {
+      const duration = 1600;
+      const start = performance.now();
+      const prefix  = target.prefix;
+      const suffix  = target.suffix;
+      const decimals = target.decimals;
+
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const val = ease * target.end;
+        el.textContent = prefix + (decimals ? val.toFixed(decimals) : Math.round(val)) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = prefix + target.end.toFixed(decimals) + suffix;
+      }
+      requestAnimationFrame(step);
+    }
+
+    const impactSection = document.getElementById('impact');
+    let triggered = false;
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !triggered) {
+        triggered = true;
+        addIds();
+        targets.forEach(t => {
+          const el = document.getElementById(t.id);
+          if (el) animateCount(el, t);
+        });
+      }
+    }, { threshold: 0.3 });
+    if (impactSection) obs.observe(impactSection);
+  })();
+
+
+
+
+  // ───── 3D CARD TILT ─────
+  (function() {
+    const TILT = 10; // max degrees
+    document.querySelectorAll('.glow-card, .stat-card').forEach(card => {
+      card.classList.add('tilt-card');
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width  - 0.5;
+        const y = (e.clientY - r.top)  / r.height - 0.5;
+        card.style.transform = `perspective(600px) rotateY(${x * TILT}deg) rotateX(${-y * TILT}deg) scale(1.02)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)';
+      });
+    });
+  })();
+
+
+  // ───── CURSOR SPOTLIGHT (dark mode glow only) ─────
+  (function() {
+    const spot = document.getElementById('cursor-spotlight');
+    document.addEventListener('mousemove', e => {
+      spot.style.left = e.clientX + 'px';
+      spot.style.top  = e.clientY + 'px';
+    });
+  })();
+  // ───── SCROLL TO TOP ON LOAD ─────
+  window.addEventListener('load', () => window.scrollTo({ top: 0, behavior: 'instant' }));
+  history.scrollRestoration = 'manual';
+
+
+  // ───── BACK TO TOP ─────
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('back-to-top');
+    if (window.scrollY > 400) {
+      btn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      btn.classList.add('opacity-100', 'translate-y-0');
+    } else {
+      btn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+      btn.classList.remove('opacity-100', 'translate-y-0');
+    }
+  });
+
+  // ───── PROJECT FILTER ─────
+  function filterProjects(cat) {
+    // Update button styles
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      const isActive = btn.dataset.filter === cat;
+      btn.className = isActive
+        ? 'filter-btn active-filter px-4 py-2 rounded-full text-sm font-medium bg-orange-500 text-white transition'
+        : 'filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition';
+    });
+    // Show/hide cards
+    document.querySelectorAll('#projects-grid > div').forEach(card => {
+      const tag = card.querySelector('[data-category]');
+      if (!tag) return;
+      const cardCat = tag.dataset.category;
+      const show = cat === 'all' || cardCat.includes(cat);
+      card.style.transition = 'opacity 0.3s, transform 0.3s';
+      card.style.opacity    = show ? '1' : '0.15';
+      card.style.transform  = show ? 'scale(1)' : 'scale(0.97)';
+      card.style.pointerEvents = show ? 'auto' : 'none';
+    });
+  }
+
+  // ───── SHARE PORTFOLIO ─────
+  function sharePortfolio() {
+    const data = { title: 'Vikas Kumar | AI/ML Engineer', url: window.location.href };
+    if (navigator.share) {
+      navigator.share(data).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      const btn = document.querySelector('[onclick="sharePortfolio()"]');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> Link Copied!';
+      btn.classList.add('text-green-500', 'border-green-400');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('text-green-500','border-green-400'); }, 2000);
+    }
+  }
+
+</script>
 
 </body>
 </html>
