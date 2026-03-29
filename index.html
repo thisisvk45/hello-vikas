@@ -503,6 +503,92 @@
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
+    /* ════════════════════════════════
+       MOBILE RESPONSIVE FIXES
+    ════════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* Chat widget — full width on mobile */
+      #chat-window {
+        width: calc(100vw - 24px) !important;
+        height: 70vh !important;
+        right: 12px !important;
+        left: 12px !important;
+        bottom: 80px !important;
+      }
+      #chat-toggle-btn {
+        width: 46px !important;
+        height: 46px !important;
+        bottom: 16px !important;
+        right: 16px !important;
+      }
+
+      /* Visitor counter — smaller on mobile */
+      #visit-counter {
+        bottom: 16px !important;
+        left: 12px !important;
+        min-width: 160px !important;
+        padding: 10px 12px !important;
+        font-size: 10px !important;
+      }
+
+      /* Hide currently building card on mobile */
+      #building-card { display: none !important; }
+
+      /* Command palette full width */
+      #cmd-box { width: 95vw !important; }
+      #cmd-overlay { padding-top: 10vh !important; }
+
+      /* Hero section */
+      #home { padding-top: 100px !important; padding-left: 20px !important; padding-right: 20px !important; }
+
+      /* Timeline — remove left padding on mobile */
+      .timeline-item { padding-left: 28px !important; }
+      .timeline-dot { left: -28px !important; }
+
+      /* Impact grid — 2 cols on mobile */
+      #impact .grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+      /* Testimonials — single col */
+      #testimonials .grid { grid-template-columns: 1fr !important; }
+
+      /* GitHub stats grid — 2 cols */
+      #gh-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+      /* Reduce hero text size */
+      h1 { font-size: 2.2rem !important; line-height: 1.2 !important; }
+
+      /* Stack pills wrap properly */
+      .flex-wrap { gap: 6px !important; }
+
+      /* Section padding */
+      section { padding-left: 16px !important; padding-right: 16px !important; }
+
+      /* Back to top / progress bar */
+      #progress-bar { height: 2px !important; }
+
+      /* Tilt cards — disable 3D tilt on touch */
+      .tilt-card { transform: none !important; }
+
+      /* Modal */
+      #visitor-modal > div { margin: 16px !important; padding: 24px !important; }
+
+      /* Spotlight — disable on mobile */
+      #cursor-spotlight { display: none !important; }
+
+      /* Mouse trail — disable on mobile */
+      .trail-dot { display: none !important; }
+
+      /* Neural canvas — lighter on mobile */
+      #neural-canvas { opacity: 0.4 !important; }
+    }
+
+    /* Small phones */
+    @media (max-width: 400px) {
+      h1 { font-size: 1.8rem !important; }
+      #visit-counter { display: none !important; }
+    }
+
   </style>
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3QZKNEFV0"></script>
