@@ -2,6 +2,21 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Vikas Kumar - AI/ML Engineer specializing in RAG, LLMs, and Knowledge Graphs. MSBA at Wake Forest University. Building intelligent AI systems that create real business impact.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://helloviks.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://helloviks.com/">
+  <meta property="og:title" content="Vikas Kumar | AI/ML Engineer">
+  <meta property="og:description" content="RAG Architect, LLM Engineer, Knowledge Graph Builder. MSBA at Wake Forest. Building AI that creates real business impact.">
+  <meta property="og:image" content="https://helloviks.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@imvk45">
+  <meta name="twitter:title" content="Vikas Kumar | AI/ML Engineer">
+  <meta name="twitter:description" content="RAG Architect, LLM Engineer, Knowledge Graph Builder. MSBA at Wake Forest University.">
+  <meta name="twitter:image" content="https://helloviks.com/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23f97316'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='bold' font-size='18' fill='white'>V</text></svg>">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vikas Kumar | AI/ML Engineer</title>
 
@@ -141,6 +156,131 @@
     }
     .tilt-card:hover { box-shadow: 0 24px 60px rgba(249,115,22,0.18); }
 
+
+    /* ── AI Chat Widget ── */
+    #chat-widget { font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; }
+    #chat-window {
+      position: fixed; bottom: 90px; right: 24px; z-index: 300;
+      width: 300px; height: 400px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      display: flex; flex-direction: column;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(249,115,22,0.1);
+      transform: scale(0.95) translateY(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #chat-window.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #chat-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #21262d;
+      display: flex; align-items: center; justify-content: space-between;
+      border-radius: 12px 12px 0 0;
+      background: #161b22;
+    }
+    .chat-dot { width: 12px; height: 12px; border-radius: 50%; }
+    #chat-messages {
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #30363d #0d1117;
+    }
+    #chat-messages::-webkit-scrollbar { width: 4px; }
+    #chat-messages::-webkit-scrollbar-track { background: #0d1117; }
+    #chat-messages::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+    .msg-user {
+      align-self: flex-end;
+      background: #1a2332;
+      border: 1px solid #1d4ed8;
+      color: #93c5fd;
+      padding: 8px 12px; border-radius: 8px 8px 2px 8px;
+      font-size: 12px; max-width: 85%; line-height: 1.5;
+    }
+    .msg-ai {
+      align-self: flex-start;
+      color: #e6edf3;
+      font-size: 12px; max-width: 92%; line-height: 1.7;
+    }
+    .msg-ai .prompt-prefix { color: #f97316; margin-right: 6px; }
+    .msg-ai .ai-text { color: #adbac7; }
+    .typing-dots span {
+      display: inline-block; width: 4px; height: 4px;
+      background: #f97316; border-radius: 50%; margin: 0 2px;
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+    #chat-input-area {
+      padding: 12px 16px;
+      border-top: 1px solid #21262d;
+      display: flex; gap: 8px; align-items: center;
+      background: #161b22;
+      border-radius: 0 0 12px 12px;
+    }
+    #chat-prompt-sign { color: #f97316; font-size: 13px; font-weight: bold; }
+    #chat-input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: #e6edf3; font-size: 12px; font-family: inherit;
+      caret-color: #f97316;
+    }
+    #chat-input::placeholder { color: #484f58; }
+    #chat-send {
+      background: none; border: none; color: #f97316;
+      cursor: pointer; font-size: 14px; padding: 2px 4px;
+      transition: color 0.2s; line-height: 1;
+    }
+    #chat-send:hover { color: #fb923c; }
+    .chat-suggestion {
+      background: #161b22; border: 1px solid #30363d;
+      color: #8b949e; font-size: 11px; padding: 5px 10px;
+      border-radius: 4px; cursor: pointer; font-family: inherit;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .chat-suggestion:hover { border-color: #f97316; color: #f97316; background: #1a110500; }
+    #chat-toggle-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 300;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #1e293b;
+      border: 1.5px solid #334155;
+      color: #f97316; font-size: 16px; font-weight: 700;
+      cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-family: monospace;
+    }
+    /* Light mode: dark button so it contrasts on white bg */
+    html:not(.dark) #chat-toggle-btn {
+      background: #1e293b;
+      border-color: #334155;
+      color: #f97316;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    /* Dark mode: lighter button so it stands out on dark bg */
+    html.dark #chat-toggle-btn {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #ea580c;
+      box-shadow: 0 8px 24px rgba(249,115,22,0.2);
+    }
+    #chat-toggle-btn:hover { border-color: #f97316; box-shadow: 0 0 20px rgba(249,115,22,0.35); transform: scale(1.05); }
+    .chat-badge {
+      position: absolute; top: -3px; right: -3px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #f97316; border: 2px solid #0d1117;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:0.7} }
+
+
+    /* Active nav link */
+    nav a.nav-active { color: #f97316 !important; }
+
     /* Neural network canvas */
     #neural-canvas {
       position: absolute;
@@ -183,6 +323,157 @@
 
     /* Tag pill */
     .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+    /* Print styles */
+    @media print {
+      #navbar, #chat-widget, #visit-counter, footer { display: none !important; }
+      body { background: white !important; color: black !important; }
+      section { break-inside: avoid; }
+      * { animation: none !important; transition: none !important; }
+      a { color: #ea580c !important; }
+    }
+
+    /* 404 Overlay */
+    #overlay-404 {
+      display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0d1117;
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 24px;
+      font-family: 'Courier New', monospace;
+    }
+    #overlay-404.show { display: flex; }
+    #overlay-404 .err-code {
+      font-size: clamp(80px,20vw,140px); font-weight:900;
+      color: #f97316; line-height:1; letter-spacing:-4px;
+    }
+    #overlay-404 .err-prompt { color:#f97316; margin-top:28px; font-size:14px; }
+    #overlay-404 .err-msg { color:#adbac7; font-size:14px; margin-top:8px; max-width:380px; line-height:1.7; }
+    #overlay-404 .err-btn {
+      display:inline-block; margin-top:28px; padding:10px 24px;
+      background:#f97316; color:white; border-radius:8px; text-decoration:none;
+      font-size:13px; font-weight:600; transition:background 0.2s;
+    }
+    #overlay-404 .err-btn:hover { background:#ea580c; }
+    #overlay-404 .err-line { width:100%; max-width:420px; height:1px; background:#21262d; margin:24px auto; }
+    #overlay-404 .err-sub { color:#484f58; font-size:11px; }
+    @keyframes cur-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .cur-blink { animation: cur-blink 1s step-end infinite; color:#f97316; }
+
+    /* ── Grain texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 1000;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── Mouse trail particle ── */
+    .trail-dot {
+      position: fixed; pointer-events: none; z-index: 9998;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #f97316;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    /* ── Command palette ── */
+    #cmd-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9990;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+      align-items: flex-start; justify-content: center;
+      padding-top: 15vh;
+    }
+    #cmd-overlay.show { display: flex; }
+    #cmd-box {
+      width: min(560px, 90vw);
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+    }
+    #cmd-input-wrap {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px; border-bottom: 1px solid #21262d;
+    }
+    #cmd-input-wrap i { color: #484f58; font-size: 14px; }
+    #cmd-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: #e6edf3; font-size: 15px;
+      font-family: 'Inter', sans-serif;
+    }
+    #cmd-input::placeholder { color: #484f58; }
+    #cmd-hint { color: #30363d; font-size: 11px; font-family: monospace; }
+    #cmd-results { max-height: 320px; overflow-y: auto; padding: 6px; }
+    .cmd-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 8px; cursor: pointer;
+      transition: background 0.1s;
+    }
+    .cmd-item:hover, .cmd-item.cmd-selected { background: #21262d; }
+    .cmd-item i { color: #f97316; width: 16px; text-align: center; font-size: 13px; }
+    .cmd-item-label { color: #e6edf3; font-size: 13px; font-weight: 500; }
+    .cmd-item-sub { color: #484f58; font-size: 11px; margin-left: auto; }
+    #cmd-footer {
+      padding: 8px 16px; border-top: 1px solid #21262d;
+      display: flex; gap: 16px;
+      font-size: 10px; color: #484f58; font-family: monospace;
+    }
+    #cmd-footer kbd {
+      background: #21262d; border: 1px solid #30363d;
+      border-radius: 3px; padding: 1px 5px; font-size: 10px; color: #8b949e;
+    }
+
+    /* ── Keyboard shortcut toast ── */
+    #shortcut-toast {
+      position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%) translateY(10px);
+      z-index: 9000; background: #161b22; border: 1px solid #30363d;
+      border-radius: 8px; padding: 8px 16px; font-size: 12px;
+      color: #adbac7; font-family: monospace;
+      opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap;
+    }
+    #shortcut-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── GitHub commit ticker ── */
+    #gh-commits { list-style: none; padding: 0; margin: 0; }
+    #gh-commits li {
+      padding: 8px 0; border-bottom: 1px solid #21262d;
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 11px; font-family: 'Courier New', monospace;
+      animation: fadeIn 0.4s ease;
+    }
+    #gh-commits li:last-child { border-bottom: none; }
+    .commit-sha { color: #f97316; flex-shrink: 0; }
+    .commit-msg { color: #adbac7; flex: 1; }
+    .commit-repo { color: #484f58; flex-shrink: 0; }
+
+    /* ── Currently building card ── */
+    #building-card {
+      position: fixed; top: 80px; right: 16px; z-index: 200;
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 11px; font-family: monospace; color: #adbac7;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      max-width: 220px; cursor: pointer;
+      transform: translateX(260px);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    #building-card.visible { transform: translateX(0); }
+    #building-card .bc-title { color: #f97316; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    #building-card .bc-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+    #building-card .bc-close { float: right; color: #484f58; font-size: 13px; margin-left: 8px; }
+
+    /* ── Konami / confetti ── */
+    .confetti-piece {
+      position: fixed; pointer-events: none; z-index: 9999;
+      width: 8px; height: 8px; border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
   </style>
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3QZKNEFV0"></script>
@@ -212,7 +503,7 @@
 </div>
 
 <!-- ───── VISITOR COUNTER WIDGET ───── -->
-<div id="visit-counter" class="fixed bottom-5 right-5 z-50 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg px-5 py-4 text-xs opacity-0 transition-opacity duration-500 pointer-events-none" style="min-width:200px">
+<div id="visit-counter" class="fixed bottom-5 left-5 z-50 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg px-5 py-4 text-xs opacity-0 transition-opacity duration-500 pointer-events-none" style="min-width:200px">
   <p class="font-semibold text-slate-700 dark:text-slate-200 mb-3 text-xs uppercase tracking-widest">Portfolio Views</p>
   <div class="space-y-2">
     <div class="flex justify-between items-center">
@@ -254,6 +545,7 @@
       <a href="#blog"         class="hover:text-orange-500 transition">Writing</a>
       <a href="#achievements" class="hover:text-orange-500 transition">Achievements</a>
       <a href="#testimonials" class="hover:text-orange-500 transition">Reviews</a>
+      <a href="#github"       class="hover:text-orange-500 transition">GitHub</a>
       <a href="#contact"      class="hover:text-orange-500 transition">Contact</a>
     </nav>
 
@@ -757,6 +1049,8 @@
 </section>
 
 <!-- ───────────────── PROJECTS ───────────────── -->
+
+
 <section id="projects" class="py-24 px-6 bg-white dark:bg-[#0d1117] section-reveal circuit-bg">
   <div class="max-w-6xl mx-auto">
     <div class="text-center mb-14">
@@ -892,7 +1186,7 @@
       </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
+    <div id="medium-posts" class="grid md:grid-cols-3 gap-6">
       <!-- Article 1 -->
       <a href="https://medium.com/@imvk45" target="_blank" class="group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block">
         <div class="h-1.5 bg-gradient-to-r from-orange-500 to-amber-500"></div>
@@ -1120,6 +1414,41 @@
   </div>
 </section>
 
+
+<!-- ───── GITHUB STATS ───── -->
+<section id="github" class="py-16 px-6 bg-white dark:bg-[#080d14] section-reveal">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <p class="text-orange-500 font-semibold text-sm uppercase tracking-widest mb-2">Open Source</p>
+      <h2 class="text-3xl font-bold">GitHub Activity</h2>
+    </div>
+    <div class="grid sm:grid-cols-4 gap-4 mb-8" id="gh-stats-grid">
+      <div class="bg-slate-50 dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-xl p-5 text-center">
+        <div id="gh-contrib-6m" class="text-2xl font-bold text-orange-500">--</div>
+        <div class="text-xs text-slate-500 mt-1">Contributions (6 mo)</div>
+      </div>
+      <div class="bg-slate-50 dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-xl p-5 text-center">
+        <div id="gh-contrib-18m" class="text-2xl font-bold text-orange-500">--</div>
+        <div class="text-xs text-slate-500 mt-1">Contributions (18 mo)</div>
+      </div>
+      <div class="bg-slate-50 dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-xl p-5 text-center">
+        <div id="gh-repos" class="text-2xl font-bold text-orange-500">--</div>
+        <div class="text-xs text-slate-500 mt-1">Public Repos</div>
+      </div>
+      <div class="bg-slate-50 dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-xl p-5 text-center">
+        <div id="gh-langs" class="text-2xl font-bold text-orange-500">--</div>
+        <div class="text-xs text-slate-500 mt-1">Languages</div>
+      </div>
+    </div>
+    <!-- Contribution heatmap via ghchart -->
+    <div class="bg-slate-50 dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-xl p-6 overflow-x-auto text-center">
+      <p class="text-xs text-slate-400 mb-3 uppercase tracking-widest">Contribution Activity</p>
+      <img id="gh-chart" src="https://ghchart.rshah.org/f97316/thisisvk45" alt="GitHub contribution chart" loading="lazy" class="mx-auto max-w-full rounded opacity-90" style="filter: invert(0);">
+      <p class="text-xs text-slate-400 mt-3"><a href="https://github.com/thisisvk45" target="_blank" class="hover:text-orange-500 transition">github.com/thisisvk45 →</a></p>
+    </div>
+  </div>
+</section>
+
 <!-- ───────────────── CONTACT ───────────────── -->
 <section id="contact" class="py-24 px-6 bg-slate-50 dark:bg-[#0a0f1a] section-reveal">
   <div class="max-w-5xl mx-auto">
@@ -1184,11 +1513,7 @@
 </section>
 
 
-<!-- Back to Top -->
-<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" 
-  class="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/30 flex items-center justify-center text-lg transition-all duration-300 opacity-0 translate-y-4 pointer-events-none">
-  ↑
-</button>
+
 
 <!-- ───────────────── FOOTER ───────────────── -->
 <footer class="bg-[#080d14] text-slate-400 py-12 px-6 text-center">
@@ -1558,17 +1883,7 @@
   history.scrollRestoration = 'manual';
 
 
-  // ───── BACK TO TOP ─────
-  window.addEventListener('scroll', () => {
-    const btn = document.getElementById('back-to-top');
-    if (window.scrollY > 400) {
-      btn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-      btn.classList.add('opacity-100', 'translate-y-0');
-    } else {
-      btn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
-      btn.classList.remove('opacity-100', 'translate-y-0');
-    }
-  });
+
 
   // ───── PROJECT FILTER ─────
   function filterProjects(cat) {
@@ -1607,7 +1922,509 @@
     }
   }
 
+
+
+  // ───── ACTIVE NAV HIGHLIGHT ─────
+  (function() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(a => {
+            a.classList.toggle('nav-active', a.getAttribute('href') === '#' + e.target.id);
+          });
+        }
+      });
+    }, { threshold: 0.35 });
+    sections.forEach(s => obs.observe(s));
+  })();
+
+  // ───── GITHUB STATS FETCH ─────
+  (function() {
+    // Repos count
+    fetch('https://api.github.com/users/thisisvk45')
+      .then(r => r.json())
+      .then(u => { document.getElementById('gh-repos').textContent = u.public_repos || '--'; })
+      .catch(() => {});
+
+    // Contribution counts from public API (no auth needed)
+    fetch('https://github-contributions-api.jogruber.de/v4/thisisvk45?y=last')
+      .then(r => r.json())
+      .then(data => {
+        if (!data.contributions) return;
+        const now = new Date();
+        const ms6m  = 6  * 30 * 24 * 60 * 60 * 1000;
+        const ms18m = 18 * 30 * 24 * 60 * 60 * 1000;
+        let sum6m = 0, sum18m = 0;
+        data.contributions.forEach(function(d) {
+          const diff = now - new Date(d.date);
+          if (diff <= ms6m)  sum6m  += d.count;
+          if (diff <= ms18m) sum18m += d.count;
+        });
+        document.getElementById('gh-contrib-6m').textContent  = sum6m  || '--';
+        document.getElementById('gh-contrib-18m').textContent = sum18m || '--';
+      })
+      .catch(() => {});
+
+    // Stars from repos
+    fetch('https://api.github.com/users/thisisvk45/repos?per_page=100')
+      .then(r => r.json())
+      .then(repos => {
+        if (!Array.isArray(repos)) return;
+        const langs = new Set(repos.map(r => r.language).filter(Boolean)).size;
+        document.getElementById('gh-langs').textContent = langs;
+      }).catch(() => {});
+
+    // Dark mode heatmap invert
+    function updateChart() {
+      const img = document.getElementById('gh-chart');
+      if (img) img.style.filter = document.documentElement.classList.contains('dark') ? 'invert(0.85) hue-rotate(180deg)' : 'none';
+    }
+    updateChart();
+    new MutationObserver(updateChart).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  })();
+
+  // ───── DYNAMIC MEDIUM POSTS ─────
+  (function() {
+    const COLORS = [
+      ['from-orange-500','to-amber-500','bg-orange-100 dark:bg-orange-900/30','text-orange-600 dark:text-orange-400'],
+      ['from-sky-500','to-blue-500','bg-sky-100 dark:bg-sky-900/30','text-sky-600 dark:text-sky-400'],
+      ['from-purple-500','to-indigo-500','bg-purple-100 dark:bg-purple-900/30','text-purple-600 dark:text-purple-400'],
+      ['from-green-500','to-teal-500','bg-green-100 dark:bg-green-900/30','text-green-600 dark:text-green-400'],
+      ['from-rose-500','to-pink-500','bg-rose-100 dark:bg-rose-900/30','text-rose-600 dark:text-rose-400'],
+      ['from-slate-400','to-slate-500','bg-slate-100 dark:bg-slate-700','text-slate-600 dark:text-slate-300'],
+    ];
+    const rssUrl = encodeURIComponent('https://medium.com/feed/@imvk45');
+    fetch('https://api.rss2json.com/v1/api.json?rss_url=' + rssUrl + '&api_key=public&count=6')
+      .then(r => r.json())
+      .then(data => {
+        if (!data.items || !data.items.length) return;
+        const grid = document.getElementById('medium-posts');
+        if (!grid) return;
+        // Remove skeletons
+        grid.querySelectorAll('.skeleton-card').forEach(el => el.remove());
+        data.items.forEach((item, i) => {
+          const col = COLORS[i % COLORS.length];
+          const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+          const cats = item.categories && item.categories.length ? item.categories.slice(0,2).join(' · ') : 'AI';
+          // strip html from description
+          const tmp = document.createElement('div'); tmp.innerHTML = item.description || ''; 
+          const desc = (tmp.textContent || '').substring(0, 140).trim() + '...';
+          const card = document.createElement('a');
+          card.href = item.link || 'https://medium.com/@imvk45';
+          card.target = '_blank';
+          card.rel = 'noopener';
+          card.className = 'group glow-card bg-white dark:bg-[#161b22] rounded-2xl overflow-hidden shadow-sm block';
+          card.innerHTML = '<div class="h-1.5 bg-gradient-to-r ' + col[0] + ' ' + col[1] + '"></div>'
+            + '<div class="p-6">'
+            + '<span class="tag ' + col[2] + ' ' + col[3] + ' mb-3 inline-block">' + cats + '</span>'
+            + '<div class="text-xs text-slate-400 mb-2">' + date + '</div>'
+            + '<p class="font-semibold text-base mb-2 group-hover:text-orange-500 transition leading-snug">' + (item.title || '') + '</p>'
+            + '<p class="text-sm text-slate-500 dark:text-slate-400">' + desc + '</p>'
+            + '<div class="mt-4 text-orange-500 text-sm font-medium">Read on Medium →</div>'
+            + '</div>';
+          grid.appendChild(card);
+        });
+      })
+      .catch(() => {
+        // On error keep static fallback — do nothing (static cards still rendered in HTML or skeletons)
+      });
+  })();
+
+  // ───── CHAT AUTO-OPEN ON EVERY VISIT ─────
+  setTimeout(function() {
+    if (typeof toggleChat === 'function') toggleChat();
+  }, 2800);
+
+
+  // ───── AI CHAT WIDGET ─────
+  (function() {
+    const API_KEY = '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';
+    const MODEL   = 'openai/gpt-4o-mini';
+    const SYSTEM  = `You are an AI assistant for Vikas Kumar's portfolio website. Answer questions about Vikas concisely and professionally.
+
+PROFILE:
+- Name: Vikas Kumar | AI/ML Engineer
+- Education: MSBA (Business Analytics) at Wake Forest University (GPA 3.9/4.0, 2024-2025); B.Tech Computer Science from Plaksha University (2020-2024)
+- Location: San Francisco Bay Area
+
+EXPERIENCE:
+1. Aditya Birla Group (June 2024 - Aug 2024): Analyst Intern - Deployed enterprise AI platforms saving $3.2M annually, reducing manual processes by 23%, report generation from 2h to 15min
+2. Lawroom AI (Jan 2024 - Apr 2024): AI/ML Engineer - Multilingual legal AI chatbot using InLegalBERT + ElevenLabs TTS, 10 languages, 2000+ users
+3. Plaksha University AI Research Lab (Jul 2023 - Dec 2023): ML Research Intern - NLP pipeline, 97% accuracy on legal document classification
+4. AIESEC (Dec 2021 - Jun 2023): National Marketing Director - Led 2000+ member campaigns
+
+SKILLS: Python, PyTorch, LangChain, RAG pipelines, Knowledge Graphs, LLMs, OpenAI/Anthropic APIs, SQL, Tableau, Power BI, AWS, GCP, Azure
+
+PROJECTS:
+- MedRAG: AI medical knowledge base using RAG + LangChain
+- LegalMind: Multilingual legal AI (InLegalBERT)
+- ESG Analytics: ESG-financial performance correlation (NLP + ML)
+- NeuroChat: Mental health chatbot (GPT-3)
+- Financial Intelligence: LSTM stock prediction models
+- Knowledge Graph Builder: Entity extraction and graph visualization
+
+ACHIEVEMENTS:
+- 2nd place national AI competition (among 120+ graduate teams)
+- CFA Institute Research Challenge - Campus Winner
+- DataCamp Scholarship recipient
+- National Sports Recognition (Cricket, representing university)
+- Spirit of Plaksha Award (leadership recognition)
+- AIESEC National Marketing Director (led 2000+ members)
+
+Keep answers brief (2-4 sentences). If asked something unrelated to Vikas Kumar's professional profile, respond with: 'That's outside the scope of Vikas's profile — I can only answer questions about his experience, skills, projects, and background.' Do not make up information.`;
+
+    let messages = [];
+    let chatOpen = false;
+
+    window.toggleChat = function() {
+      chatOpen = !chatOpen;
+      const win = document.getElementById('chat-window');
+      const badge = document.getElementById('chat-badge');
+      const icon  = document.getElementById('chat-btn-icon');
+      if (chatOpen) {
+        win.classList.add('open');
+        badge.style.display = 'none';
+        icon.textContent = 'x';
+        document.getElementById('chat-input').focus();
+      } else {
+        win.classList.remove('open');
+        icon.textContent = '>_';
+      }
+    };
+
+    window.sendSuggestion = function(btn) {
+      document.getElementById('chat-input').value = btn.textContent;
+      const sugg = document.getElementById('chat-suggestions');
+      if (sugg) sugg.style.display = 'none';
+      sendMessage();
+    };
+
+    window.sendMessage = function() {
+      const input = document.getElementById('chat-input');
+      const text  = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      appendMsg('user', text);
+      messages.push({ role: 'user', content: text });
+
+      const sugg = document.getElementById('chat-suggestions');
+      if (sugg) sugg.style.display = 'none';
+
+      const typingId = 'typing-' + Date.now();
+      const typingEl = document.createElement('div');
+      typingEl.id = typingId;
+      typingEl.className = 'msg-ai';
+      typingEl.innerHTML = '<span class="prompt-prefix">vikas@ai:~$</span><span class="typing-dots"><span></span><span></span><span></span></span>';
+      document.getElementById('chat-messages').appendChild(typingEl);
+      scrollChat();
+
+      fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + API_KEY,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://helloviks.com/',
+          'X-Title': 'Vikas Kumar Portfolio'
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [{ role: 'system', content: SYSTEM }, ...messages],
+          max_tokens: 200,
+          temperature: 0.7
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        const reply = data.choices && data.choices[0] && data.choices[0].message
+          ? data.choices[0].message.content
+          : 'Sorry, I could not get a response right now.';
+        const el = document.getElementById(typingId);
+        if (el) el.remove();
+        appendMsg('ai', reply);
+        messages.push({ role: 'assistant', content: reply });
+        if (messages.length > 12) messages = messages.slice(-12);
+      })
+      .catch(function() {
+        const el = document.getElementById(typingId);
+        if (el) el.remove();
+        appendMsg('ai', 'Connection error. Please try again.');
+      });
+    };
+
+    function appendMsg(role, text) {
+      const msgs = document.getElementById('chat-messages');
+      const el = document.createElement('div');
+      if (role === 'user') {
+        el.className = 'msg-user';
+        el.textContent = text;
+        msgs.appendChild(el);
+        scrollChat();
+      } else {
+        el.className = 'msg-ai';
+        el.innerHTML = '<span class="prompt-prefix">vikas@ai:~$</span><span class="ai-text"></span>';
+        msgs.appendChild(el);
+        scrollChat();
+        const aiSpan = el.querySelector('.ai-text');
+        let i = 0;
+        const iv = setInterval(function() {
+          aiSpan.textContent += text[i];
+          i++;
+          if (i >= text.length) clearInterval(iv);
+          scrollChat();
+        }, 12);
+      }
+    }
+
+    function scrollChat() {
+      const msgs = document.getElementById('chat-messages');
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+  })();
+
+
+
+  // ───── 404 HASH ROUTING ─────
+  (function() {
+    const known = ['','home','impact','education','experience','projects','blog','achievements','testimonials','github','contact'];
+    function check404() {
+      const hash = window.location.hash.replace('#','').toLowerCase();
+      const overlay = document.getElementById('overlay-404');
+      if (hash && !known.includes(hash)) {
+        overlay.classList.add('show');
+      } else {
+        overlay.classList.remove('show');
+      }
+    }
+    window.addEventListener('hashchange', check404);
+    check404();
+  })();
+
+
+  // ═══════════════════════════════════════════
+  // FEATURE PACK
+  // ═══════════════════════════════════════════
+
+  // ── 2. Mouse trail particles ──
+  (function() {
+    const pool = [];
+    const MAX = 18;
+    for (let i = 0; i < MAX; i++) {
+      const d = document.createElement('div');
+      d.className = 'trail-dot';
+      d.style.opacity = '0';
+      document.body.appendChild(d);
+      pool.push({ el: d, x: 0, y: 0, life: 0 });
+    }
+    let idx = 0;
+    document.addEventListener('mousemove', function(e) {
+      const p = pool[idx % MAX];
+      idx++;
+      p.el.style.left = e.clientX + 'px';
+      p.el.style.top  = e.clientY + 'px';
+      p.el.style.opacity = '0.7';
+      p.el.style.transform = 'translate(-50%,-50%) scale(1)';
+      clearTimeout(p.timer);
+      p.timer = setTimeout(function() {
+        p.el.style.opacity = '0';
+        p.el.style.transform = 'translate(-50%,-50%) scale(0)';
+      }, 80);
+    });
+  })();
+
+  // ── 3. Command palette ──
+  const CMD_ITEMS = [
+    { icon:'fas fa-home',        label:'Home',          sub:'#home',          action: ()=>{ scrollTo('#home'); } },
+    { icon:'fas fa-chart-bar',   label:'Impact',        sub:'#impact',        action: ()=>{ scrollTo('#impact'); } },
+    { icon:'fas fa-graduation-cap', label:'Education',  sub:'#education',     action: ()=>{ scrollTo('#education'); } },
+    { icon:'fas fa-briefcase',   label:'Experience',    sub:'#experience',    action: ()=>{ scrollTo('#experience'); } },
+    { icon:'fas fa-code',        label:'Projects',      sub:'#projects',      action: ()=>{ scrollTo('#projects'); } },
+    { icon:'fas fa-pen',         label:'Writing',       sub:'#blog',          action: ()=>{ scrollTo('#blog'); } },
+    { icon:'fas fa-trophy',      label:'Achievements',  sub:'#achievements',  action: ()=>{ scrollTo('#achievements'); } },
+    { icon:'fas fa-star',        label:'Reviews',       sub:'#testimonials',  action: ()=>{ scrollTo('#testimonials'); } },
+    { icon:'fab fa-github',      label:'GitHub',        sub:'#github',        action: ()=>{ scrollTo('#github'); } },
+    { icon:'fas fa-envelope',    label:'Contact',       sub:'#contact',       action: ()=>{ scrollTo('#contact'); } },
+    { icon:'fas fa-file-alt',    label:'Open Resume',   sub:'↗ Drive',        action: ()=>{ window.open('https://drive.google.com/file/d/1juSI7-GTBaysavI9jBoh0zTJtWXsMmtN/view','_blank'); } },
+    { icon:'fas fa-calendar-alt',label:'Book a Call',   sub:'↗ Calendly',     action: ()=>{ window.open('https://calendly.com/kumav25-wfu/30min','_blank'); } },
+    { icon:'fab fa-linkedin-in', label:'LinkedIn',      sub:'↗ Profile',      action: ()=>{ window.open('https://linkedin.com/in/vikaskumar45/','_blank'); } },
+    { icon:'fab fa-medium-m',    label:'Medium',        sub:'↗ Articles',     action: ()=>{ window.open('https://medium.com/@imvk45','_blank'); } },
+    { icon:'fas fa-moon',        label:'Toggle Theme',  sub:'dark / light',   action: ()=>{ document.getElementById('theme-toggle').click(); } },
+  ];
+  function scrollTo(hash) { document.querySelector(hash)?.scrollIntoView({ behavior:'smooth' }); }
+  let cmdSel = 0;
+  let cmdFiltered = [...CMD_ITEMS];
+
+  function openCmd() {
+    document.getElementById('cmd-overlay').classList.add('show');
+    document.getElementById('cmd-input').value = '';
+    cmdSel = 0;
+    renderCmd(CMD_ITEMS);
+    setTimeout(()=>document.getElementById('cmd-input').focus(), 50);
+  }
+  window.closeCmd = function() {
+    document.getElementById('cmd-overlay').classList.remove('show');
+  };
+  function renderCmd(items) {
+    cmdFiltered = items;
+    const el = document.getElementById('cmd-results');
+    el.innerHTML = items.map((it, i) =>
+      '<div class="cmd-item' + (i===cmdSel?' cmd-selected':'') + '" onclick="cmdSelect(' + i + ')">' +
+      '<i class="' + it.icon + '"></i>' +
+      '<span class="cmd-item-label">' + it.label + '</span>' +
+      '<span class="cmd-item-sub">' + it.sub + '</span>' +
+      '</div>'
+    ).join('');
+  }
+  window.filterCmd = function() {
+    const q = document.getElementById('cmd-input').value.toLowerCase();
+    cmdSel = 0;
+    renderCmd(q ? CMD_ITEMS.filter(it => it.label.toLowerCase().includes(q) || it.sub.toLowerCase().includes(q)) : CMD_ITEMS);
+  };
+  window.cmdKey = function(e) {
+    if (e.key === 'Escape') { closeCmd(); return; }
+    if (e.key === 'ArrowDown') { cmdSel = Math.min(cmdSel+1, cmdFiltered.length-1); renderCmd(cmdFiltered); e.preventDefault(); }
+    if (e.key === 'ArrowUp')   { cmdSel = Math.max(cmdSel-1, 0); renderCmd(cmdFiltered); e.preventDefault(); }
+    if (e.key === 'Enter')     { cmdSelect(cmdSel); }
+  };
+  window.cmdSelect = function(i) {
+    closeCmd();
+    cmdFiltered[i]?.action();
+  };
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmd(); }
+  });
+
+
+  // ── 5. Konami code easter egg ──
+  (function() {
+    const CODE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let pos = 0;
+    document.addEventListener('keydown', function(e) {
+      if (e.key === CODE[pos]) { pos++; if (pos === CODE.length) { pos=0; launchConfetti(); } }
+      else pos = 0;
+    });
+    function launchConfetti() {
+      const colors = ['#f97316','#fb923c','#fbbf24','#34d399','#60a5fa','#a78bfa','#f472b6'];
+      for (let i=0; i<120; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.cssText = 'left:' + Math.random()*100 + 'vw;top:-10px;background:' + colors[Math.floor(Math.random()*colors.length)] +
+          ';width:' + (4+Math.random()*8) + 'px;height:' + (4+Math.random()*8) + 'px;animation-duration:' + (1.5+Math.random()*2) + 's;animation-delay:' + Math.random()*0.8 + 's;border-radius:' + (Math.random()>0.5?'50%':'2px');
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(), 4000);
+      }
+      const t = document.getElementById('shortcut-toast');
+      t.textContent = '🎉 Konami code unlocked! You found the easter egg!';
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), 3500);
+    }
+  })();
+
+  // ── 8. Currently building card ──
+  setTimeout(function() {
+    const card = document.getElementById('building-card');
+    if (card) card.classList.add('visible');
+  }, 5000);
+
+  // ── 9. Add skills nav link ──
+  // (done in HTML)
+
+
+
 </script>
+
+
+<!-- ── AI Chat Widget ── -->
+<div id="chat-widget">
+
+  <!-- Toggle button -->
+  <button id="chat-toggle-btn" onclick="toggleChat()" title="Ask AI about Vikas">
+    <span id="chat-btn-icon">&gt;_</span>
+    <div class="chat-badge" id="chat-badge"></div>
+  </button>
+
+  <!-- Chat window -->
+  <div id="chat-window">
+    <!-- Header -->
+    <div id="chat-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="chat-dot" style="background:#ff5f57;"></div>
+        <div class="chat-dot" style="background:#febc2e;"></div>
+        <div class="chat-dot" style="background:#28c840;"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="color:#f97316;font-size:11px;font-weight:600;">vikas@portfolio</span>
+        <span style="color:#484f58;font-size:11px;">~</span>
+        <span style="color:#adbac7;font-size:11px;">ai-assistant</span>
+      </div>
+      <button onclick="toggleChat()" style="background:none;border:none;color:#484f58;cursor:pointer;font-size:14px;padding:0;" title="Close">&times;</button>
+    </div>
+
+    <!-- Messages area -->
+    <div id="chat-messages">
+      <div class="msg-ai">
+        <span class="prompt-prefix">vikas@ai:~$</span>
+        <span class="ai-text">Hello! I'm Vikas's AI assistant. Ask me anything about his experience, projects, or skills.</span>
+      </div>
+      <!-- Suggestion chips -->
+      <div id="chat-suggestions" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+        <button class="chat-suggestion" onclick="sendSuggestion(this)">What are Vikas&apos;s skills?</button>
+        <button class="chat-suggestion" onclick="sendSuggestion(this)">Tell me about his projects</button>
+        <button class="chat-suggestion" onclick="sendSuggestion(this)">His work experience?</button>
+        <button class="chat-suggestion" onclick="sendSuggestion(this)">Education background?</button>
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div id="chat-input-area">
+      <span id="chat-prompt-sign">$</span>
+      <input id="chat-input" type="text" placeholder="ask about vikas..." autocomplete="off" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button id="chat-send" onclick="sendMessage()" title="Send">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── 404 Overlay ── -->
+<div id="overlay-404">
+  <div class="err-code">404</div>
+  <div class="err-prompt">vikas@portfolio:~$ <span class="cur-blink">_</span></div>
+  <div class="err-msg">bash: page not found<br>This path does not exist in the repository.</div>
+  <div class="err-line"></div>
+  <div class="err-sub">exit code 404 &bull; no such file or directory</div>
+  <a href="#home" class="err-btn" onclick="document.getElementById('overlay-404').classList.remove('show')">↩ cd ~/home</a>
+</div>
+
+<!-- ── Currently Building Card ── -->
+<div id="building-card" onclick="this.classList.remove('visible')">
+  <div class="bc-title"><div class="bc-dot"></div> Currently Building <span class="bc-close">&times;</span></div>
+  <div>Agentic RAG system with real-time knowledge graph updates and multi-hop reasoning</div>
+</div>
+
+<!-- ── Command Palette ── -->
+<div id="cmd-overlay" onclick="if(event.target===this)closeCmd()">
+  <div id="cmd-box">
+    <div id="cmd-input-wrap">
+      <i class="fas fa-search"></i>
+      <input id="cmd-input" placeholder="Search or jump to..." autocomplete="off" oninput="filterCmd()" onkeydown="cmdKey(event)">
+      <span id="cmd-hint">ESC to close</span>
+    </div>
+    <div id="cmd-results"></div>
+    <div id="cmd-footer">
+      <span><kbd>↑↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> select</span>
+      <span><kbd>ESC</kbd> close</span>
+      <span><kbd>⌘K</kbd> open</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Keyboard shortcut toast ── -->
+<div id="shortcut-toast"></div>
 
 </body>
 </html>
