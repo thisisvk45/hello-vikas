@@ -2040,8 +2040,7 @@
 
   // ───── AI CHAT WIDGET ─────
   (function() {
-    const API_KEY = 'REDACTED';
-    const MODEL   = 'openai/gpt-4o-mini';
+    const MODEL = 'openai/gpt-4o-mini';
     const SYSTEM  = `You are an AI assistant for Vikas Kumar's portfolio website. Answer questions about Vikas concisely and professionally.
 
 PROFILE:
@@ -2121,14 +2120,9 @@ Keep answers brief (2-4 sentences). If asked something unrelated to Vikas Kumar'
       document.getElementById('chat-messages').appendChild(typingEl);
       scrollChat();
 
-      fetch('https://openrouter.ai/api/v1/chat/completions', {
+      fetch('https://viks-ai-proxy.kumav25.workers.dev', {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + API_KEY,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://helloviks.com/',
-          'X-Title': 'Vikas Kumar Portfolio'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: MODEL,
           messages: [{ role: 'system', content: SYSTEM }, ...messages],
