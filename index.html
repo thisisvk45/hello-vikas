@@ -193,7 +193,9 @@
       background: #161b22;
       border-bottom-color: #21262d;
     }
-    .chat-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .chat-dot { width: 12px; height: 12px; border-radius: 50%; cursor: default; transition: opacity 0.15s; }
+    .chat-dot:hover { opacity: 0.7; }
+    .chat-dot-close { cursor: pointer !important; }
     #chat-messages {
       flex: 1; overflow-y: auto; padding: 16px;
       display: flex; flex-direction: column; gap: 12px;
@@ -1197,61 +1199,71 @@
     <!-- Filter Tabs -->
     <div class="flex flex-wrap justify-center gap-2 mb-10">
       <button onclick="filterProjects('all')" data-filter="all" class="filter-btn active-filter px-4 py-2 rounded-full text-sm font-medium bg-orange-500 text-white transition">All</button>
-      <button onclick="filterProjects('llm')" data-filter="llm" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">LLM / RAG</button>
+      <button onclick="filterProjects('llm')" data-filter="llm" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">LLM / Agentic</button>
       <button onclick="filterProjects('ml')" data-filter="ml" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">ML</button>
-      <button onclick="filterProjects('analytics')" data-filter="analytics" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">Analytics</button>
+      <button onclick="filterProjects('cv')" data-filter="cv" class="filter-btn px-4 py-2 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-orange-400 hover:text-orange-500 transition">Computer Vision</button>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6" id="projects-grid">
-      <!-- Card 1 -->
+      <!-- Card 1 — OmniPro Support Agent -->
+      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm" style="border:1px solid #f9731640;">
+        <div class="h-1.5 bg-gradient-to-r from-orange-500 to-red-500"></div>
+        <div class="p-6">
+          <span class="tag bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 mb-3 inline-block">Agentic AI · Voice · Vision</span>
+          <p class="font-bold text-lg mb-2" data-category="llm cv">OmniPro 220 Support Agent</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Multimodal voice agent for the Vulcan OmniPro 220 welder built in 49 hours for Prox (YC F25). Hands-free voice loop, three-layer photo diagnosis with vision grounding, multi-agent deliberation (Safety + Quality reviewers), 14 structured tools, persistent cross-session memory, and customer mode toggle.</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Next.js</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Claude API</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">ElevenLabs</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">TypeScript</span>
+          </div>
+          <div class="flex items-center gap-4 mt-4">
+            <a href="https://omnipro.helloviks.com" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-orange-500 hover:text-orange-400 transition"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+            <a href="https://github.com/thisisvk45/prox-challenge" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-orange-400 transition"><i class="fab fa-github"></i> Code</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 — JobForge -->
       <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
         <div class="h-1.5 bg-gradient-to-r from-sky-500 to-blue-500"></div>
         <div class="p-6">
-          <span class="tag bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 mb-3 inline-block">NLP · Chatbot</span>
-          <p class="font-bold text-lg mb-2" data-category="llm">AI Chatbot for United Airlines</p>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Built an NLP-based conversational agent that reduced response time by 75% and improved CSAT scores using intent classification and contextual response generation.</p>
+          <span class="tag bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 mb-3 inline-block">Agentic AI · Automation</span>
+          <p class="font-bold text-lg mb-2" data-category="llm ml">JobForge</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Autonomous end-to-end job search pipeline. Scrapes Greenhouse, Lever, and Ashby APIs via Playwright, uses Claude Haiku for pre-filtering and Sonnet for deep evaluation, RAG over personal corpus via ChromaDB, auto-generates tailored CVs and cover letters, and submits applications autonomously. 97/97 tests passing.</p>
           <div class="flex flex-wrap gap-1.5">
             <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">NLP</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">TensorFlow</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Flask</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Claude API</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">ChromaDB</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Playwright</span>
+          </div>
+          <div class="flex items-center gap-4 mt-4">
+            <a href="https://github.com/thisisvk45/Jobforge" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-orange-400 transition"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
-        <div class="h-1.5 bg-gradient-to-r from-green-500 to-emerald-500"></div>
-        <div class="p-6">
-          <span class="tag bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 mb-3 inline-block">LSTM · Forecasting</span>
-          <p class="font-bold text-lg mb-2" data-category="ml">Predictive Maintenance System</p>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">LSTM time series models to forecast equipment failures, cutting downtime by 60% by enabling proactive maintenance scheduling for industrial clients.</p>
-          <div class="flex flex-wrap gap-1.5">
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LSTM</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Time Series</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Scikit-learn</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
+      <!-- Card 3 — InstantID -->
       <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
         <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
         <div class="p-6">
-          <span class="tag bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 mb-3 inline-block">Finance · Analytics</span>
-          <p class="font-bold text-lg mb-2" data-category="analytics">ESG vs Financial Performance</p>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Statistical analysis of ESG scores vs stock performance correlation across the S&P 500, using Selenium-scraped data and regression models to surface investment insights.</p>
+          <span class="tag bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 mb-3 inline-block">CV · Generative AI · Research</span>
+          <p class="font-bold text-lg mb-2" data-category="cv ml">InstantID — Facial Identity Persistence</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Research project solving identity drift in diffusion models. Custom identity aggregation layer on top of InstantID using ArcFace embeddings. Aggregates 4-5 reference images into a single 512-dim master vector with confidence-weighted fusion. Targeting UCSD and Berkeley RA applications.</p>
           <div class="flex flex-wrap gap-1.5">
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Selenium</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Matplotlib</span>
-            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Statistics</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">InsightFace</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">ArcFace</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">SDXL</span>
+            <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Gradio</span>
+          </div>
+          <div class="flex items-center gap-4 mt-4">
+            <a href="https://github.com/thisisvk45/InstantID" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-orange-400 transition"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
 
-      <!-- Card 4 -->
+      <!-- Card 4 — Fraud Detection -->
       <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
         <div class="h-1.5 bg-gradient-to-r from-pink-500 to-red-500"></div>
         <div class="p-6">
@@ -1267,12 +1279,12 @@
         </div>
       </div>
 
-      <!-- Card 5 -->
+      <!-- Card 5 — Logistics Optimization -->
       <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
-        <div class="h-1.5 bg-gradient-to-r from-orange-500 to-amber-500"></div>
+        <div class="h-1.5 bg-gradient-to-r from-green-500 to-emerald-500"></div>
         <div class="p-6">
-          <span class="tag bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 mb-3 inline-block">Optimization · Supply Chain</span>
-          <p class="font-bold text-lg mb-2" data-category="ml analytics">Logistics Optimization Engine</p>
+          <span class="tag bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 mb-3 inline-block">Optimization · Supply Chain</span>
+          <p class="font-bold text-lg mb-2" data-category="ml">Logistics Optimization Engine</p>
           <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Distributed route clustering system using ML and operations research that delivered $3.2M in annual cost savings and 23% faster delivery across six enterprise clusters at Aditya Birla.</p>
           <div class="flex flex-wrap gap-1.5">
             <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Python</span>
@@ -1283,7 +1295,7 @@
         </div>
       </div>
 
-      <!-- Card 6 -->
+      <!-- Card 6 — Legal AI Chatbot -->
       <div class="glow-card bg-slate-50 dark:bg-[#121c2b] rounded-2xl overflow-hidden shadow-sm">
         <div class="h-1.5 bg-gradient-to-r from-teal-500 to-cyan-500"></div>
         <div class="p-6">
@@ -2195,20 +2207,23 @@ PROFILE:
 - Location: San Francisco Bay Area
 
 EXPERIENCE:
-1. Aditya Birla Group (June 2024 - Aug 2024): Analyst Intern - Deployed enterprise AI platforms saving $3.2M annually, reducing manual processes by 23%, report generation from 2h to 15min
-2. Lawroom AI (Jan 2024 - Apr 2024): AI/ML Engineer - Multilingual legal AI chatbot using InLegalBERT + ElevenLabs TTS, 10 languages, 2000+ users
-3. Plaksha University AI Research Lab (Jul 2023 - Dec 2023): ML Research Intern - NLP pipeline, 97% accuracy on legal document classification
-4. AIESEC (Dec 2021 - Jun 2023): National Marketing Director - Led 2000+ member campaigns
+1. SViam.ai (Present): Founding AI Engineer - Building a voice-driven technical interview platform with real-time speech processing and adaptive follow-up questioning
+2. Prox (YC F25) Challenge (Apr 2025): Built a multimodal voice agent for the Vulcan OmniPro 220 welder in 49 hours — hands-free voice loop, photo diagnosis with vision grounding, multi-agent deliberation with 14 tools. Live at omnipro.helloviks.com
+3. Aditya Birla Group (June 2024 - Aug 2024): Analyst Intern - Deployed enterprise AI platforms saving $3.2M annually, reducing manual processes by 23%, report generation from 2h to 15min
+4. Lawroom AI (Jan 2024 - Apr 2024): AI/ML Engineer - Multilingual legal AI chatbot using InLegalBERT + ElevenLabs TTS, 10 languages, 2000+ users
+5. Plaksha University AI Research Lab (Jul 2023 - Dec 2023): ML Research Intern - NLP pipeline, 97% accuracy on legal document classification
+6. AIESEC (Dec 2021 - Jun 2023): National Marketing Director - Led 2000+ member campaigns
 
-SKILLS: Python, PyTorch, LangChain, RAG pipelines, Knowledge Graphs, LLMs, OpenAI/Anthropic APIs, SQL, Tableau, Power BI, AWS, GCP, Azure
+SKILLS: Python, TypeScript, Next.js, PyTorch, LangChain, RAG pipelines, Knowledge Graphs, LLMs, Claude API, OpenAI API, ElevenLabs, SQL, Tableau, Power BI, AWS, GCP, Azure
 
 PROJECTS:
-- MedRAG: AI medical knowledge base using RAG + LangChain
-- LegalMind: Multilingual legal AI (InLegalBERT)
-- ESG Analytics: ESG-financial performance correlation (NLP + ML)
-- NeuroChat: Mental health chatbot (GPT-3)
-- Financial Intelligence: LSTM stock prediction models
-- Knowledge Graph Builder: Entity extraction and graph visualization
+- OmniPro 220 Support Agent: Multimodal voice agent for Prox (YC F25) — hands-free voice loop, three-layer photo diagnosis, multi-agent deliberation, 14 structured tools, built in 49 hours (omnipro.helloviks.com)
+- JobForge: Autonomous end-to-end job search pipeline — scrapes Greenhouse/Lever/Ashby, Claude Haiku pre-filtering + Sonnet deep evaluation, RAG via ChromaDB, auto CV/cover letter generation, autonomous submission via Playwright, 97/97 tests passing
+- InstantID — Facial Identity Persistence: Research project solving identity drift in diffusion models using ArcFace embeddings, custom identity aggregation layer, confidence-weighted fusion of 4-5 reference images into 512-dim master vector. Targeting UCSD/Berkeley RA applications
+- SViam.ai: Voice-driven technical interview platform (Founding AI Engineer)
+- Multilingual Legal AI Chatbot: InLegalBERT + ElevenLabs TTS, 10 Indian languages, 3000+ users at Lawroom AI
+- Logistics Optimization Engine: ML + operations research, $3.2M annual savings at Aditya Birla
+- Real-time Fraud Detection: XGBoost + Random Forest, 99.2% accuracy, Kafka streaming
 
 ACHIEVEMENTS:
 - 2nd place national AI competition (among 120+ graduate teams)
@@ -2507,9 +2522,9 @@ Keep answers brief (2-4 sentences). If asked something unrelated to Vikas Kumar'
     <!-- Header -->
     <div id="chat-header">
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="chat-dot" style="background:#ff5f57;"></div>
-        <div class="chat-dot" style="background:#febc2e;"></div>
-        <div class="chat-dot" style="background:#28c840;"></div>
+        <div class="chat-dot chat-dot-close" style="background:#ff5f57;" onclick="toggleChat()" title="Close"></div>
+        <div class="chat-dot" style="background:#febc2e;" title="Minimize"></div>
+        <div class="chat-dot" style="background:#28c840;" title="Maximize"></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span style="color:#f97316;font-size:11px;font-weight:600;">vikas@portfolio</span>
@@ -2559,7 +2574,7 @@ Keep answers brief (2-4 sentences). If asked something unrelated to Vikas Kumar'
 <!-- ── Currently Building Card ── -->
 <div id="building-card" onclick="this.classList.remove('visible')">
   <div class="bc-title"><div class="bc-dot"></div> Currently Building <span class="bc-close">&times;</span></div>
-  <div>Agentic RAG system with real-time knowledge graph updates and multi-hop reasoning</div>
+  <div>Multimodal voice agent for Prox (YC F25) — hands-free voice, photo diagnosis, multi-agent deliberation</div>
 </div>
 
 <!-- ── Command Palette ── -->
