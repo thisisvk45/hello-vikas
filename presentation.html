@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaign Strategy and Learnings | Buhi Supply Co.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ===================== DARK THEME (default) ===================== */
+  :root {
+    --bg: #0d1117;
+    --bg-card: #161b22;
+    --bg-card-hover: #1c2333;
+    --border: #30363d;
+    --border-glow: rgba(249, 115, 22, 0.25);
+    --text: #e6edf3;
+    --text-secondary: #c9d1d9;
+    --text-muted: #8b949e;
+    --text-faint: #484f58;
+    --orange: #f97316;
+    --orange-light: #fb923c;
+    --orange-dark: #ea580c;
+    --orange-glow: rgba(249, 115, 22, 0.12);
+    --orange-bg: #1c1410;
+    --green: #22c55e;
+    --green-light: #34d399;
+    --amber: #eab308;
+    --amber-light: #fbbf24;
+    --red: #ef4444;
+    --red-light: #f87171;
+    --purple: #8b5cf6;
+    --grid-color: rgba(249,115,22,0.04);
+    --overlay-bg: rgba(13,17,23,0.92);
+    --progress-from: #f97316;
+    --progress-to: #fb923c;
+    --shadow-card: 0 0 24px rgba(249,115,22,0.08);
+    --shadow-glow: 0 0 24px rgba(249,115,22,0.18);
+  }
+
+  /* ===================== LIGHT THEME ===================== */
+  html.light {
+    --bg: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --border: #e2e8f0;
+    --border-glow: rgba(249, 115, 22, 0.35);
+    --text: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --text-faint: #94a3b8;
+    --orange-bg: #fff7ed;
+    --grid-color: rgba(249,115,22,0.06);
+    --overlay-bg: rgba(248,250,252,0.92);
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.06);
+    --shadow-glow: 0 0 24px rgba(249,115,22,0.15);
+  }
+
+  html, body {
+    height: 100%; overflow: hidden;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.4s, color 0.4s;
+  }
+
+  /* Circuit grid overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none; z-index: 0;
+    transition: background 0.4s;
+  }
+  /* Grain texture */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    opacity: 0.03;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+  html.light body::after { opacity: 0.015; }
+
+  /* ── Theme toggle ── */
+  .theme-toggle {
+    position: fixed; top: 1.2rem; right: 1.5rem;
+    z-index: 200;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .45rem .7rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: all 0.3s;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  .theme-toggle:hover {
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+    transform: scale(1.05);
+  }
+  .theme-toggle .toggle-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--text-muted);
+  }
+
+  /* ── Deck / Slides ── */
+  .deck { position: relative; width: 100%; height: 100%; z-index: 1; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 3.5rem 5rem;
+    opacity: 0; visibility: hidden;
+    transform: translateY(24px);
+    transition: opacity 0.55s ease, transform 0.55s ease, visibility 0s 0.55s;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1; visibility: visible; transform: translateY(0);
+    transition: opacity 0.55s ease, transform 0.55s ease, visibility 0s 0s;
+  }
+
+  /* Stagger children */
+  .slide .anim {
+    opacity: 0; transform: translateY(18px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .slide.active .anim { opacity: 1; transform: translateY(0); }
+  .slide.active .anim:nth-child(1) { transition-delay: .08s; }
+  .slide.active .anim:nth-child(2) { transition-delay: .16s; }
+  .slide.active .anim:nth-child(3) { transition-delay: .24s; }
+  .slide.active .anim:nth-child(4) { transition-delay: .32s; }
+  .slide.active .anim:nth-child(5) { transition-delay: .40s; }
+  .slide.active .anim:nth-child(6) { transition-delay: .48s; }
+  .slide.active .anim:nth-child(7) { transition-delay: .56s; }
+  .slide.active .anim:nth-child(8) { transition-delay: .64s; }
+
+  /* ── Typography ── */
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 1rem;
+  }
+  h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.15; color: var(--text); }
+  h2 { font-size: 2rem; font-weight: 700; line-height: 1.2; margin-bottom: .5rem; color: var(--text); }
+  h3 { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+  .subtitle { font-size: 1.05rem; color: var(--text-secondary); font-weight: 400; margin-top: .6rem; }
+  .big-num { font-size: 2.6rem; font-weight: 900; line-height: 1; }
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; font-weight: 500; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1.5px; margin-top: .3rem;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s, background 0.3s;
+  }
+  .card:hover {
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-4px);
+    background: var(--bg-card-hover);
+  }
+  .card h3 { color: var(--orange); margin-bottom: .35rem; }
+  .card p { font-size: .85rem; color: var(--text-secondary); line-height: 1.5; }
+  .card .meta { font-size: .75rem; color: var(--text-muted); margin-top: .4rem; }
+
+  .card-grid { display: grid; gap: 1.25rem; width: 100%; max-width: 1100px; }
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem; font-weight: 600;
+    padding: .15rem .5rem; border-radius: 999px;
+    margin-top: .4rem; margin-right: .25rem;
+  }
+  .tag.backpack  { background: rgba(249,115,22,0.12); color: var(--orange); }
+  .tag.messenger { background: rgba(234,179,8,0.12); color: var(--amber); }
+  .tag.duffel    { background: rgba(34,197,94,0.12); color: var(--green); }
+
+  /* ── Persona cards ── */
+  .persona-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; width: 100%; max-width: 1100px; }
+
+  .persona-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(.22,1,.36,1);
+    position: relative;
+    opacity: 0; transform: translateY(24px) scale(0.97);
+  }
+  .slide.active .persona-card { opacity: 1; transform: translateY(0) scale(1); }
+  .slide.active .persona-card:nth-child(1) { transition-delay: .15s; }
+  .slide.active .persona-card:nth-child(2) { transition-delay: .25s; }
+  .slide.active .persona-card:nth-child(3) { transition-delay: .35s; }
+  .slide.active .persona-card:nth-child(4) { transition-delay: .45s; }
+
+  .persona-card:hover {
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-5px) scale(1.02);
+  }
+  .persona-card .emoji { font-size: 1.8rem; display: block; margin-bottom: .6rem; }
+  .persona-card h3 { color: var(--orange); font-size: .95rem; margin-bottom: .3rem; }
+  .persona-card p { font-size: .8rem; color: var(--text-secondary); line-height: 1.45; }
+  .persona-card .meta { font-size: .72rem; color: var(--text-muted); margin-top: .35rem; }
+  .persona-card .click-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6rem; color: var(--text-muted);
+    margin-top: .7rem; opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+  .persona-card:hover .click-hint { opacity: 1; color: var(--orange); }
+
+  /* ── Persona detail overlay ── */
+  .persona-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 200;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.35s, visibility 0s 0.35s;
+  }
+  .persona-overlay.open {
+    opacity: 1; visibility: visible;
+    transition: opacity 0.35s, visibility 0s 0s;
+  }
+  .persona-detail {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 18px;
+    padding: 2.5rem;
+    max-width: 750px; width: 90%;
+    max-height: 85vh; overflow-y: auto;
+    box-shadow: var(--shadow-glow);
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+  }
+  .persona-overlay.open .persona-detail { transform: scale(1) translateY(0); }
+  .persona-detail .close-btn {
+    position: absolute; top: 1rem; right: 1.2rem;
+    background: none; border: none; color: var(--text-muted);
+    font-size: 1.5rem; cursor: pointer;
+    transition: color 0.2s;
+  }
+  .persona-detail .close-btn:hover { color: var(--text); }
+  .persona-detail h2 { font-size: 1.5rem; color: var(--orange); margin-bottom: .3rem; }
+  .persona-detail .detail-product { font-size: .88rem; color: var(--text); font-weight: 600; margin-bottom: .2rem; }
+  .persona-detail .detail-meta { font-size: .82rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+
+  .detail-section { margin-bottom: 1.3rem; }
+  .detail-section h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: .5rem;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  .detail-section h4 .dot-icon {
+    width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0;
+  }
+  .detail-section p { font-size: .85rem; color: var(--text-secondary); line-height: 1.55; }
+  .detail-section p strong { color: var(--text); }
+
+  /* Colored left borders for worked/didnt sections */
+  .detail-section.worked {
+    border-left: 3px solid var(--green);
+    padding-left: 1rem;
+  }
+  .detail-section.didnt {
+    border-left: 3px solid var(--amber);
+    padding-left: 1rem;
+  }
+
+  .keyword-tag {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: .68rem; background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.15);
+    color: var(--text-secondary); padding: .2rem .55rem;
+    border-radius: 6px; margin: .15rem .2rem .15rem 0;
+    transition: background 0.2s;
+  }
+  .keyword-tag:hover { background: rgba(249,115,22,0.15); }
+
+  .detail-metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem;
+    margin-top: .5rem;
+  }
+  .detail-metric {
+    text-align: center; padding: .8rem;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .detail-metric .val { font-size: 1.3rem; font-weight: 800; color: var(--orange); }
+  .detail-metric .lbl { font-size: .65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: .2rem; }
+
+  .mini-chart { width: 100%; height: 120px; margin-top: .5rem; }
+
+  /* What I Learned section in overlay */
+  .learned-box {
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.2rem;
+    margin-top: .5rem;
+  }
+  .learned-box p { font-size: .84rem; color: var(--text-secondary); line-height: 1.55; }
+  .learned-box strong { color: var(--text); }
+
+  /* Strategy lesson highlight */
+  .round-body .lesson {
+    font-size: .76rem; color: var(--orange);
+    margin-top: .4rem; font-style: italic;
+    background: rgba(249,115,22,0.05);
+    border-left: 2px solid var(--orange);
+    padding: .35rem .6rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Timeline ── */
+  .timeline { width: 100%; max-width: 1100px; position: relative; }
+  .timeline-line {
+    position: absolute; left: 45px; top: 0; bottom: 0; width: 2px;
+    background: var(--border);
+  }
+  .timeline-line-fill {
+    width: 100%; height: 0%;
+    background: linear-gradient(180deg, var(--orange), var(--orange-light));
+    transition: height 1.2s cubic-bezier(.22,1,.36,1);
+    border-radius: 2px;
+  }
+  .slide.active .timeline-line-fill { height: 100%; }
+
+  .round-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 220px;
+    gap: 1.2rem; align-items: start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    opacity: 0; transform: translateX(-20px);
+    transition: all 0.5s cubic-bezier(.22,1,.36,1);
+  }
+  .slide.active .round-row { opacity: 1; transform: translateX(0); }
+  .slide.active .round-row:nth-child(2) { transition-delay: .15s; }
+  .slide.active .round-row:nth-child(3) { transition-delay: .30s; }
+  .slide.active .round-row:nth-child(4) { transition-delay: .45s; }
+  .slide.active .round-row:nth-child(5) { transition-delay: .60s; }
+
+  .round-row:hover {
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .round-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: #fff; background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    border-radius: 8px; padding: .3rem 0;
+    text-align: center; margin-top: .1rem;
+  }
+  .round-body h3 { color: var(--text); font-size: .92rem; margin-bottom: .3rem; }
+  .round-body p { font-size: .82rem; color: var(--text-secondary); line-height: 1.45; }
+  .round-stats { text-align: right; }
+  .round-stats .big-num { font-size: 1.5rem; color: var(--orange); }
+  .round-stats .label { font-size: .65rem; }
+  .round-metrics {
+    display: flex; gap: .6rem; margin-top: .5rem; justify-content: flex-end; flex-wrap: wrap;
+  }
+  .round-metric-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .62rem; font-weight: 600;
+    padding: .15rem .45rem; border-radius: 6px;
+    background: rgba(249,115,22,0.08); color: var(--text-secondary);
+  }
+
+  /* ── Results ── */
+  .stat-box { text-align: center; }
+  .stat-box .big-num { color: var(--orange); }
+
+  .chart-container {
+    width: 100%; max-width: 1000px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    margin-top: 1.25rem;
+  }
+  .chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+  .chart-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: .8rem;
+  }
+  .chart-card canvas { width: 100%; height: 200px; }
+
+  /* ── Display Ads ── */
+  .display-grid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1rem; width: 100%; max-width: 1000px;
+  }
+  .display-grid .card { text-align: center; }
+  .display-grid .big-num { font-size: 2rem; }
+
+  .funnel-row {
+    display: flex; align-items: center; gap: 1rem;
+    width: 100%; max-width: 1000px; margin-top: 1rem;
+  }
+  .funnel-step {
+    flex: 1; text-align: center; padding: 1rem;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .funnel-step .val { font-size: 1.2rem; font-weight: 800; }
+  .funnel-step .lbl { font-size: .65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: .2rem; }
+  .funnel-arrow { color: var(--text-muted); font-size: 1.2rem; }
+
+  .verdict {
+    margin-top: 1rem; padding: .9rem 1.3rem;
+    background: var(--orange-bg);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 12px;
+    font-size: .85rem; color: var(--orange);
+    text-align: center; max-width: 1000px; width: 100%;
+  }
+
+  /* ── Takeaways ── */
+  .takeaway-list { list-style: none; width: 100%; max-width: 900px; }
+  .takeaway-list li {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.3rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: .7rem;
+    opacity: 0; transform: translateX(-30px);
+    transition: all 0.5s cubic-bezier(.22,1,.36,1);
+  }
+  .slide.active .takeaway-list li { opacity: 1; transform: translateX(0); }
+  .slide.active .takeaway-list li:nth-child(1) { transition-delay: .10s; }
+  .slide.active .takeaway-list li:nth-child(2) { transition-delay: .20s; }
+  .slide.active .takeaway-list li:nth-child(3) { transition-delay: .30s; }
+  .slide.active .takeaway-list li:nth-child(4) { transition-delay: .40s; }
+  .slide.active .takeaway-list li:nth-child(5) { transition-delay: .50s; }
+
+  .takeaway-list li:hover { border-color: var(--border-glow); }
+  .takeaway-num { font-size: 1.3rem; font-weight: 800; color: var(--orange); min-width: 28px; }
+  .takeaway-list li p { font-size: .88rem; color: var(--text-secondary); line-height: 1.5; }
+  .takeaway-list li strong { color: var(--text); }
+
+  /* ── Thank you ── */
+  .thankyou h1 {
+    font-size: 3.2rem;
+    background: linear-gradient(135deg, var(--orange), var(--orange-light), var(--amber-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .contact-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .contact-row span { font-size: .9rem; color: var(--text-secondary); }
+
+  /* ── Bottom progress ── */
+  .progress-bottom {
+    position: fixed; bottom: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    transition: width 0.5s ease;
+    z-index: 100;
+  }
+
+  /* ── Nav dots ── */
+  .nav-dots {
+    position: fixed; right: 1.5rem; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 100;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(249,115,22,0.2);
+    border: none; cursor: pointer;
+    transition: all 0.3s; padding: 0;
+  }
+  .dot.active { background: var(--orange); transform: scale(1.4); box-shadow: 0 0 8px var(--orange-glow); }
+  .dot:hover { background: rgba(249,115,22,0.5); }
+
+  .slide-counter {
+    position: fixed; bottom: 1.5rem; right: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem; font-weight: 500;
+    color: var(--text-muted); letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  .hint {
+    position: fixed; bottom: 3rem; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .68rem; color: var(--text-muted);
+    opacity: 0.5; z-index: 100;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{ opacity:.3 } 50%{ opacity:.7 } }
+
+  /* ── Responsive ── */
+  @media (max-width: 960px) {
+    .slide { padding: 2rem 1.5rem; }
+    h1 { font-size: 2rem; } h2 { font-size: 1.5rem; }
+    .persona-grid, .card-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .display-grid { grid-template-columns: 1fr 1fr; }
+    .round-row { grid-template-columns: 75px 1fr; }
+    .round-stats { grid-column: 1/-1; text-align: left; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .chart-container { grid-template-columns: 1fr; }
+    .funnel-row { flex-wrap: wrap; }
+    .nav-dots { right: .7rem; }
+  }
+  @media (max-width: 600px) {
+    .persona-grid, .card-grid.cols-4, .card-grid.cols-3, .card-grid.cols-2 { grid-template-columns: 1fr; }
+    .display-grid { grid-template-columns: 1fr; }
+    .big-num { font-size: 2rem; }
+    .detail-metrics { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" id="themeToggle" title="Toggle theme">
+  <span id="themeIcon">🌙</span>
+  <span class="toggle-label" id="themeLabel">DARK</span>
+</button>
+
+<!-- Bottom progress -->
+<div class="progress-bottom" id="progress"></div>
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots"></nav>
+<!-- Counter -->
+<div class="slide-counter" id="slideCounter"></div>
+<!-- Hint -->
+<div class="hint" id="hint">Arrow keys or click to navigate</div>
+
+<!-- Persona overlay -->
+<div class="persona-overlay" id="personaOverlay">
+  <div class="persona-detail" id="personaDetail" style="position:relative;"></div>
+</div>
+
+<!-- ===== SLIDES ===== -->
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <section class="slide" data-slide="0">
+    <div class="anim" style="display:flex; align-items:center; gap:.8rem; margin-bottom:.5rem;">
+      <span class="kicker" style="margin-bottom:0;">BAN 6065</span>
+      <span style="color:var(--text-faint);">|</span>
+      <span style="font-size:.82rem; color:var(--text-muted); font-weight:500;">Digital Marketing · Wake Forest University</span>
+    </div>
+    <h1 class="anim" style="text-align:center; max-width:800px;">Campaign Strategy and Learnings</h1>
+    <p class="subtitle anim" style="text-align:center; max-width:600px;">
+      Buhi Supply Co. Digital Marketing Simulation
+    </p>
+    <p class="anim" style="margin-top:.8rem; font-size:.92rem; color:var(--text-muted);">
+      From <strong style="color:var(--orange);">$1,200</strong> to <strong style="color:var(--orange);">$30,700</strong> | Four Rounds, Three Products, One Strategy
+    </p>
+    <div class="anim" style="margin-top:2.5rem; display:flex; gap:2.5rem; flex-wrap:wrap; justify-content:center;">
+      <div style="text-align:center;">
+        <div class="big-num countup" data-target="65" data-prefix="$" style="color:var(--orange);">$0</div>
+        <div class="label">Backpack</div>
+      </div>
+      <div style="text-align:center;">
+        <div class="big-num countup" data-target="60" data-prefix="$" style="color:var(--orange-light);">$0</div>
+        <div class="label">Messenger</div>
+      </div>
+      <div style="text-align:center;">
+        <div class="big-num countup" data-target="40" data-prefix="$" style="color:var(--amber-light);">$0</div>
+        <div class="label">Duffel</div>
+      </div>
+    </div>
+    <p class="anim" style="margin-top:2rem; font-size:.9rem; color:var(--text-secondary);">
+      Vikas Kumar
+    </p>
+  </section>
+
+  <!-- SLIDE 2: Personas -->
+  <section class="slide" data-slide="1">
+    <span class="kicker anim">Audience Strategy</span>
+    <h2 class="anim" style="text-align:center; margin-bottom:1.25rem;">Who I Targeted</h2>
+    <p class="anim" style="font-size:.82rem; color:var(--text-muted); margin-bottom:1rem; text-align:center;">Click a persona to explore their campaign details</p>
+    <div class="persona-grid">
+      <div class="persona-card" data-persona="mindy">
+        <span class="emoji">🎒</span>
+        <h3>Back to School Mindy</h3>
+        <p>Full time student who values style and convenience for campus life.</p>
+        <div class="meta">Age 18 to 26</div>
+        <span class="tag backpack">Backpack</span>
+        <div class="click-hint">Click to expand</div>
+      </div>
+      <div class="persona-card" data-persona="tom">
+        <span class="emoji">🏔️</span>
+        <h3>Daypacker Tom</h3>
+        <p>Full time employee who values durability and functionality for everyday carry.</p>
+        <div class="meta">Age 24 to 31</div>
+        <span class="tag backpack">Backpack</span>
+        <span class="tag duffel">Duffel</span>
+        <div class="click-hint">Click to expand</div>
+      </div>
+      <div class="persona-card" data-persona="raj">
+        <span class="emoji">💼</span>
+        <h3>Up and Comer Raj</h3>
+        <p>Young professional who values style and functionality in a work bag.</p>
+        <div class="meta">Age 21 to 28</div>
+        <span class="tag messenger">Messenger</span>
+        <div class="click-hint">Click to expand</div>
+      </div>
+      <div class="persona-card" data-persona="jill">
+        <span class="emoji">⚡</span>
+        <h3>Energetic Jill</h3>
+        <p>Part time employee who values space and functionality for an active lifestyle.</p>
+        <div class="meta">Age 18 to 27</div>
+        <span class="tag messenger">Messenger</span>
+        <span class="tag duffel">Duffel</span>
+        <div class="click-hint">Click to expand</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: Strategy -->
+  <section class="slide" data-slide="2">
+    <span class="kicker anim">Round by Round</span>
+    <h2 class="anim" style="text-align:center; margin-bottom:1rem;">How My Strategy Evolved</h2>
+    <div class="timeline">
+      <div class="timeline-line"><div class="timeline-line-fill"></div></div>
+      <div class="round-row">
+        <div class="round-badge">Round 1</div>
+        <div class="round-body">
+          <h3>American Dream Backpack · Budget $1,200</h3>
+          <p>One campaign, one ad group, 20 keywords split between Mindy and Tom.</p>
+          <p class="lesson">Keywords not reflected in headlines, poor ad relevance.</p>
+        </div>
+        <div class="round-stats">
+          <div class="big-num countup" data-target="5005" data-prefix="$">$0</div>
+          <div class="label">Revenue</div>
+          <div class="round-metrics">
+            <span class="round-metric-pill">2,141 clicks</span>
+            <span class="round-metric-pill">CPC $0.56</span>
+          </div>
+        </div>
+      </div>
+      <div class="round-row">
+        <div class="round-badge">Round 2</div>
+        <div class="round-body">
+          <h3>+ Messenger Bag · Budget $2,400</h3>
+          <p>Separate ad groups for Raj and Jill. Backpack 2,153 clicks · Messenger 1,540 clicks.</p>
+          <p class="lesson">Raj 396 clicks vs Jill 1,144. Professional keywords underperform vs lifestyle.</p>
+        </div>
+        <div class="round-stats">
+          <div class="big-num countup" data-target="9520" data-prefix="$">$0</div>
+          <div class="label">Revenue</div>
+          <div class="round-metrics">
+            <span class="round-metric-pill">3,693 clicks</span>
+            <span class="round-metric-pill">CPC $0.65</span>
+          </div>
+        </div>
+      </div>
+      <div class="round-row">
+        <div class="round-badge">Round 3</div>
+        <div class="round-body">
+          <h3>+ Duffel Bag · Budget $4,800</h3>
+          <p>$2,400 to Duffel. Backpack 2,156 · Messenger 1,526 · Duffel 3,116 clicks.</p>
+          <p class="lesson">$498 budget unspent, directly cost the backpack click goal.</p>
+        </div>
+        <div class="round-stats">
+          <div class="big-num countup" data-target="18000" data-prefix="$">$0</div>
+          <div class="label">Revenue</div>
+          <div class="round-metrics">
+            <span class="round-metric-pill">6,798 clicks</span>
+            <span class="round-metric-pill">$498 unspent</span>
+          </div>
+        </div>
+      </div>
+      <div class="round-row">
+        <div class="round-badge">Round 4</div>
+        <div class="round-body">
+          <h3>+ Display Ads · Budget $7,500</h3>
+          <p>Display campaign for backpack. Rebalanced search budgets across all products.</p>
+          <p class="lesson">Data from prior rounds enabled precision, every dollar accounted for.</p>
+        </div>
+        <div class="round-stats">
+          <div class="big-num countup" data-target="30700" data-prefix="$">$0</div>
+          <div class="label">Revenue</div>
+          <div class="round-metrics">
+            <span class="round-metric-pill">8,986 clicks</span>
+            <span class="round-metric-pill">ROAS 4.09</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: Results + Charts -->
+  <section class="slide" data-slide="3">
+    <span class="kicker anim">Performance</span>
+    <h2 class="anim" style="text-align:center; margin-bottom:1rem;">Results by the Numbers</h2>
+    <div class="card-grid cols-4 anim" style="max-width:900px;">
+      <div class="card stat-box">
+        <div class="big-num countup" data-target="30700" data-prefix="$">$0</div>
+        <div class="label">Peak Revenue</div>
+      </div>
+      <div class="card stat-box">
+        <div class="big-num countup" data-target="8986" style="color:var(--orange-light);">0</div>
+        <div class="label">R4 Total Clicks</div>
+      </div>
+      <div class="card stat-box">
+        <div class="big-num" style="color:var(--green);">3x</div>
+        <div class="label">Duffel Click Goal</div>
+      </div>
+      <div class="card stat-box">
+        <div class="big-num countup" data-target="4.09" data-decimals="2" style="color:var(--orange);">0</div>
+        <div class="label">R4 ROAS</div>
+      </div>
+    </div>
+    <div class="chart-container anim">
+      <div class="chart-card">
+        <h4>Revenue Growth</h4>
+        <canvas id="revenueChart" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Clicks by Campaign</h4>
+        <canvas id="clicksChart" height="200"></canvas>
+        <div style="display:flex; justify-content:center; gap:1.5rem; margin-top:.6rem;">
+          <span style="display:flex; align-items:center; gap:.4rem; font-size:.7rem; color:var(--text-muted);"><span style="width:10px;height:10px;border-radius:2px;background:#f97316;display:inline-block;"></span> Backpack</span>
+          <span style="display:flex; align-items:center; gap:.4rem; font-size:.7rem; color:var(--text-muted);"><span style="width:10px;height:10px;border-radius:2px;background:#eab308;display:inline-block;"></span> Messenger</span>
+          <span style="display:flex; align-items:center; gap:.4rem; font-size:.7rem; color:var(--text-muted);"><span style="width:10px;height:10px;border-radius:2px;background:#22c55e;display:inline-block;"></span> Duffel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: Display Ads -->
+  <section class="slide" data-slide="4">
+    <span class="kicker anim">Experiment</span>
+    <h2 class="anim" style="text-align:center; margin-bottom:.5rem;">Display Ads | The Backpack Test</h2>
+    <p class="anim" style="font-size:.82rem; color:var(--text-muted); text-align:center; margin-bottom:1.25rem; max-width:700px;">
+      I ran a display campaign targeting women aged 25 to 34 with Back to School affinity and Shopping intent signals.
+      Unlike search ads where users are actively looking for a product, display ads appear while users browse other sites.
+      The goal: drive 39 conversions on a $2,490 budget.
+    </p>
+    <div class="card-grid cols-4 anim" style="max-width:1000px;">
+      <div class="card">
+        <div class="big-num countup" data-target="454742" style="font-size:1.8rem; color:var(--orange-light);">0</div>
+        <div class="label">Impressions</div>
+        <p style="font-size:.72rem; color:var(--text-muted); margin-top:.4rem;">Times the ad was shown, like a billboard 454K people drove past.</p>
+      </div>
+      <div class="card">
+        <div class="big-num countup" data-target="5680" style="font-size:1.8rem; color:var(--orange);">0</div>
+        <div class="label">Clicks</div>
+        <p style="font-size:.72rem; color:var(--text-muted); margin-top:.4rem;">Only 1.25% of viewers were interested enough to click through.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:1.8rem; font-weight:900; color:var(--amber);"><span class="countup" data-target="31">0</span> <span style="font-size:.85rem; font-weight:500; color:var(--text-muted);">/ 39</span></div>
+        <div class="label">Conversions</div>
+        <p style="font-size:.72rem; color:var(--text-muted); margin-top:.4rem;">Needed 39 purchases to break even. Got 31. Fell 8 short.</p>
+      </div>
+      <div class="card">
+        <div class="big-num countup" data-target="0.89" data-decimals="2" style="font-size:1.8rem; color:var(--red);">0</div>
+        <div class="label">ROAS</div>
+        <p style="font-size:.72rem; color:var(--text-muted); margin-top:.4rem;">For every $1 spent, only $0.89 came back. Below 1.0 = lost money.</p>
+      </div>
+    </div>
+    <div class="card-grid cols-4 anim" style="max-width:1000px; margin-top:.8rem;">
+      <div class="card stat-box">
+        <div class="big-num" style="font-size:1.4rem; color:var(--orange);">1.25%</div>
+        <div class="label">CTR</div>
+      </div>
+      <div class="card stat-box">
+        <div class="big-num" style="font-size:1.4rem;">$0.44</div>
+        <div class="label">CPC</div>
+      </div>
+      <div class="card stat-box">
+        <div class="big-num" style="font-size:1.4rem; color:var(--amber);">0.55%</div>
+        <div class="label">Conv. Rate</div>
+      </div>
+      <div class="card stat-box">
+        <div class="big-num" style="font-size:1.4rem; color:var(--red);">$80.32</div>
+        <div class="label">Cost per Conv.</div>
+      </div>
+    </div>
+    <div class="verdict anim">
+      Did NOT break even. Clicks were cheap at $0.44, but only 0.55% of clickers converted.
+      In search, users have intent ("buy backpack"). In display, users are passively browsing.
+      <strong>Display builds awareness, but search drives purchases.</strong>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: Takeaways -->
+  <section class="slide" data-slide="5">
+    <span class="kicker anim">Lessons Learned</span>
+    <h2 class="anim" style="text-align:center; margin-bottom:1rem;">Key Takeaways</h2>
+    <ul class="takeaway-list">
+      <li>
+        <span class="takeaway-num">01</span>
+        <p><strong>Keyword to Ad to Page alignment is everything.</strong> Keywords must appear in headlines or ad relevance suffers. Google rewards message consistency across the funnel.</p>
+      </li>
+      <li>
+        <span class="takeaway-num">02</span>
+        <p><strong>Persona driven keywords win.</strong> Jill (lifestyle) outperformed Raj (professional) every time. Understanding how your audience actually searches matters more than who they are.</p>
+      </li>
+      <li>
+        <span class="takeaway-num">03</span>
+        <p><strong>Budget discipline is critical.</strong> $498 unspent in Round 3 directly cost the backpack click goal. In paid search, unspent budget is a missed opportunity.</p>
+      </li>
+      <li>
+        <span class="takeaway-num">04</span>
+        <p><strong>Display is not search.</strong> 454K impressions but only 31 conversions. Display drives awareness, but conversions need audience creative fit and intent signals.</p>
+      </li>
+      <li>
+        <span class="takeaway-num">05</span>
+        <p><strong>Data compounds.</strong> Each round produced better data to optimize the next. By Round 4, every dollar was precision allocated based on historical performance.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- SLIDE 7: Thank You -->
+  <section class="slide thankyou" data-slide="6">
+    <span class="kicker anim">BAN 6065 · Digital Marketing</span>
+    <h1 class="anim">Thank You</h1>
+    <p class="subtitle anim">Vikas Kumar · Wake Forest University</p>
+    <div class="contact-row anim">
+      <span class="mono" style="font-size:.82rem;">Buhi Supply Co. Simulation</span>
+      <span class="mono" style="font-size:.82rem;">4 Rounds · 3 Products · $30,700 Revenue</span>
+    </div>
+    <div class="anim" style="margin-top:1.5rem; display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center;">
+      <a href="https://helloviks.com" target="_blank" style="font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--orange); text-decoration:none; padding:.4rem .8rem; border:1px solid rgba(249,115,22,0.25); border-radius:8px; transition:all 0.3s;">helloviks.com</a>
+      <a href="https://linkedin.com/in/thisisvk" target="_blank" style="font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--text-muted); text-decoration:none; padding:.4rem .8rem; border:1px solid var(--border); border-radius:8px; transition:all 0.3s;">LinkedIn</a>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================
+   THEME TOGGLE
+   ============================ */
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+
+function setTheme(mode) {
+  if (mode === 'light') {
+    document.documentElement.classList.add('light');
+    themeIcon.textContent = '☀️';
+    themeLabel.textContent = 'LIGHT';
+  } else {
+    document.documentElement.classList.remove('light');
+    themeIcon.textContent = '🌙';
+    themeLabel.textContent = 'DARK';
+  }
+  localStorage.setItem('presentationTheme', mode);
+  // Redraw charts if on results slide
+  if (current === 3) { chartsDrawn = false; drawCharts(); chartsDrawn = true; }
+}
+
+themeToggle.addEventListener('click', e => {
+  e.stopPropagation();
+  const isLight = document.documentElement.classList.contains('light');
+  setTheme(isLight ? 'dark' : 'light');
+});
+
+// Load saved theme
+const saved = localStorage.getItem('presentationTheme');
+if (saved) setTheme(saved);
+
+/* ============================
+   PERSONA DATA
+   ============================ */
+const personaData = {
+  mindy: {
+    name: 'Back to School Mindy',
+    emoji: '🎒',
+    age: '18 to 26',
+    desc: 'Full time student who values style and convenience. Targeted for the American Dream Backpack across all rounds.',
+    product: 'American Dream Backpack ($65)',
+    keywords: ['college backpack', 'stylish school bag', 'back to school backpack', 'campus backpack', 'student bag', 'trendy backpack', 'cute school bag', 'everyday backpack', 'lightweight backpack', 'book bag'],
+    worked: 'Lifestyle and style oriented keywords ("stylish school bag", "trendy backpack") generated strong click through rates. Mindy\'s intent aligned well with emotional ad copy.',
+    didnt: 'Generic terms like "book bag" had high competition and low relevance scores. Early rounds suffered from keywords not appearing in ad headlines.',
+    learned: [
+      '<strong>Ad headlines must echo keyword language</strong> or quality score drops significantly.',
+      '<strong>Student personas respond best to aspirational, lifestyle framing</strong> rather than feature lists.',
+      'Mindy taught me that <strong>consistency between keyword, ad copy, and landing page is not optional.</strong> It is the foundation of ad relevance.'
+    ],
+    metrics: { clicks: '~1,100/round', revenue: 'Consistent $3K+', ctr: 'Above average' },
+    chartData: [1070, 1077, 1078, 1100],
+    chartLabel: 'Clicks per Round'
+  },
+  tom: {
+    name: 'Daypacker Tom',
+    emoji: '🏔️',
+    age: '24 to 31',
+    desc: 'Full time employee who values durability and functionality. Targeted for Backpack (all rounds) and Duffel (R3 and R4).',
+    product: 'Backpack ($65) + Duffel Bag ($40)',
+    keywords: ['durable backpack', 'everyday carry bag', 'work backpack', 'travel duffel bag', 'commuter backpack', 'rugged daypack', 'gym duffel', 'weekender bag', 'functional backpack', 'carry on duffel'],
+    worked: 'Functionality keywords ("everyday carry", "commuter backpack") performed well. Duffel keywords for Tom drove strong volume in R3 and R4 with 3x click goal.',
+    didnt: 'Overlap between backpack and duffel targeting needed careful budget separation to avoid cannibalization.',
+    learned: [
+      '<strong>Budget isolation per campaign is essential</strong> when one persona spans multiple products to prevent cannibalization.',
+      'Tom validated that <strong>functional keywords convert better than aspirational ones</strong> for working professionals.',
+      'The duffel campaign taught me that <strong>product market fit can surprise you.</strong> Tom over delivered because the $40 value prop matched his practical mindset perfectly.'
+    ],
+    metrics: { clicks: '~1,070 BP + ~1,500 duffel', revenue: 'Major R3 and R4 driver', ctr: 'Strong for duffel' },
+    chartData: [1071, 1076, 2634, 2800],
+    chartLabel: 'Clicks per Round (Backpack + Duffel)'
+  },
+  raj: {
+    name: 'Up and Comer Raj',
+    emoji: '💼',
+    age: '21 to 28',
+    desc: 'Young professional who values style and functionality in a work bag. Targeted for the American Dream Messenger Bag.',
+    product: 'American Dream Messenger Bag ($60)',
+    keywords: ['professional messenger bag', 'work laptop bag', 'business messenger', 'office bag', 'professional crossbody', 'sleek work bag', 'commute messenger', 'executive bag'],
+    worked: 'Very few keywords gained traction. Professional intent keywords had lower search volume in the simulation environment.',
+    didnt: 'Only 396 clicks in R2 vs Jill\'s 1,144. Professional and corporate keywords consistently underperformed lifestyle keywords. The simulation audience skewed toward lifestyle searches.',
+    learned: [
+      'Not every persona converts equally. Raj proved that <strong>keyword volume matters as much as keyword relevance.</strong>',
+      '<strong>Professional intent keywords can be too narrow.</strong> Broadening to lifestyle adjacent terms would have helped.',
+      'Raj was my biggest learning: <strong>if the audience is not searching in your language, even perfectly relevant keywords will underperform.</strong> Meet the audience where they are, not where you think they should be.'
+    ],
+    metrics: { clicks: '396 (R2), declining', revenue: 'Lowest contributor', ctr: 'Below average' },
+    chartData: [0, 396, 380, 390],
+    chartLabel: 'Clicks per Round'
+  },
+  jill: {
+    name: 'Energetic Jill',
+    emoji: '⚡',
+    age: '18 to 27',
+    desc: 'Part time employee who values space and functionality for an active lifestyle. Targeted for Messenger Bag and Duffel.',
+    product: 'Messenger Bag ($60) + Duffel Bag ($40)',
+    keywords: ['spacious messenger bag', 'gym bag', 'active lifestyle bag', 'travel messenger', 'adventure duffel', 'everyday messenger', 'sporty bag', 'versatile carry bag', 'weekend duffel', 'casual crossbody'],
+    worked: 'Lifestyle and activity keywords crushed it. 1,144 clicks in R2 (3x Raj\'s volume). Jill\'s segment responded to emotional, benefit driven ad copy consistently.',
+    didnt: 'Some overlap with Tom on duffel keywords required budget discipline to avoid overspend in one ad group.',
+    learned: [
+      '<strong>Lifestyle keywords outperform professional keywords</strong> in this market. Jill proved that emotional resonance drives clicks.',
+      '<strong>Benefit driven copy</strong> ("spacious", "versatile", "adventure") <strong>consistently outperformed feature driven copy</strong> ("laptop sleeve", "waterproof").',
+      'Jill was the star performer and taught me that <strong>understanding search intent is more valuable than demographic targeting alone.</strong> She searched differently than Raj even though both wanted messenger bags.'
+    ],
+    metrics: { clicks: '1,144 (R2), growing', revenue: 'Top messenger driver', ctr: 'Highest persona CTR' },
+    chartData: [0, 1144, 1660, 1750],
+    chartLabel: 'Clicks per Round (Messenger + Duffel)'
+  }
+};
+
+/* ============================
+   SLIDE ENGINE
+   ============================ */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+let chartsDrawn = false;
+
+const slideLabels = ['Title', 'Personas', 'Strategy', 'Results', 'Display Ads', 'Takeaways', 'Thank You'];
+
+// Build nav dots
+const dotsContainer = document.getElementById('navDots');
+slides.forEach((_, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'dot';
+  btn.title = slideLabels[i];
+  btn.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(btn);
+});
+
+function goTo(n) {
+  if (n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  updateUI();
+  triggerCountUps();
+  if (current === 3 && !chartsDrawn) {
+    setTimeout(drawCharts, 500);
+    chartsDrawn = true;
+  }
+}
+
+function updateUI() {
+  document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('slideCounter').textContent = (current + 1) + ' / ' + total;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  if (current > 0) document.getElementById('hint').style.display = 'none';
+}
+
+/* ============================
+   COUNT UP ANIMATION
+   ============================ */
+function triggerCountUps() {
+  const els = slides[current].querySelectorAll('.countup');
+  els.forEach(el => {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+    const target = parseFloat(el.dataset.target);
+    const prefix = el.dataset.prefix || '';
+    const decimals = parseInt(el.dataset.decimals) || 0;
+    const duration = 1200;
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = target * ease;
+      if (decimals > 0) {
+        el.textContent = prefix + val.toFixed(decimals);
+      } else if (target >= 1000) {
+        el.textContent = prefix + Math.round(val).toLocaleString();
+      } else {
+        el.textContent = prefix + Math.round(val);
+      }
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    setTimeout(() => requestAnimationFrame(tick), 300);
+  });
+}
+
+/* ============================
+   CHARTS (Canvas)
+   ============================ */
+function getChartColors() {
+  const isLight = document.documentElement.classList.contains('light');
+  return {
+    gridLine: isLight ? 'rgba(226,232,240,0.7)' : 'rgba(48,54,61,0.5)',
+    axisText: isLight ? '#64748b' : '#8b949e',
+    valueText: isLight ? '#1e293b' : '#e6edf3',
+    barFrom: '#ea580c',
+    barTo: '#f97316',
+    lineColor: 'rgba(234,179,8,0.7)',
+    dotColor: '#eab308',
+    dotBorder: isLight ? '#ffffff' : '#0d1117',
+    cat1: '#f97316',
+    cat2: '#eab308',
+    cat3: '#22c55e'
+  };
+}
+
+function drawCharts() {
+  drawRevenueChart();
+  drawClicksChart();
+}
+
+function drawLineChart(canvas, datasets, xLabels, yLabel, yMax, yFormat) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const c = getChartColors();
+
+  const padL = 58, padR = 15, padT = 20, padB = 35;
+  const cW = W - padL - padR, cH = H - padT - padB;
+  const steps = 5;
+
+  let progress = 0;
+  function frame() {
+    progress = Math.min(progress + 0.02, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    ctx.clearRect(0, 0, W, H);
+
+    // Y axis label
+    ctx.save();
+    ctx.fillStyle = c.axisText;
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.translate(12, padT + cH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(yLabel, 0, 0);
+    ctx.restore();
+
+    // Grid lines + Y tick labels
+    for (let i = 0; i <= steps; i++) {
+      const y = padT + cH * (1 - i / steps);
+      ctx.strokeStyle = c.gridLine;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+      ctx.fillStyle = c.axisText;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.textAlign = 'right';
+      const val = yMax * i / steps;
+      ctx.fillText(yFormat(val), padL - 8, y + 3);
+    }
+
+    // X axis line
+    ctx.strokeStyle = c.gridLine;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, padT + cH);
+    ctx.lineTo(W - padR, padT + cH);
+    ctx.stroke();
+
+    // X labels
+    const xGap = cW / (xLabels.length - 1);
+    xLabels.forEach((label, i) => {
+      const x = padL + xGap * i;
+      ctx.fillStyle = c.axisText;
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, H - padB + 20);
+      // Tick mark
+      ctx.strokeStyle = c.gridLine;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, padT + cH); ctx.lineTo(x, padT + cH + 5); ctx.stroke();
+    });
+
+    // Draw each dataset
+    datasets.forEach(ds => {
+      const points = ds.data.map((v, i) => ({
+        x: padL + xGap * i,
+        y: padT + cH - (v / yMax) * cH * ease
+      }));
+
+      // Area fill
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, padT + cH);
+      points.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(points[points.length - 1].x, padT + cH);
+      ctx.closePath();
+      ctx.fillStyle = ds.fill;
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+      ctx.strokeStyle = ds.color;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Circles + value labels
+      points.forEach((p, i) => {
+        // Circle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = ds.color;
+        ctx.fill();
+        ctx.strokeStyle = c.dotBorder;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Value label
+        if (ease > 0.6) {
+          ctx.fillStyle = c.valueText;
+          ctx.font = 'bold 10px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(ds.labelFormat(ds.data[i]), p.x, p.y - 12);
+        }
+      });
+    });
+
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function drawRevenueChart() {
+  drawLineChart(
+    document.getElementById('revenueChart'),
+    [{
+      data: [5005, 9520, 18000, 30700],
+      color: '#f97316',
+      fill: 'rgba(249,115,22,0.08)',
+      labelFormat: v => '$' + (v / 1000).toFixed(1) + 'K'
+    }],
+    ['Round 1', 'Round 2', 'Round 3', 'Round 4'],
+    'Revenue ($)',
+    35000,
+    v => '$' + (v / 1000).toFixed(0) + 'K'
+  );
+}
+
+function drawClicksChart() {
+  const canvas = document.getElementById('clicksChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const c = getChartColors();
+
+  const data = [
+    [2141, 0, 0],
+    [2153, 1540, 0],
+    [2156, 1526, 3116],
+    [2200, 1106, 5680]
+  ];
+  const labels = ['Round 1', 'Round 2', 'Round 3', 'Round 4'];
+  const colors = [c.cat1, c.cat2, c.cat3];
+  const maxVal = 10000;
+  const padL = 55, padR = 15, padT = 20, padB = 35;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+
+  // Y axis label
+  ctx.save();
+  ctx.fillStyle = c.axisText;
+  ctx.font = '9px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.translate(12, padT + chartH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Clicks', 0, 0);
+  ctx.restore();
+
+  let progress = 0;
+  function frame() {
+    progress = Math.min(progress + 0.025, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    ctx.clearRect(0, 0, W, H);
+
+    // Y axis label (redraw)
+    ctx.save();
+    ctx.fillStyle = c.axisText;
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.translate(12, padT + chartH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Clicks', 0, 0);
+    ctx.restore();
+
+    // Grid + Y labels
+    for (let i = 0; i <= 5; i++) {
+      const y = padT + chartH * (1 - i / 5);
+      ctx.strokeStyle = c.gridLine;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+      ctx.fillStyle = c.axisText;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText((maxVal * i / 5 / 1000).toFixed(0) + 'K', padL - 8, y + 3);
+    }
+
+    // X axis
+    ctx.strokeStyle = c.gridLine;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, padT + chartH); ctx.lineTo(W - padR, padT + chartH); ctx.stroke();
+
+    // Stacked bars
+    const gap = chartW / data.length;
+    const barW = gap * 0.5;
+    data.forEach((round, ri) => {
+      let cumH = 0;
+      round.forEach((v, ci) => {
+        const segH = (v / maxVal) * chartH * ease;
+        const x = padL + gap * ri + (gap - barW) / 2;
+        const y = padT + chartH - cumH - segH;
+        ctx.fillStyle = colors[ci];
+        ctx.globalAlpha = 0.85;
+        ctx.beginPath();
+        // Top segment gets rounded top, bottom gets rounded bottom
+        const isTop = ci === round.length - 1 || round.slice(ci + 1).every(xv => xv === 0);
+        const isBottom = cumH === 0;
+        if (isTop && isBottom) {
+          roundedRect(ctx, x, y, barW, segH, 6);
+        } else if (isTop) {
+          roundedRect(ctx, x, y, barW, segH, [6, 6, 0, 0]);
+        } else if (isBottom) {
+          roundedRect(ctx, x, y, barW, segH, [0, 0, 6, 6]);
+        } else {
+          ctx.rect(x, y, barW, segH);
+        }
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        cumH += segH;
+      });
+      // X label
+      ctx.fillStyle = c.axisText;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(labels[ri], padL + gap * ri + gap / 2, H - padB + 20);
+    });
+
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function roundedRect(ctx, x, y, w, h, r) {
+  if (typeof r === 'number') r = [r, r, r, r];
+  const [tl, tr, br, bl] = r;
+  ctx.beginPath();
+  ctx.moveTo(x + tl, y);
+  ctx.lineTo(x + w - tr, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + tr);
+  ctx.lineTo(x + w, y + h - br);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
+  ctx.lineTo(x + bl, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - bl);
+  ctx.lineTo(x, y + tl);
+  ctx.quadraticCurveTo(x, y, x + tl, y);
+  ctx.closePath();
+}
+
+/* ============================
+   PERSONA OVERLAY
+   ============================ */
+const overlay = document.getElementById('personaOverlay');
+const detailEl = document.getElementById('personaDetail');
+
+document.querySelectorAll('.persona-card').forEach(card => {
+  card.addEventListener('click', e => {
+    e.stopPropagation();
+    const key = card.dataset.persona;
+    const p = personaData[key];
+    if (!p) return;
+
+    detailEl.innerHTML = `
+      <button class="close-btn" id="closePersona">×</button>
+      <div style="display:flex; align-items:center; gap:.8rem; margin-bottom:.6rem;">
+        <span style="font-size:2rem;">${p.emoji}</span>
+        <div>
+          <h2>${p.name}</h2>
+          <div class="detail-product">${p.product}</div>
+        </div>
+      </div>
+      <div class="detail-meta">${p.age} · ${p.desc}</div>
+      <div class="detail-section">
+        <h4><span class="dot-icon" style="background:var(--orange);"></span> Keywords Used</h4>
+        <div>${p.keywords.map(k => '<span class="keyword-tag">' + k + '</span>').join('')}</div>
+      </div>
+      <div class="detail-section worked">
+        <h4><span class="dot-icon" style="background:var(--green);"></span> What Worked</h4>
+        <p>${p.worked}</p>
+      </div>
+      <div class="detail-section didnt">
+        <h4><span class="dot-icon" style="background:var(--amber);"></span> What Did Not Work</h4>
+        <p>${p.didnt}</p>
+      </div>
+      <div class="detail-section">
+        <h4><span class="dot-icon" style="background:var(--purple);"></span> What I Learned</h4>
+        <div class="learned-box">
+          ${p.learned.map(l => '<p style="margin-bottom:.5rem;">' + l + '</p>').join('')}
+        </div>
+      </div>
+      <div class="detail-section">
+        <h4><span class="dot-icon" style="background:var(--orange);"></span> Performance Metrics</h4>
+        <div class="detail-metrics">
+          <div class="detail-metric"><div class="val">${p.metrics.clicks}</div><div class="lbl">Clicks</div></div>
+          <div class="detail-metric"><div class="val">${p.metrics.revenue}</div><div class="lbl">Revenue</div></div>
+          <div class="detail-metric"><div class="val">${p.metrics.ctr}</div><div class="lbl">CTR</div></div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <h4><span class="dot-icon" style="background:var(--green);"></span> ${p.chartLabel}</h4>
+        <canvas class="mini-chart" id="miniChart"></canvas>
+      </div>
+    `;
+    overlay.classList.add('open');
+    setTimeout(() => drawMiniChart(p.chartData, key), 100);
+    document.getElementById('closePersona').addEventListener('click', closeOverlay);
+  });
+});
+
+overlay.addEventListener('click', e => {
+  if (e.target === overlay) closeOverlay();
+});
+
+function closeOverlay() {
+  overlay.classList.remove('open');
+}
+
+function drawMiniChart(data, key) {
+  const lineColors = { mindy: '#f97316', tom: '#22c55e', raj: '#eab308', jill: '#fb923c' };
+  const color = lineColors[key] || '#f97316';
+  const fillColor = color + '15';
+  drawLineChart(
+    document.getElementById('miniChart'),
+    [{
+      data: data,
+      color: color,
+      fill: fillColor,
+      labelFormat: v => v > 0 ? v.toLocaleString() : ''
+    }],
+    ['R1', 'R2', 'R3', 'R4'],
+    'Clicks',
+    Math.max(...data) * 1.2 || 100,
+    v => v >= 1000 ? (v / 1000).toFixed(1) + 'K' : Math.round(v).toString()
+  );
+}
+
+/* ============================
+   NAVIGATION
+   ============================ */
+document.addEventListener('keydown', e => {
+  if (overlay.classList.contains('open')) {
+    if (e.key === 'Escape') closeOverlay();
+    return;
+  }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault(); goTo(current + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault(); goTo(current - 1);
+  }
+});
+
+document.getElementById('deck').addEventListener('click', e => {
+  if (overlay.classList.contains('open')) return;
+  if (e.target.closest('.nav-dots') || e.target.closest('.persona-card') || e.target.closest('button')) return;
+  const x = e.clientX / window.innerWidth;
+  x < 0.33 ? goTo(current - 1) : goTo(current + 1);
+});
+
+// Touch
+let touchX = 0;
+document.addEventListener('touchstart', e => { touchX = e.changedTouches[0].screenX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  if (overlay.classList.contains('open')) return;
+  const diff = touchX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
+}, { passive: true });
+
+// Reset countups when leaving slide
+const observer = new MutationObserver(() => {
+  slides.forEach((s, i) => {
+    if (i !== current) {
+      s.querySelectorAll('.countup').forEach(el => { delete el.dataset.counted; });
+    }
+  });
+});
+slides.forEach(s => observer.observe(s, { attributes: true, attributeFilter: ['class'] }));
+
+// Init
+goTo(0);
+
+// Redraw charts on resize
+window.addEventListener('resize', () => { if (current === 3) { chartsDrawn = false; drawCharts(); chartsDrawn = true; } });
+</script>
+</body>
+</html>
