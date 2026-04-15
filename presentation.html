@@ -540,6 +540,15 @@
   .chart-tooltip .tt-label { color: var(--text-muted); font-size: .62rem; display: block; margin-bottom: 2px; }
   .chart-tooltip .tt-value { font-weight: 700; font-size: .82rem; }
 
+  /* ── Typewriter ── */
+  .typewriter {
+    display: inline;
+    border-right: 2px solid var(--orange);
+    animation: blink-caret 0.7s step-end infinite;
+  }
+  .typewriter.done { border-right-color: transparent; animation: none; }
+  @keyframes blink-caret { 0%,100%{ border-color: var(--orange) } 50%{ border-color: transparent } }
+
   /* ── Bottom progress ── */
   .progress-bottom {
     position: fixed; bottom: 0; left: 0;
@@ -656,7 +665,7 @@
       <span style="color:var(--text-faint);">|</span>
       <span style="font-size:.82rem; color:var(--text-muted); font-weight:500;">Digital Marketing · Wake Forest University</span>
     </div>
-    <h1 class="anim" style="text-align:center; max-width:800px;">Campaign Strategy and Learnings</h1>
+    <h1 class="anim" id="titleText" style="text-align:center; max-width:800px;"><span class="typewriter" id="typewriterText"></span></h1>
     <p class="subtitle anim" style="text-align:center; max-width:600px;">
       Buhi Supply Co. Digital Marketing Simulation
     </p>
@@ -1160,11 +1169,17 @@ function drawLineChart(canvas, datasets, xLabels, yLabel, yMax, yFormat) {
   const padL = 68, padR = 15, padT = 20, padB = 35;
   const cW = W - padL - padR, cH = H - padT - padB;
   const steps = 5;
+  const xGap = cW / (xLabels.length - 1);
 
-  let progress = 0;
-  function frame() {
-    progress = Math.min(progress + 0.02, 1);
-    const ease = 1 - Math.pow(1 - progress, 3);
+  // Store data point positions for hover
+  const dataPoints = [];
+  let animDone = false;
+
+  const tooltip = document.getElementById('chartTooltip');
+  const ttLabel = tooltip.querySelector('.tt-label');
+  const ttValue = tooltip.querySelector('.tt-value');
+
+  function drawFrame(ease, hoverIdx) {
     ctx.clearRect(0, 0, W, H);
 
     // Y axis label
@@ -1199,20 +1214,29 @@ function drawLineChart(canvas, datasets, xLabels, yLabel, yMax, yFormat) {
     ctx.stroke();
 
     // X labels
-    const xGap = cW / (xLabels.length - 1);
     xLabels.forEach((label, i) => {
       const x = padL + xGap * i;
       ctx.fillStyle = c.axisText;
       ctx.font = '11px JetBrains Mono, monospace';
       ctx.textAlign = 'center';
       ctx.fillText(label, x, H - padB + 20);
-      // Tick mark
       ctx.strokeStyle = c.gridLine;
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(x, padT + cH); ctx.lineTo(x, padT + cH + 5); ctx.stroke();
     });
 
+    // Hover crosshair
+    if (hoverIdx !== null && hoverIdx !== undefined) {
+      const hx = padL + xGap * hoverIdx;
+      ctx.strokeStyle = 'rgba(249,115,22,0.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(hx, padT); ctx.lineTo(hx, padT + cH); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
     // Draw each dataset
+    if (ease >= 1) dataPoints.length = 0;
     datasets.forEach(ds => {
       const points = ds.data.map((v, i) => ({
         x: padL + xGap * i,
@@ -1238,9 +1262,19 @@ function drawLineChart(canvas, datasets, xLabels, yLabel, yMax, yFormat) {
 
       // Circles + value labels
       points.forEach((p, i) => {
-        // Circle
+        const isHovered = hoverIdx === i;
+        const radius = isHovered ? 8 : 5;
+
+        // Glow ring on hover
+        if (isHovered) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 14, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(249,115,22,0.12)';
+          ctx.fill();
+        }
+
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fillStyle = ds.color;
         ctx.fill();
         ctx.strokeStyle = c.dotBorder;
@@ -1250,16 +1284,68 @@ function drawLineChart(canvas, datasets, xLabels, yLabel, yMax, yFormat) {
         // Value label
         if (ease > 0.6) {
           ctx.fillStyle = c.valueText;
-          ctx.font = 'bold 10px Inter, sans-serif';
+          ctx.font = isHovered ? 'bold 12px Inter, sans-serif' : 'bold 10px Inter, sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText(ds.labelFormat(ds.data[i]), p.x, p.y - 12);
+          ctx.fillText(ds.labelFormat(ds.data[i]), p.x, p.y - (isHovered ? 18 : 12));
+        }
+
+        // Store hit area
+        if (ease >= 1) {
+          dataPoints.push({ x: p.x, y: p.y, idx: i, value: ds.data[i], label: xLabels[i], formatted: ds.labelFormat(ds.data[i]), color: ds.color });
         }
       });
     });
+  }
 
-    if (progress < 1) requestAnimationFrame(frame);
+  // Animation
+  let progress = 0;
+  function frame() {
+    progress = Math.min(progress + 0.02, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    drawFrame(ease, null);
+    if (progress < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      animDone = true;
+    }
   }
   requestAnimationFrame(frame);
+
+  // Hover interaction
+  canvas.style.cursor = 'default';
+  canvas.addEventListener('mousemove', function(e) {
+    if (!animDone) return;
+    const cr = canvas.getBoundingClientRect();
+    const mx = e.clientX - cr.left;
+    const my = e.clientY - cr.top;
+    let hit = null;
+    let minDist = 30;
+    for (const pt of dataPoints) {
+      const d = Math.sqrt((mx - pt.x) ** 2 + (my - pt.y) ** 2);
+      if (d < minDist) { minDist = d; hit = pt; }
+    }
+    if (hit) {
+      canvas.style.cursor = 'pointer';
+      ttLabel.textContent = hit.label;
+      ttValue.style.color = hit.color;
+      ttValue.textContent = hit.formatted;
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+      tooltip.classList.add('visible');
+      drawFrame(1, hit.idx);
+    } else {
+      canvas.style.cursor = 'default';
+      tooltip.classList.remove('visible');
+      drawFrame(1, null);
+    }
+  });
+
+  canvas.addEventListener('mouseleave', function() {
+    if (!animDone) return;
+    tooltip.classList.remove('visible');
+    canvas.style.cursor = 'default';
+    drawFrame(1, null);
+  });
 }
 
 function drawRevenueChart() {
@@ -1585,8 +1671,37 @@ const observer = new MutationObserver(() => {
 });
 slides.forEach(s => observer.observe(s, { attributes: true, attributeFilter: ['class'] }));
 
+/* ============================
+   TYPEWRITER EFFECT
+   ============================ */
+const typewriterEl = document.getElementById('typewriterText');
+const typewriterFullText = 'Campaign Strategy and Learnings';
+let typewriterPlayed = false;
+
+function playTypewriter() {
+  if (typewriterPlayed) return;
+  typewriterPlayed = true;
+  typewriterEl.textContent = '';
+  typewriterEl.classList.remove('done');
+  let i = 0;
+  function type() {
+    if (i < typewriterFullText.length) {
+      typewriterEl.textContent = typewriterFullText.slice(0, i + 1);
+      i++;
+      setTimeout(type, 55 + Math.random() * 35);
+    } else {
+      setTimeout(() => typewriterEl.classList.add('done'), 1200);
+    }
+  }
+  setTimeout(type, 600);
+}
+
+// Reset typewriter when returning to title slide
+const origGoTo = goTo;
+
 // Init
 goTo(0);
+playTypewriter();
 
 // Redraw charts on resize
 window.addEventListener('resize', () => { if (current === 3) { chartsDrawn = false; drawCharts(); chartsDrawn = true; } });
