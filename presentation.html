@@ -613,9 +613,177 @@
     .big-num { font-size: 2rem; }
     .detail-metrics { grid-template-columns: 1fr 1fr; }
   }
+
+  /* ── Chatbot ── */
+  .chat-fab {
+    position: fixed; bottom: 1.8rem; left: 1.8rem;
+    z-index: 250;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(249,115,22,0.35);
+    transition: all 0.3s;
+  }
+  .chat-fab:hover { transform: scale(1.1); box-shadow: 0 4px 28px rgba(249,115,22,0.5); }
+  .chat-fab svg { width: 22px; height: 22px; fill: #fff; }
+  .chat-fab .close-icon { display: none; }
+  .chat-fab.open .chat-icon { display: none; }
+  .chat-fab.open .close-icon { display: block; }
+
+  .chat-panel {
+    position: fixed; bottom: 5rem; left: 1.8rem;
+    z-index: 250;
+    width: 340px; max-height: 480px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transform: translateY(12px) scale(0.95);
+    transition: all 0.3s cubic-bezier(.22,1,.36,1);
+    overflow: hidden;
+  }
+  .chat-panel.open {
+    opacity: 1; visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .chat-header {
+    padding: .8rem 1rem;
+    background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(249,115,22,0.03));
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .chat-header-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  }
+  .chat-header span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem; font-weight: 600;
+    color: var(--text); letter-spacing: .5px;
+  }
+  .chat-header small {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .58rem; color: var(--text-muted);
+    margin-left: auto;
+  }
+  .chat-messages {
+    flex: 1; overflow-y: auto;
+    padding: .8rem;
+    display: flex; flex-direction: column; gap: .5rem;
+    max-height: 340px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .chat-msg {
+    max-width: 88%;
+    padding: .55rem .8rem;
+    border-radius: 12px;
+    font-size: .78rem;
+    line-height: 1.5;
+    animation: msgIn 0.3s ease;
+  }
+  @keyframes msgIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
+  .chat-msg.bot {
+    align-self: flex-start;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .chat-msg.bot strong { color: var(--orange); font-weight: 600; }
+  .chat-msg.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    color: #fff;
+  }
+  .chat-input-row {
+    padding: .6rem .8rem;
+    border-top: 1px solid var(--border);
+    display: flex; gap: .5rem;
+    background: var(--bg-card);
+  }
+  .chat-input-row input {
+    flex: 1;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .45rem .7rem;
+    font-family: 'Inter', sans-serif;
+    font-size: .78rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input-row input::placeholder { color: var(--text-faint); }
+  .chat-input-row input:focus { border-color: var(--orange); }
+  .chat-input-row button {
+    background: var(--orange);
+    border: none; border-radius: 8px;
+    padding: .45rem .7rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .chat-input-row button:hover { background: var(--orange-dark); }
+  .chat-input-row button svg { width: 16px; height: 16px; fill: #fff; }
+  .chat-suggestions {
+    display: flex; flex-wrap: wrap; gap: .35rem;
+    padding: 0 .8rem .6rem;
+  }
+  .chat-suggestions button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6rem;
+    padding: .3rem .55rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-card-hover);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .chat-suggestions button:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: rgba(249,115,22,0.06);
+  }
+  @media (max-width: 600px) {
+    .chat-panel { width: calc(100vw - 2rem); left: 1rem; bottom: 4.5rem; }
+    .chat-fab { bottom: 1.2rem; left: 1.2rem; width: 42px; height: 42px; }
+  }
 </style>
 </head>
 <body>
+
+<!-- Chatbot -->
+<button class="chat-fab" id="chatFab" title="Ask about the simulation">
+  <svg class="chat-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+  <svg class="close-icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <span class="chat-header-dot"></span>
+    <span>Buhi Bot</span>
+    <small>Simulation Q&A</small>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Hey! I know everything about this Buhi Supply Co. simulation. Ask me about <strong>personas</strong>, <strong>rounds</strong>, <strong>products</strong>, <strong>display ads</strong>, or any <strong>metrics</strong>.</div>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button data-q="What was the total revenue?">Total revenue?</button>
+    <button data-q="Tell me about Mindy">About Mindy</button>
+    <button data-q="How did display ads perform?">Display ads?</button>
+    <button data-q="What was the ROAS?">ROAS?</button>
+    <button data-q="Which round was best?">Best round?</button>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Ask about the simulation..." autocomplete="off">
+    <button id="chatSend"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
 
 <!-- Top nav -->
 <nav class="top-nav">
@@ -1705,6 +1873,123 @@ playTypewriter();
 
 // Redraw charts on resize
 window.addEventListener('resize', () => { if (current === 3) { chartsDrawn = false; drawCharts(); chartsDrawn = true; } });
+
+/* ============================
+   CHATBOT
+   ============================ */
+(function() {
+  const fab = document.getElementById('chatFab');
+  const panel = document.getElementById('chatPanel');
+  const msgs = document.getElementById('chatMessages');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+  const suggestions = document.getElementById('chatSuggestions');
+
+  fab.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = panel.classList.toggle('open');
+    fab.classList.toggle('open', open);
+    if (open) input.focus();
+  });
+
+  function addMsg(text, type) {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + type;
+    div.innerHTML = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function send() {
+    const q = input.value.trim();
+    if (!q) return;
+    addMsg(q, 'user');
+    input.value = '';
+    suggestions.style.display = 'none';
+    setTimeout(() => addMsg(getAnswer(q), 'bot'), 400 + Math.random() * 300);
+  }
+
+  sendBtn.addEventListener('click', send);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
+
+  suggestions.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      input.value = btn.dataset.q;
+      send();
+    });
+  });
+
+  const kb = [
+    { keys: ['revenue', 'money', 'earned', 'sales', 'total revenue'],
+      a: 'Total revenue across all 4 rounds was <strong>$30,700</strong> in Round 4 (peak). It grew from <strong>$5,005</strong> (R1) to <strong>$9,520</strong> (R2) to <strong>$18,000</strong> (R3) to <strong>$30,700</strong> (R4).' },
+    { keys: ['roas', 'return on ad'],
+      a: 'The overall ROAS in Round 4 was <strong>4.09</strong>, meaning every $1 spent returned $4.09 in revenue. The display ad ROAS was only <strong>0.89</strong> (lost money).' },
+    { keys: ['mindy', 'back to school'],
+      a: '<strong>Back to School Mindy</strong> (age 18 to 26) was targeted for the Backpack ($65). She consistently delivered ~1,100 clicks per round. Keywords like "cute backpacks for college" and "laptop backpacks for college" worked best. Lifestyle framing outperformed feature lists for her.' },
+    { keys: ['tom', 'daypacker', 'hiking'],
+      a: '<strong>Daypacker Tom</strong> (age 24 to 31) was targeted for both Backpack and Duffel. His duffel campaign crushed it in R3/R4, hitting <strong>3x the click goal</strong>. Keywords like "hiking backpack" and "heavy duty backpacks" matched his practical mindset.' },
+    { keys: ['raj', 'up and comer', 'professional', 'satchel'],
+      a: '<strong>Up and Comer Raj</strong> (age 21 to 28) was my weakest persona. Only <strong>396 clicks</strong> in R2 vs Jill\'s 1,144. Professional keywords like "office work bag" and "professional messenger bag" had low search volume. Lesson: if the audience isn\'t searching in your language, even relevant keywords underperform.' },
+    { keys: ['jill', 'energetic', 'yoga', 'gym'],
+      a: '<strong>Energetic Jill</strong> (age 18 to 27) was the star performer! <strong>1,144 clicks</strong> in R2 (3x Raj). Keywords like "womens gym bag", "yoga bag", and "casual messenger bag" crushed it. Benefit driven copy consistently outperformed feature driven copy.' },
+    { keys: ['display', 'display ad', 'banner', 'impression'],
+      a: 'The display ad campaign targeted women 25 to 34 with Back to School affinity. Results: <strong>454,742 impressions</strong>, <strong>5,680 clicks</strong> (1.25% CTR), but only <strong>31 conversions</strong> out of the 39 needed. ROAS was <strong>0.89</strong> (lost money). CPC was cheap at $0.44, but conversion rate was only 0.55%. Display builds awareness but search drives purchases.' },
+    { keys: ['round 1', 'first round', 'r1'],
+      a: '<strong>Round 1:</strong> Budget $1,200. One campaign (Backpack only), 20 keywords split between Mindy and Tom. Revenue: <strong>$5,005</strong>, 2,141 clicks, CPC $0.56. Main issue: keywords not reflected in headlines, poor ad relevance.' },
+    { keys: ['round 2', 'second round', 'r2'],
+      a: '<strong>Round 2:</strong> Budget $2,400. Added Messenger Bag with separate ad groups for Raj and Jill. Revenue: <strong>$9,520</strong>, 3,693 clicks. Key learning: Raj got only 396 clicks vs Jill\'s 1,144. Professional keywords underperformed lifestyle ones.' },
+    { keys: ['round 3', 'third round', 'r3'],
+      a: '<strong>Round 3:</strong> Budget $4,800. Added Duffel Bag ($2,400 to duffel). Revenue: <strong>$18,000</strong>, 6,798 clicks. Issue: $498 budget went unspent, directly costing the backpack click goal.' },
+    { keys: ['round 4', 'fourth round', 'r4', 'best round', 'final round'],
+      a: '<strong>Round 4:</strong> Budget $7,500. Added display ads for backpack, rebalanced search budgets. Revenue: <strong>$30,700</strong>, 8,986 clicks, ROAS 4.09. Data from prior rounds enabled precision allocation.' },
+    { keys: ['backpack', 'american dream'],
+      a: 'The <strong>American Dream Backpack</strong> ($65) was the flagship product across all 4 rounds. It consistently earned ~2,100+ clicks per round. Targeted through Mindy and Tom personas.' },
+    { keys: ['messenger', 'messenger bag'],
+      a: 'The <strong>American Dream Messenger Bag</strong> ($60) was introduced in Round 2. Targeted through Raj and Jill. Jill vastly outperformed Raj (1,144 vs 396 clicks in R2).' },
+    { keys: ['duffel', 'duffel bag'],
+      a: 'The <strong>Duffel Bag</strong> ($40) was introduced in Round 3 and was the breakout product. It hit <strong>3x the click goal</strong> with 3,116 clicks in R3 and 5,680 in R4. The $40 price point and practical positioning resonated perfectly.' },
+    { keys: ['budget', 'spend', 'cost', 'how much'],
+      a: 'Budget grew each round: <strong>$1,200</strong> (R1) → <strong>$2,400</strong> (R2) → <strong>$4,800</strong> (R3) → <strong>$7,500</strong> (R4). In R3, $498 went unspent. In R4, $2,490 went to the display campaign.' },
+    { keys: ['click', 'clicks', 'ctr', 'click through'],
+      a: 'Total clicks by round: <strong>2,141</strong> (R1) → <strong>3,693</strong> (R2) → <strong>6,798</strong> (R3) → <strong>8,986</strong> (R4). The duffel was the biggest click driver in later rounds.' },
+    { keys: ['cpc', 'cost per click'],
+      a: 'CPC for search ads was around <strong>$0.56</strong> in R1 and <strong>$0.65</strong> in R2. Display ads had a cheaper CPC of <strong>$0.44</strong>, but conversions were much lower.' },
+    { keys: ['keyword', 'keywords', 'search term'],
+      a: 'Key learning: keywords must appear in ad headlines or quality score drops. Lifestyle keywords (Mindy/Jill) consistently outperformed professional keywords (Raj). In R1, keywords were not reflected in headlines, causing poor ad relevance.' },
+    { keys: ['persona', 'audience', 'target', 'who'],
+      a: 'Four personas were used: <strong>Mindy</strong> (student, backpack), <strong>Tom</strong> (employee, backpack + duffel), <strong>Raj</strong> (professional, messenger), and <strong>Jill</strong> (active lifestyle, messenger + duffel). Jill was the top performer, Raj was the weakest.' },
+    { keys: ['takeaway', 'lesson', 'learn', 'insight'],
+      a: 'Top 5 takeaways: (1) Keyword to ad to page alignment is everything. (2) Persona driven keywords win (Jill > Raj). (3) Budget discipline is critical ($498 unspent cost us). (4) Display is not search (awareness vs conversions). (5) Data compounds — each round gave better data.' },
+    { keys: ['conversion', 'convert', 'purchase'],
+      a: 'Display ads: 31 conversions out of 39 needed (0.55% conversion rate, cost per conversion $80.32). Search ads converted much better due to user intent.' },
+    { keys: ['product', 'products', 'sell', 'bag'],
+      a: 'Three products: <strong>Backpack</strong> at $65 (all rounds), <strong>Messenger Bag</strong> at $60 (R2 onward), and <strong>Duffel Bag</strong> at $40 (R3 onward). The duffel was the breakout hit.' },
+    { keys: ['vikas', 'who made', 'who are', 'about you', 'creator'],
+      a: 'This simulation was done by <strong>Vikas Kumar</strong> at Wake Forest University for <strong>BAN 6065 Digital Marketing</strong>. Check out more at <strong>helloviks.com</strong>!' },
+    { keys: ['strategy', 'approach', 'how did'],
+      a: 'The strategy evolved each round: R1 was learn and test (one product). R2 expanded to two products with persona segmentation. R3 added a third product and learned about budget discipline. R4 used all prior data to precision allocate every dollar across search and display.' },
+    { keys: ['simulation', 'buhi', 'what is this'],
+      a: 'This is a <strong>Buhi Supply Co.</strong> digital marketing simulation from the <strong>BAN 6065</strong> course at Wake Forest University. Students manage ad campaigns across multiple rounds, making budget, keyword, and targeting decisions for three bag products.' },
+    { keys: ['hello', 'hi', 'hey', 'sup'],
+      a: 'Hey there! Ask me anything about the Buhi Supply Co. simulation — personas, rounds, products, metrics, or strategy. I\'ve got all the data!' }
+  ];
+
+  function getAnswer(q) {
+    const lower = q.toLowerCase();
+    let best = null, bestScore = 0;
+    for (const entry of kb) {
+      let score = 0;
+      for (const key of entry.keys) {
+        if (lower.includes(key)) {
+          score += key.split(' ').length;
+        }
+      }
+      if (score > bestScore) { bestScore = score; best = entry; }
+    }
+    if (best) return best.a;
+    return 'I\'m not sure about that one! Try asking about <strong>personas</strong> (Mindy, Tom, Raj, Jill), <strong>rounds</strong> (1 through 4), <strong>products</strong> (backpack, messenger, duffel), <strong>display ads</strong>, or <strong>metrics</strong> (revenue, ROAS, clicks, CPC).';
+  }
+})();
 </script>
 </body>
 </html>
