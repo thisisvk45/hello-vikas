@@ -616,7 +616,7 @@
 
   /* ── Chatbot ── */
   .chat-fab {
-    position: fixed; bottom: 1.8rem; left: 1.8rem;
+    position: fixed; bottom: 1.8rem; right: 1.8rem;
     z-index: 250;
     width: 48px; height: 48px;
     border-radius: 50%;
@@ -633,7 +633,7 @@
   .chat-fab.open .close-icon { display: block; }
 
   .chat-panel {
-    position: fixed; bottom: 5rem; left: 1.8rem;
+    position: fixed; bottom: 5rem; right: 1.8rem;
     z-index: 250;
     width: 340px; max-height: 480px;
     background: var(--bg-card);
@@ -671,6 +671,13 @@
     font-size: .58rem; color: var(--text-muted);
     margin-left: auto;
   }
+  .chat-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 1.1rem;
+    padding: 0 0 0 .5rem; line-height: 1;
+    transition: color 0.2s;
+  }
+  .chat-close:hover { color: var(--text); }
   .chat-messages {
     flex: 1; overflow-y: auto;
     padding: .8rem;
@@ -751,8 +758,8 @@
     background: rgba(249,115,22,0.06);
   }
   @media (max-width: 600px) {
-    .chat-panel { width: calc(100vw - 2rem); left: 1rem; bottom: 4.5rem; }
-    .chat-fab { bottom: 1.2rem; left: 1.2rem; width: 42px; height: 42px; }
+    .chat-panel { width: calc(100vw - 2rem); right: 1rem; bottom: 4.5rem; }
+    .chat-fab { bottom: 1.2rem; right: 1.2rem; width: 42px; height: 42px; }
   }
 </style>
 </head>
@@ -768,9 +775,10 @@
     <span class="chat-header-dot"></span>
     <span>Buhi Bot</span>
     <small>Simulation Q&A</small>
+    <button class="chat-close" id="chatClose" title="Close">✕</button>
   </div>
   <div class="chat-messages" id="chatMessages">
-    <div class="chat-msg bot">Hey! I know everything about this Buhi Supply Co. simulation. Ask me about <strong>personas</strong>, <strong>rounds</strong>, <strong>products</strong>, <strong>display ads</strong>, or any <strong>metrics</strong>.</div>
+    <div class="chat-msg bot">Hey! I know everything about this Buhi Supply Co. simulation. Ask me about <strong>personas</strong>, <strong>rounds</strong>, <strong>products</strong>, <strong>display ads</strong>, or any <strong>metrics</strong>. For example, try "How did Jill perform?"</div>
   </div>
   <div class="chat-suggestions" id="chatSuggestions">
     <button data-q="What was the total revenue?">Total revenue?</button>
@@ -1878,19 +1886,23 @@ window.addEventListener('resize', () => { if (current === 3) { chartsDrawn = fal
    CHATBOT
    ============================ */
 (function() {
+  const API_URL = window.BUHI_BOT_API || 'https://buhi-bot-api.vercel.app/api/chat';
   const fab = document.getElementById('chatFab');
   const panel = document.getElementById('chatPanel');
   const msgs = document.getElementById('chatMessages');
   const input = document.getElementById('chatInput');
   const sendBtn = document.getElementById('chatSend');
   const suggestions = document.getElementById('chatSuggestions');
+  const closeBtn = document.getElementById('chatClose');
 
-  fab.addEventListener('click', e => {
-    e.stopPropagation();
+  function toggleChat() {
     const open = panel.classList.toggle('open');
     fab.classList.toggle('open', open);
     if (open) input.focus();
-  });
+  }
+
+  fab.addEventListener('click', e => { e.stopPropagation(); toggleChat(); });
+  closeBtn.addEventListener('click', e => { e.stopPropagation(); toggleChat(); });
 
   function addMsg(text, type) {
     const div = document.createElement('div');
@@ -1900,13 +1912,116 @@ window.addEventListener('resize', () => { if (current === 3) { chartsDrawn = fal
     msgs.scrollTop = msgs.scrollHeight;
   }
 
-  function send() {
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.id = 'typingIndicator';
+    div.innerHTML = '<span style="opacity:0.5;">Thinking...</span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  // Keyword fallback for when API is unavailable
+  const kb = [
+    { keys: ['revenue', 'money', 'earned', 'sales', 'total revenue'],
+      a: 'Total revenue peaked at <strong>$30,700</strong> in Round 4. Growth path: $5,005 (R1) to $9,520 (R2) to $18,000 (R3) to $30,700 (R4). Consistent growth each round as strategy improved.' },
+    { keys: ['roas', 'return on ad'],
+      a: 'Round 4 ROAS was <strong>4.09</strong>, meaning every $1 returned $4.09. Display ad ROAS was only <strong>0.89</strong> (lost money). Search consistently outperformed display for conversions.' },
+    { keys: ['mindy', 'back to school'],
+      a: '<strong>Back to School Mindy</strong> (18 to 26) targeted for Backpack ($65). Steady ~1,100 clicks per round. "Cute backpacks for college" and "laptop backpacks for college" worked best. Lifestyle framing outperformed feature lists.' },
+    { keys: ['tom', 'daypacker', 'hiking'],
+      a: '<strong>Daypacker Tom</strong> (24 to 31) targeted for Backpack and Duffel. Duffel campaign hit <strong>3x click goal</strong> in R3/R4. "Hiking backpack" and "heavy duty backpacks" matched his practical mindset perfectly.' },
+    { keys: ['raj', 'up and comer', 'professional', 'satchel'],
+      a: '<strong>Up and Comer Raj</strong> (21 to 28) was the weakest persona. Only <strong>396 clicks</strong> in R2 vs Jill\'s 1,144. Professional keywords had low search volume. Lesson: meet the audience where they search.' },
+    { keys: ['jill', 'energetic', 'yoga', 'gym'],
+      a: '<strong>Energetic Jill</strong> (18 to 27) was the star! <strong>1,144 clicks</strong> in R2 (3x Raj). "Womens gym bag", "yoga bag", and "casual messenger bag" crushed it. Benefit driven copy outperformed feature driven copy.' },
+    { keys: ['display', 'display ad', 'banner', 'impression'],
+      a: 'Display ads: <strong>454,742 impressions</strong>, 5,680 clicks (1.25% CTR), only 31 of 39 needed conversions. ROAS <strong>0.89</strong> (lost money). CPC was cheap at $0.44 but 0.55% conversion rate. Display builds awareness, search drives purchases.' },
+    { keys: ['round 1', 'first round', 'r1'],
+      a: '<strong>Round 1:</strong> $1,200 budget. Backpack only, 20 keywords for Mindy and Tom. Revenue $5,005, 2,141 clicks, CPC $0.56. Keywords not in headlines caused poor ad relevance.' },
+    { keys: ['round 2', 'second round', 'r2'],
+      a: '<strong>Round 2:</strong> $2,400 budget. Added Messenger for Raj and Jill. Revenue $9,520, 3,693 clicks. Raj got 396 clicks vs Jill\'s 1,144. Lifestyle keywords dominated professional ones.' },
+    { keys: ['round 3', 'third round', 'r3'],
+      a: '<strong>Round 3:</strong> $4,800 budget. Added Duffel. Revenue $18,000, 6,798 clicks. $498 went unspent, directly costing the backpack click goal. Budget discipline lesson learned.' },
+    { keys: ['round 4', 'fourth round', 'r4', 'best round', 'final round'],
+      a: '<strong>Round 4:</strong> $7,500 budget. Added display ads, rebalanced search. Revenue <strong>$30,700</strong>, 8,986 clicks, ROAS 4.09. Prior round data enabled precision allocation.' },
+    { keys: ['backpack', 'american dream'],
+      a: 'The <strong>American Dream Backpack</strong> ($65) was the flagship across all 4 rounds. Steady ~2,100+ clicks per round. Targeted through Mindy and Tom personas.' },
+    { keys: ['messenger', 'messenger bag'],
+      a: 'The <strong>Messenger Bag</strong> ($60) launched in Round 2 for Raj and Jill. Jill vastly outperformed Raj (1,144 vs 396 clicks in R2). Lifestyle keywords drove the wins.' },
+    { keys: ['duffel', 'duffel bag'],
+      a: 'The <strong>Duffel Bag</strong> ($40) launched in Round 3 and was the breakout hit. Hit <strong>3x click goal</strong> with 3,116 clicks (R3) and 5,680 (R4). $40 price point resonated perfectly.' },
+    { keys: ['budget', 'spend', 'cost', 'how much'],
+      a: 'Budget grew each round: $1,200 (R1), $2,400 (R2), $4,800 (R3), $7,500 (R4). In R3, $498 went unspent. In R4, $2,490 went to the display campaign.' },
+    { keys: ['click', 'clicks', 'ctr', 'click through'],
+      a: 'Clicks by round: 2,141 (R1), 3,693 (R2), 6,798 (R3), 8,986 (R4). Duffel was the biggest driver in later rounds with 5,680 clicks in R4.' },
+    { keys: ['cpc', 'cost per click'],
+      a: 'Search CPC: $0.56 (R1), $0.65 (R2). Display CPC was cheaper at $0.44 but conversions were much lower. Cheap clicks do not equal good results.' },
+    { keys: ['keyword', 'keywords', 'search term'],
+      a: 'Keywords must appear in ad headlines or quality score drops. Lifestyle keywords (Mindy/Jill) consistently beat professional ones (Raj). Ad relevance depends on keyword to headline alignment.' },
+    { keys: ['persona', 'audience', 'target', 'who'],
+      a: 'Four personas: <strong>Mindy</strong> (student, backpack), <strong>Tom</strong> (employee, backpack + duffel), <strong>Raj</strong> (professional, messenger), <strong>Jill</strong> (active, messenger + duffel). Jill was the star, Raj the weakest.' },
+    { keys: ['takeaway', 'lesson', 'learn', 'insight'],
+      a: 'Five key takeaways: (1) Keyword to ad alignment is everything. (2) Persona driven keywords win. (3) Budget discipline is critical. (4) Display is not search. (5) Data compounds over rounds.' },
+    { keys: ['conversion', 'convert', 'purchase'],
+      a: 'Display: 31 of 39 needed conversions (0.55% rate, $80.32 per conversion). Search converted much better because users have purchase intent when they search.' },
+    { keys: ['product', 'products', 'sell', 'bag'],
+      a: 'Three products: <strong>Backpack</strong> $65 (all rounds), <strong>Messenger</strong> $60 (R2+), <strong>Duffel</strong> $40 (R3+). The duffel was the breakout hit thanks to price and positioning.' },
+    { keys: ['vikas', 'who made', 'who are', 'about you', 'creator'],
+      a: 'This simulation was done by <strong>Vikas Kumar</strong> at Wake Forest University for BAN 6065 Digital Marketing. Visit <strong>helloviks.com</strong> to learn more!' },
+    { keys: ['strategy', 'approach', 'how did'],
+      a: 'Strategy evolved: R1 tested one product. R2 added persona segmentation. R3 added a third product (learned budget discipline). R4 used all prior data for precision allocation.' },
+    { keys: ['simulation', 'buhi', 'what is this'],
+      a: 'This is a <strong>Buhi Supply Co.</strong> digital marketing simulation for BAN 6065 at Wake Forest. Students manage ad campaigns across rounds, making budget, keyword, and targeting decisions.' },
+    { keys: ['hello', 'hi', 'hey', 'sup'],
+      a: 'Hey there! Ask me anything about the Buhi Supply Co. simulation: personas, rounds, products, metrics, or strategy. For example, try "How did Jill perform?"' }
+  ];
+
+  function getFallbackAnswer(q) {
+    const lower = q.toLowerCase();
+    let best = null, bestScore = 0;
+    for (const entry of kb) {
+      let score = 0;
+      for (const key of entry.keys) {
+        if (lower.includes(key)) score += key.split(' ').length;
+      }
+      if (score > bestScore) { bestScore = score; best = entry; }
+    }
+    if (best) return best.a;
+    return 'I\'m not sure about that one! Try asking about <strong>personas</strong> (Mindy, Tom, Raj, Jill), <strong>rounds</strong> (1 to 4), <strong>products</strong> (backpack, messenger, duffel), <strong>display ads</strong>, or <strong>metrics</strong> (revenue, ROAS, clicks).';
+  }
+
+  async function getAnswer(q) {
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: q })
+      });
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+      if (data.reply) return data.reply.replace(/-/g, ' ');
+      throw new Error('No reply');
+    } catch (e) {
+      return getFallbackAnswer(q);
+    }
+  }
+
+  async function send() {
     const q = input.value.trim();
     if (!q) return;
     addMsg(q, 'user');
     input.value = '';
     suggestions.style.display = 'none';
-    setTimeout(() => addMsg(getAnswer(q), 'bot'), 400 + Math.random() * 300);
+    showTyping();
+    const answer = await getAnswer(q);
+    removeTyping();
+    addMsg(answer, 'bot');
   }
 
   sendBtn.addEventListener('click', send);
@@ -1918,77 +2033,6 @@ window.addEventListener('resize', () => { if (current === 3) { chartsDrawn = fal
       send();
     });
   });
-
-  const kb = [
-    { keys: ['revenue', 'money', 'earned', 'sales', 'total revenue'],
-      a: 'Total revenue across all 4 rounds was <strong>$30,700</strong> in Round 4 (peak). It grew from <strong>$5,005</strong> (R1) to <strong>$9,520</strong> (R2) to <strong>$18,000</strong> (R3) to <strong>$30,700</strong> (R4).' },
-    { keys: ['roas', 'return on ad'],
-      a: 'The overall ROAS in Round 4 was <strong>4.09</strong>, meaning every $1 spent returned $4.09 in revenue. The display ad ROAS was only <strong>0.89</strong> (lost money).' },
-    { keys: ['mindy', 'back to school'],
-      a: '<strong>Back to School Mindy</strong> (age 18 to 26) was targeted for the Backpack ($65). She consistently delivered ~1,100 clicks per round. Keywords like "cute backpacks for college" and "laptop backpacks for college" worked best. Lifestyle framing outperformed feature lists for her.' },
-    { keys: ['tom', 'daypacker', 'hiking'],
-      a: '<strong>Daypacker Tom</strong> (age 24 to 31) was targeted for both Backpack and Duffel. His duffel campaign crushed it in R3/R4, hitting <strong>3x the click goal</strong>. Keywords like "hiking backpack" and "heavy duty backpacks" matched his practical mindset.' },
-    { keys: ['raj', 'up and comer', 'professional', 'satchel'],
-      a: '<strong>Up and Comer Raj</strong> (age 21 to 28) was my weakest persona. Only <strong>396 clicks</strong> in R2 vs Jill\'s 1,144. Professional keywords like "office work bag" and "professional messenger bag" had low search volume. Lesson: if the audience isn\'t searching in your language, even relevant keywords underperform.' },
-    { keys: ['jill', 'energetic', 'yoga', 'gym'],
-      a: '<strong>Energetic Jill</strong> (age 18 to 27) was the star performer! <strong>1,144 clicks</strong> in R2 (3x Raj). Keywords like "womens gym bag", "yoga bag", and "casual messenger bag" crushed it. Benefit driven copy consistently outperformed feature driven copy.' },
-    { keys: ['display', 'display ad', 'banner', 'impression'],
-      a: 'The display ad campaign targeted women 25 to 34 with Back to School affinity. Results: <strong>454,742 impressions</strong>, <strong>5,680 clicks</strong> (1.25% CTR), but only <strong>31 conversions</strong> out of the 39 needed. ROAS was <strong>0.89</strong> (lost money). CPC was cheap at $0.44, but conversion rate was only 0.55%. Display builds awareness but search drives purchases.' },
-    { keys: ['round 1', 'first round', 'r1'],
-      a: '<strong>Round 1:</strong> Budget $1,200. One campaign (Backpack only), 20 keywords split between Mindy and Tom. Revenue: <strong>$5,005</strong>, 2,141 clicks, CPC $0.56. Main issue: keywords not reflected in headlines, poor ad relevance.' },
-    { keys: ['round 2', 'second round', 'r2'],
-      a: '<strong>Round 2:</strong> Budget $2,400. Added Messenger Bag with separate ad groups for Raj and Jill. Revenue: <strong>$9,520</strong>, 3,693 clicks. Key learning: Raj got only 396 clicks vs Jill\'s 1,144. Professional keywords underperformed lifestyle ones.' },
-    { keys: ['round 3', 'third round', 'r3'],
-      a: '<strong>Round 3:</strong> Budget $4,800. Added Duffel Bag ($2,400 to duffel). Revenue: <strong>$18,000</strong>, 6,798 clicks. Issue: $498 budget went unspent, directly costing the backpack click goal.' },
-    { keys: ['round 4', 'fourth round', 'r4', 'best round', 'final round'],
-      a: '<strong>Round 4:</strong> Budget $7,500. Added display ads for backpack, rebalanced search budgets. Revenue: <strong>$30,700</strong>, 8,986 clicks, ROAS 4.09. Data from prior rounds enabled precision allocation.' },
-    { keys: ['backpack', 'american dream'],
-      a: 'The <strong>American Dream Backpack</strong> ($65) was the flagship product across all 4 rounds. It consistently earned ~2,100+ clicks per round. Targeted through Mindy and Tom personas.' },
-    { keys: ['messenger', 'messenger bag'],
-      a: 'The <strong>American Dream Messenger Bag</strong> ($60) was introduced in Round 2. Targeted through Raj and Jill. Jill vastly outperformed Raj (1,144 vs 396 clicks in R2).' },
-    { keys: ['duffel', 'duffel bag'],
-      a: 'The <strong>Duffel Bag</strong> ($40) was introduced in Round 3 and was the breakout product. It hit <strong>3x the click goal</strong> with 3,116 clicks in R3 and 5,680 in R4. The $40 price point and practical positioning resonated perfectly.' },
-    { keys: ['budget', 'spend', 'cost', 'how much'],
-      a: 'Budget grew each round: <strong>$1,200</strong> (R1) → <strong>$2,400</strong> (R2) → <strong>$4,800</strong> (R3) → <strong>$7,500</strong> (R4). In R3, $498 went unspent. In R4, $2,490 went to the display campaign.' },
-    { keys: ['click', 'clicks', 'ctr', 'click through'],
-      a: 'Total clicks by round: <strong>2,141</strong> (R1) → <strong>3,693</strong> (R2) → <strong>6,798</strong> (R3) → <strong>8,986</strong> (R4). The duffel was the biggest click driver in later rounds.' },
-    { keys: ['cpc', 'cost per click'],
-      a: 'CPC for search ads was around <strong>$0.56</strong> in R1 and <strong>$0.65</strong> in R2. Display ads had a cheaper CPC of <strong>$0.44</strong>, but conversions were much lower.' },
-    { keys: ['keyword', 'keywords', 'search term'],
-      a: 'Key learning: keywords must appear in ad headlines or quality score drops. Lifestyle keywords (Mindy/Jill) consistently outperformed professional keywords (Raj). In R1, keywords were not reflected in headlines, causing poor ad relevance.' },
-    { keys: ['persona', 'audience', 'target', 'who'],
-      a: 'Four personas were used: <strong>Mindy</strong> (student, backpack), <strong>Tom</strong> (employee, backpack + duffel), <strong>Raj</strong> (professional, messenger), and <strong>Jill</strong> (active lifestyle, messenger + duffel). Jill was the top performer, Raj was the weakest.' },
-    { keys: ['takeaway', 'lesson', 'learn', 'insight'],
-      a: 'Top 5 takeaways: (1) Keyword to ad to page alignment is everything. (2) Persona driven keywords win (Jill > Raj). (3) Budget discipline is critical ($498 unspent cost us). (4) Display is not search (awareness vs conversions). (5) Data compounds — each round gave better data.' },
-    { keys: ['conversion', 'convert', 'purchase'],
-      a: 'Display ads: 31 conversions out of 39 needed (0.55% conversion rate, cost per conversion $80.32). Search ads converted much better due to user intent.' },
-    { keys: ['product', 'products', 'sell', 'bag'],
-      a: 'Three products: <strong>Backpack</strong> at $65 (all rounds), <strong>Messenger Bag</strong> at $60 (R2 onward), and <strong>Duffel Bag</strong> at $40 (R3 onward). The duffel was the breakout hit.' },
-    { keys: ['vikas', 'who made', 'who are', 'about you', 'creator'],
-      a: 'This simulation was done by <strong>Vikas Kumar</strong> at Wake Forest University for <strong>BAN 6065 Digital Marketing</strong>. Check out more at <strong>helloviks.com</strong>!' },
-    { keys: ['strategy', 'approach', 'how did'],
-      a: 'The strategy evolved each round: R1 was learn and test (one product). R2 expanded to two products with persona segmentation. R3 added a third product and learned about budget discipline. R4 used all prior data to precision allocate every dollar across search and display.' },
-    { keys: ['simulation', 'buhi', 'what is this'],
-      a: 'This is a <strong>Buhi Supply Co.</strong> digital marketing simulation from the <strong>BAN 6065</strong> course at Wake Forest University. Students manage ad campaigns across multiple rounds, making budget, keyword, and targeting decisions for three bag products.' },
-    { keys: ['hello', 'hi', 'hey', 'sup'],
-      a: 'Hey there! Ask me anything about the Buhi Supply Co. simulation — personas, rounds, products, metrics, or strategy. I\'ve got all the data!' }
-  ];
-
-  function getAnswer(q) {
-    const lower = q.toLowerCase();
-    let best = null, bestScore = 0;
-    for (const entry of kb) {
-      let score = 0;
-      for (const key of entry.keys) {
-        if (lower.includes(key)) {
-          score += key.split(' ').length;
-        }
-      }
-      if (score > bestScore) { bestScore = score; best = entry; }
-    }
-    if (best) return best.a;
-    return 'I\'m not sure about that one! Try asking about <strong>personas</strong> (Mindy, Tom, Raj, Jill), <strong>rounds</strong> (1 through 4), <strong>products</strong> (backpack, messenger, duffel), <strong>display ads</strong>, or <strong>metrics</strong> (revenue, ROAS, clicks, CPC).';
-  }
 })();
 </script>
 </body>
