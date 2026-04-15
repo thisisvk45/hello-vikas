@@ -519,6 +519,27 @@
   .contact-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
   .contact-row span { font-size: .9rem; color: var(--text-secondary); }
 
+  /* ── Chart tooltip ── */
+  .chart-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 300;
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 8px;
+    padding: .35rem .65rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    color: var(--text);
+    box-shadow: var(--shadow-glow);
+    opacity: 0;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .chart-tooltip.visible { opacity: 1; }
+  .chart-tooltip .tt-label { color: var(--text-muted); font-size: .62rem; display: block; margin-bottom: 2px; }
+  .chart-tooltip .tt-value { font-weight: 700; font-size: .82rem; }
+
   /* ── Bottom progress ── */
   .progress-bottom {
     position: fixed; bottom: 0; left: 0;
@@ -598,6 +619,12 @@
     GitHub
   </a>
 </nav>
+
+<!-- Chart tooltip -->
+<div class="chart-tooltip" id="chartTooltip">
+  <span class="tt-label"></span>
+  <span class="tt-value"></span>
+</div>
 
 <!-- Theme toggle -->
 <button class="theme-toggle" id="themeToggle" title="Toggle theme">
@@ -1270,29 +1297,25 @@ function drawClicksChart() {
     [2200, 1106, 5680]
   ];
   const labels = ['Round 1', 'Round 2', 'Round 3', 'Round 4'];
+  const productNames = ['Backpack', 'Messenger', 'Duffel'];
   const colors = [c.cat1, c.cat2, c.cat3];
   const maxVal = 10000;
   const padL = 55, padR = 15, padT = 20, padB = 35;
   const chartW = W - padL - padR;
   const chartH = H - padT - padB;
 
-  // Y axis label
-  ctx.save();
-  ctx.fillStyle = c.axisText;
-  ctx.font = '9px JetBrains Mono, monospace';
-  ctx.textAlign = 'center';
-  ctx.translate(12, padT + chartH / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Clicks', 0, 0);
-  ctx.restore();
+  // Store bar segment hit areas
+  const barSegments = [];
 
-  let progress = 0;
-  function frame() {
-    progress = Math.min(progress + 0.025, 1);
-    const ease = 1 - Math.pow(1 - progress, 3);
+  // Tooltip element
+  const tooltip = document.getElementById('chartTooltip');
+  const ttLabel = tooltip.querySelector('.tt-label');
+  const ttValue = tooltip.querySelector('.tt-value');
+
+  function drawBars(ease, hoverSeg) {
     ctx.clearRect(0, 0, W, H);
 
-    // Y axis label (redraw)
+    // Y axis label
     ctx.save();
     ctx.fillStyle = c.axisText;
     ctx.font = '9px JetBrains Mono, monospace';
@@ -1322,16 +1345,19 @@ function drawClicksChart() {
     // Stacked bars
     const gap = chartW / data.length;
     const barW = gap * 0.5;
+    if (ease >= 1) barSegments.length = 0;
+
     data.forEach((round, ri) => {
       let cumH = 0;
       round.forEach((v, ci) => {
+        if (v === 0) return;
         const segH = (v / maxVal) * chartH * ease;
         const x = padL + gap * ri + (gap - barW) / 2;
         const y = padT + chartH - cumH - segH;
+        const isHovered = hoverSeg && hoverSeg.ri === ri && hoverSeg.ci === ci;
         ctx.fillStyle = colors[ci];
-        ctx.globalAlpha = 0.85;
+        ctx.globalAlpha = isHovered ? 1 : (hoverSeg ? 0.5 : 0.85);
         ctx.beginPath();
-        // Top segment gets rounded top, bottom gets rounded bottom
         const isTop = ci === round.length - 1 || round.slice(ci + 1).every(xv => xv === 0);
         const isBottom = cumH === 0;
         if (isTop && isBottom) {
@@ -1345,6 +1371,12 @@ function drawClicksChart() {
         }
         ctx.fill();
         ctx.globalAlpha = 1;
+
+        // Store final segment positions
+        if (ease >= 1) {
+          barSegments.push({ x, y, w: barW, h: segH, ri, ci, value: v, label: labels[ri], product: productNames[ci] });
+        }
+
         cumH += segH;
       });
       // X label
@@ -1353,10 +1385,60 @@ function drawClicksChart() {
       ctx.textAlign = 'center';
       ctx.fillText(labels[ri], padL + gap * ri + gap / 2, H - padB + 20);
     });
+  }
 
-    if (progress < 1) requestAnimationFrame(frame);
+  // Animation
+  let progress = 0;
+  let animDone = false;
+  function frame() {
+    progress = Math.min(progress + 0.025, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    drawBars(ease, null);
+    if (progress < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      animDone = true;
+    }
   }
   requestAnimationFrame(frame);
+
+  // Hover interaction
+  canvas.style.cursor = 'default';
+  canvas.addEventListener('mousemove', function(e) {
+    if (!animDone) return;
+    const cr = canvas.getBoundingClientRect();
+    const mx = e.clientX - cr.left;
+    const my = e.clientY - cr.top;
+    let hit = null;
+    for (let i = barSegments.length - 1; i >= 0; i--) {
+      const s = barSegments[i];
+      if (mx >= s.x && mx <= s.x + s.w && my >= s.y && my <= s.y + s.h) {
+        hit = s;
+        break;
+      }
+    }
+    if (hit) {
+      canvas.style.cursor = 'pointer';
+      ttLabel.textContent = hit.label + ' · ' + hit.product;
+      ttValue.style.color = colors[hit.ci];
+      ttValue.textContent = hit.value.toLocaleString() + ' clicks';
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+      tooltip.classList.add('visible');
+      drawBars(1, hit);
+    } else {
+      canvas.style.cursor = 'default';
+      tooltip.classList.remove('visible');
+      drawBars(1, null);
+    }
+  });
+
+  canvas.addEventListener('mouseleave', function() {
+    if (!animDone) return;
+    tooltip.classList.remove('visible');
+    canvas.style.cursor = 'default';
+    drawBars(1, null);
+  });
 }
 
 function roundedRect(ctx, x, y, w, h, r) {
