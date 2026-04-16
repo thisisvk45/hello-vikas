@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="description" content="Vikas Kumar - AI/ML Engineer specializing in RAG, LLMs, and Knowledge Graphs. MSBA at Wake Forest University. Building intelligent AI systems that create real business impact.">
@@ -1690,14 +1690,14 @@
   const toggle = document.getElementById('theme-toggle');
   const icon = document.getElementById('theme-icon');
 
-  // Load saved preference
+  // Load saved preference (default: light)
   const saved = localStorage.getItem('theme');
-  if (saved === 'light') {
-    html.classList.remove('dark');
-    icon.className = 'fas fa-sun text-sm';
-  } else {
+  if (saved === 'dark') {
     html.classList.add('dark');
     icon.className = 'fas fa-moon text-sm';
+  } else {
+    html.classList.remove('dark');
+    icon.className = 'fas fa-sun text-sm';
   }
 
   toggle.addEventListener('click', () => {
