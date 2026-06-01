@@ -148,13 +148,6 @@
 
 
 
-    /* ── 3D Tilt ── */
-    .tilt-card {
-      transform-style: preserve-3d;
-      transition: transform 0.08s ease, box-shadow 0.2s ease;
-      will-change: transform;
-    }
-    .tilt-card:hover { box-shadow: 0 24px 60px rgba(249,115,22,0.18); }
 
 
     /* ── AI Chat Widget ── */
@@ -312,14 +305,6 @@
     /* Active nav link */
     nav a.nav-active { color: #f97316 !important; }
 
-    /* Neural network canvas */
-    #neural-canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
     #home { position: relative; overflow: hidden; }
     #home > * { position: relative; z-index: 1; }
 
@@ -569,8 +554,6 @@
       /* Back to top / progress bar */
       #progress-bar { height: 2px !important; }
 
-      /* Tilt cards — disable 3D tilt on touch */
-      .tilt-card { transform: none !important; }
 
       /* Modal */
       #visitor-modal > div { margin: 16px !important; padding: 24px !important; }
@@ -581,8 +564,6 @@
       /* Mouse trail — disable on mobile */
       .trail-dot { display: none !important; }
 
-      /* Neural canvas — lighter on mobile */
-      #neural-canvas { opacity: 0.4 !important; }
     }
 
     /* Small phones */
@@ -619,25 +600,8 @@
   </div>
 </div>
 
-<!-- ───── VISITOR COUNTER WIDGET ───── -->
-<div id="visit-counter" class="fixed bottom-5 left-5 z-50 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg px-5 py-4 text-xs opacity-0 transition-opacity duration-500 pointer-events-none" style="min-width:200px">
-  <p class="font-semibold text-slate-700 dark:text-slate-200 mb-3 text-xs uppercase tracking-widest">Portfolio Views</p>
-  <div class="space-y-2">
-    <div class="flex justify-between items-center">
-      <span class="text-slate-500 dark:text-slate-400">Last 7 days</span>
-      <span id="cnt-7" class="font-bold text-orange-500">0</span>
-    </div>
-    <div class="flex justify-between items-center">
-      <span class="text-slate-500 dark:text-slate-400">Last 90 days</span>
-      <span id="cnt-90" class="font-bold text-orange-500">0</span>
-    </div>
-    <div class="flex justify-between items-center">
-      <span class="text-slate-500 dark:text-slate-400">Last 365 days</span>
-      <span id="cnt-365" class="font-bold text-orange-500">0</span>
-    </div>
-  </div>
-  <button onclick="document.getElementById('visit-counter').style.opacity='0'; setTimeout(()=>document.getElementById('visit-counter').style.display='none',400)" class="mt-3 w-full text-center text-slate-400 hover:text-orange-400 transition text-xs">dismiss</button>
-</div>
+<!-- ───── VISITOR COUNTER WIDGET (hidden) ───── -->
+<div id="visit-counter" style="display:none"></div>
 
 
 <!-- Scroll Progress -->
@@ -661,9 +625,6 @@
       <a href="#projects"     class="hover:text-orange-500 transition">Projects</a>
       <a href="#blog"         class="hover:text-orange-500 transition">Writing</a>
       <a href="#achievements" class="hover:text-orange-500 transition">Achievements</a>
-      <a href="#testimonials" class="hover:text-orange-500 transition">Reviews</a>
-      <a href="#github"       class="hover:text-orange-500 transition">GitHub</a>
-      <a href="#contact"      class="hover:text-orange-500 transition">Contact</a>
     </nav>
 
     <div class="flex items-center gap-3">
@@ -692,14 +653,11 @@
     <a href="#projects"     class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Projects</a>
     <a href="#blog"         class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Writing</a>
     <a href="#achievements" class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Achievements</a>
-    <a href="#testimonials" class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Reviews</a>
-    <a href="#contact"      class="block py-2 hover:text-orange-500" onclick="closeMobileMenu()">Contact</a>
   </div>
 </header>
 
 <!-- ───────────────── HERO ───────────────── -->
 <section id="home" class="pt-24 min-h-screen flex flex-col justify-center items-center text-center px-6">
-  <canvas id="neural-canvas"></canvas>
   <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-400 text-xs font-medium mb-8 opacity-0 animate-slide-up delay-1">
     <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
     Open to full-time AI/ML roles · Starting May 2026
@@ -771,7 +729,7 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
       <div class="stat-card col-span-2 md:col-span-1 bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
         <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">$3.2M</div>
         <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Logistics cost savings<br/>in production</div>
@@ -792,10 +750,6 @@
         <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">3K+</div>
         <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Active users<br/>Lawroom AI</div>
       </div>
-      <div class="stat-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm text-center border border-slate-100 dark:border-slate-800">
-        <div class="stat-number text-3xl font-extrabold text-orange-500 mb-1">10</div>
-        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Internships &<br/>engagements</div>
-      </div>
     </div>
 
     <!-- Two Column -->
@@ -814,28 +768,28 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
           <div class="flex items-center gap-2 mb-2">
-            <span class="text-xl">🧠</span>
+            <span class="w-7 h-7 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center text-xs"><i class="fas fa-database"></i></span>
             <span class="font-semibold text-sm">RAG &amp; LLM Systems</span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400">Production-grade retrieval pipelines with vector search, context window management, and low-hallucination outputs deployed at scale using Azure OpenAI and LlamaIndex.</p>
         </div>
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
           <div class="flex items-center gap-2 mb-2">
-            <span class="text-xl">🕸️</span>
+            <span class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center text-xs"><i class="fas fa-project-diagram"></i></span>
             <span class="font-semibold text-sm">Knowledge Graphs</span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400">Neo4j architectures modeling 500+ entities across semantic dimensions, integrated with LangChain to unify structured and unstructured enterprise data at 97% ontology accuracy.</p>
         </div>
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
           <div class="flex items-center gap-2 mb-2">
-            <span class="text-xl">⚡</span>
+            <span class="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-900/30 text-sky-500 flex items-center justify-center text-xs"><i class="fas fa-robot"></i></span>
             <span class="font-semibold text-sm">Agentic AI</span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400">Multi-step autonomous systems with tool-use, persistent memory, and real-world API integration, designed to serve real users and not just run in notebooks.</p>
         </div>
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-xl p-5 shadow-sm">
           <div class="flex items-center gap-2 mb-2">
-            <span class="text-xl">📊</span>
+            <span class="w-7 h-7 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-500 flex items-center justify-center text-xs"><i class="fas fa-chart-line"></i></span>
             <span class="font-semibold text-sm">ML &amp; Analytics</span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400">End-to-end pipelines from data engineering and feature design through model training, evaluation, and stakeholder-facing dashboards that drive actual decisions.</p>
@@ -918,7 +872,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Wake Forest University</h3>
+              <h3 class="text-lg font-bold text-orange-500">Wake Forest University <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">Top-30 private research university in Winston-Salem, NC</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AI Engineer</p>
             </div>
             <span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">Mar 2026 – Present</span>
@@ -946,7 +901,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Darden</h3>
+              <h3 class="text-lg font-bold text-orange-500">Darden <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">Fortune 500, world's largest full-service restaurant company (Olive Garden, LongHorn)</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Graduate Consultant</p>
             </div>
             <span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">Oct 2025 – Present</span>
@@ -974,8 +930,9 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Snap Inc.</h3>
-              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AR & ML Extern</p>
+              <h3 class="text-lg font-bold text-orange-500">Snap Inc. <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">Parent company of Snapchat, 800M+ monthly users, AR technology pioneer</p>
+              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AR &amp; ML Extern</p>
             </div>
           </div>
           
@@ -1000,7 +957,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Aditya Birla Group</h3>
+              <h3 class="text-lg font-bold text-orange-500">Aditya Birla Group <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">$65B multinational conglomerate operating across 30+ countries</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AI/Software Engineer Intern</p>
             </div>
           </div>
@@ -1027,7 +985,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Lawroom AI</h3>
+              <h3 class="text-lg font-bold text-orange-500">Lawroom AI <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">AI legal tech startup making legal info accessible across Indian languages</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Founding AI Engineer</p>
             </div>
           </div>
@@ -1053,7 +1012,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Scale AI</h3>
+              <h3 class="text-lg font-bold text-orange-500">Scale AI <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">$14B AI data infrastructure company powering OpenAI, Meta, and U.S. DoD</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">AI Trainer, RLHF &amp; Red Teaming</p>
             </div>
           </div>
@@ -1079,7 +1039,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Indian School of Business (ISB)</h3>
+              <h3 class="text-lg font-bold text-orange-500">Indian School of Business (ISB) <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">Asia's top business school, ranked #1 in India by Financial Times</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Research Intern</p>
             </div>
           </div>
@@ -1105,7 +1066,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Omdena</h3>
+              <h3 class="text-lg font-bold text-orange-500">Omdena <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">Global collaborative AI platform, engineers from 100+ countries</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Machine Learning Engineer</p>
             </div>
           </div>
@@ -1131,7 +1093,8 @@
         <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
             <div>
-              <h3 class="text-lg font-bold text-orange-500">Airtel</h3>
+              <h3 class="text-lg font-bold text-orange-500">Airtel <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] cursor-pointer align-middle ml-1 hover:bg-orange-100 hover:text-orange-500 dark:hover:bg-orange-900/30 transition" onclick="this.parentElement.nextElementSibling.style.display=this.parentElement.nextElementSibling.style.display==='block'?'none':'block'">i</span></h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 mb-1 pl-2 border-l-2 border-orange-300 dark:border-orange-700" style="display:none">India's second-largest telecom operator, 500M+ subscribers</p>
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Machine Learning Intern</p>
             </div>
           </div>
@@ -1151,23 +1114,7 @@
         </div>
       </div>
 
-      <!-- MCN -->
-      <div class="relative">
-        <div class="timeline-dot"></div>
-        <div class="glow-card bg-white dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-          <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
-            <div>
-              <h3 class="text-lg font-bold text-orange-500">Millennium Campus Network (MCN)</h3>
-              <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Campus Director, UN Millennium Fellowship</p>
-            </div>
-          </div>
-          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Oversaw execution of a five-month UN Millennium Fellowship program, managing 30+ events and activities aligned with fellowship goals.</li>
-            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Conducted bi-weekly progress reviews for 10 fellows, providing targeted feedback resulting in a 95% goal achievement rate.</li>
-            <li class="flex gap-2"><span class="text-orange-400 mt-0.5">▸</span> Served as primary liaison for 100+ stakeholders including fellows, mentors, and program administrators, fostering a high-collaboration environment across the full fellowship cohort.</li>
-          </ul>
-        </div>
-      </div>
+      <!-- MCN removed -->
 
     </div>
   </div>
@@ -1239,7 +1186,7 @@
         <div class="h-1.5 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
         <div class="p-6">
           <span class="tag bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 mb-3 inline-block">CV · Generative AI · Research</span>
-          <p class="font-bold text-lg mb-2" data-category="cv ml">InstantID — Facial Identity Persistence</p>
+          <p class="font-bold text-lg mb-2" data-category="cv ml">InstantID: Facial Identity Persistence</p>
           <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Research project solving identity drift in diffusion models. Custom identity aggregation layer on top of InstantID using ArcFace embeddings. Aggregates 4-5 reference images into a single 512-dim master vector with confidence-weighted fusion. Targeting UCSD and Berkeley RA applications.</p>
           <div class="flex flex-wrap gap-1.5">
             <span class="tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">InsightFace</span>
@@ -1423,89 +1370,18 @@
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-      <!-- 1. Competition -->
-      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 text-lg rounded-xl flex items-center justify-center">🥈</span>
-          <span class="text-xs font-semibold text-indigo-500 uppercase tracking-wide">National Competition</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">2nd Place, East Region at DataCamp's Data for Good Analytics Competition among 120+ graduate teams. Built an AI system to detect AI-generated misinformation in educational content, tackling factual reliability as AI becomes a primary learning tool.</p>
-      </div>
-
-      <!-- 2. Graduate Scholarship -->
-      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 text-orange-500 text-lg rounded-xl flex items-center justify-center">🎓</span>
-          <span class="text-xs font-semibold text-orange-500 uppercase tracking-wide">Graduate Scholarship</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Awarded 100% merit-based scholarship (Havells Foundation) to pursue MSBA at Wake Forest University, valued at $85,000+.</p>
-      </div>
-
-      <!-- 3. Undergraduate Scholarship -->
-      <div class="glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 text-purple-500 text-lg rounded-xl flex items-center justify-center">🏛️</span>
-          <span class="text-xs font-semibold text-purple-500 uppercase tracking-wide">Undergraduate Scholarship</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Awarded the Bharati Scholarship, a full-ride covering four years of undergraduate education at Plaksha University ($42,000+).</p>
-      </div>
-
-      <!-- 4. International Recognition -->
-      <div class="mobile-hide-ach glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-blue-500 text-lg rounded-xl flex items-center justify-center">🌐</span>
-          <span class="text-xs font-semibold text-blue-500 uppercase tracking-wide">International Recognition</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Recognized by the National Academy of Engineering (USA) for research on entrepreneurial mindset in engineering education.</p>
-      </div>
-
-      <!-- 5. Case Study -->
-      <div class="mobile-hide-ach glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-500 text-lg rounded-xl flex items-center justify-center">🥇</span>
-          <span class="text-xs font-semibold text-yellow-600 dark:text-yellow-400 uppercase tracking-wide">Case Study Champion</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Gold Medalist at Caseify, a consulting-based case study competition on guestimation, defeating 12 competing teams.</p>
-      </div>
-
-      <!-- 6. Engineering Innovation -->
-      <div class="mobile-hide-ach glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-green-100 dark:bg-green-900/30 text-green-500 text-lg rounded-xl flex items-center justify-center">⚙️</span>
-          <span class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">Engineering Innovation</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Gold Medalist at PSIP and SP Dutta Innovation Award for designing a wind turbine with 8% higher output, selected from 40 competing teams.</p>
-      </div>
-
-      <!-- 7. Leadership -->
-      <div class="mobile-hide-ach glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-teal-100 dark:bg-teal-900/30 text-teal-500 text-lg rounded-xl flex items-center justify-center">🌍</span>
-          <span class="text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide">Leadership</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Selected as Campus Director for the UN Millennium Fellowship, managing 30+ events and leading 10 fellows to a 95% goal completion rate.</p>
-      </div>
-
-      <!-- 8. Sports -->
-      <div class="mobile-hide-ach glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-red-100 dark:bg-red-900/30 text-red-500 text-lg rounded-xl flex items-center justify-center">🏏</span>
-          <span class="text-xs font-semibold text-red-500 uppercase tracking-wide">Sports</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Intra-University Cricket Champion at Plaksha University, leading the team to the inter-department cricket tournament title.</p>
-      </div>
-
-      <!-- 9. Spirit of Plaksha -->
-      <div class="mobile-hide-ach glow-card bg-slate-50 dark:bg-[#161b22] rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 text-amber-500 text-lg rounded-xl flex items-center justify-center">✨</span>
-          <span class="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide">Spirit of Plaksha</span>
-        </div>
-        <p class="font-semibold text-sm leading-relaxed">Awarded the Spirit of Plaksha Award for outstanding contribution to peer learning, mentorship, and making technical concepts accessible to fellow students across the university community.</p>
-      </div>
-
+    <div class="max-w-3xl mx-auto bg-slate-50 dark:bg-[#161b22] rounded-2xl p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+      <ul class="space-y-4 text-sm text-slate-700 dark:text-slate-300">
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-medal"></i></span> <span><strong class="text-slate-900 dark:text-white">2nd Place, East Region</strong> at DataCamp Data for Good Competition (120+ graduate teams)</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-graduation-cap"></i></span> <span><strong class="text-slate-900 dark:text-white">100% Merit Scholarship</strong> from Havells Foundation for MSBA at Wake Forest University ($85,000+)</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-university"></i></span> <span><strong class="text-slate-900 dark:text-white">Bharati Scholarship</strong> full-ride for B.Tech at Plaksha University ($42,000+)</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-globe"></i></span> <span><strong class="text-slate-900 dark:text-white">NAE Recognition</strong> by National Academy of Engineering (USA) for engineering education research</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-trophy"></i></span> <span><strong class="text-slate-900 dark:text-white">Gold Medalist</strong> at Caseify consulting case study competition (12 teams)</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-cogs"></i></span> <span><strong class="text-slate-900 dark:text-white">Gold Medalist</strong> at PSIP and SP Dutta Innovation Award for wind turbine design with 8% higher output (40 teams)</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-users"></i></span> <span><strong class="text-slate-900 dark:text-white">Campus Director</strong> for UN Millennium Fellowship, 30+ events, 95% goal completion</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-futbol"></i></span> <span><strong class="text-slate-900 dark:text-white">Cricket Champion</strong> at Intra-University tournament, Plaksha University</span></li>
+        <li class="flex gap-3"><span class="text-orange-500 mt-0.5 flex-shrink-0"><i class="fas fa-star"></i></span> <span><strong class="text-slate-900 dark:text-white">Spirit of Plaksha Award</strong> for peer learning, mentorship, and technical accessibility</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -1673,12 +1549,11 @@
     <div class="flex justify-center flex-wrap gap-5 text-sm text-slate-500 mb-8">
       <a href="#home" class="hover:text-orange-400 transition">Home</a>
       <a href="#impact" class="hover:text-orange-400 transition">Impact</a>
+      <a href="#education" class="hover:text-orange-400 transition">Education</a>
       <a href="#experience" class="hover:text-orange-400 transition">Experience</a>
       <a href="#projects" class="hover:text-orange-400 transition">Projects</a>
       <a href="#blog" class="hover:text-orange-400 transition">Writing</a>
       <a href="#achievements" class="hover:text-orange-400 transition">Achievements</a>
-      <a href="#testimonials" class="hover:text-orange-400 transition">Reviews</a>
-      <a href="#contact" class="hover:text-orange-400 transition">Contact</a>
     </div>
     <p class="text-xs text-slate-600">© 2026 Vikas Kumar · Built with care.</p>
   </div>
@@ -1740,32 +1615,7 @@
     });
   });
 
-  // ───── VISITOR COUNTER ─────
-  (function() {
-    const KEY = 'vk_visits';
-    const now = Date.now();
-    let visits = JSON.parse(localStorage.getItem(KEY) || '[]');
-    visits.push(now);
-    // Keep only last 365 days worth
-    visits = visits.filter(t => now - t < 366 * 86400000);
-    localStorage.setItem(KEY, JSON.stringify(visits));
-
-    const cnt7   = visits.filter(t => now - t < 7   * 86400000).length;
-    const cnt90  = visits.filter(t => now - t < 90  * 86400000).length;
-    const cnt365 = visits.length;
-
-    // Seed base numbers — real visits accumulate on top
-    document.getElementById('cnt-7').textContent   = cnt7   + 38;
-    document.getElementById('cnt-90').textContent  = cnt90  + 274;
-    document.getElementById('cnt-365').textContent = cnt365 + 891;
-
-    // Show counter widget after 3s
-    setTimeout(() => {
-      const w = document.getElementById('visit-counter');
-      w.style.pointerEvents = 'auto';
-      w.style.opacity = '1';
-    }, 3000);
-  })();
+  // ───── VISITOR COUNTER (disabled) ─────
 
   // ───── VISITOR MODAL ─────
   (function() {
@@ -1807,105 +1657,6 @@
   }
 
 
-  // ───── NEURAL NETWORK CANVAS ─────
-  (function() {
-    const canvas = document.getElementById('neural-canvas');
-    const ctx = canvas.getContext('2d');
-    let W, H, nodes = [], animId;
-    const NODE_COUNT = 60;
-    const MAX_DIST = 160;
-    const isDark = () => document.documentElement.classList.contains('dark');
-
-    function resize() {
-      W = canvas.width  = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
-    }
-
-    function initNodes() {
-      nodes = Array.from({ length: NODE_COUNT }, () => ({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 2 + 1.2
-      }));
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, W, H);
-      const dark = isDark();
-      const nodeColor  = dark ? 'rgba(249,115,22,0.55)' : 'rgba(249,115,22,0.35)';
-      const lineBase   = dark ? '249,115,22' : '249,115,22';
-
-      // update
-      nodes.forEach(n => {
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0 || n.x > W) n.vx *= -1;
-        if (n.y < 0 || n.y > H) n.vy *= -1;
-      });
-
-      // lines
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < MAX_DIST) {
-            const alpha = (1 - dist / MAX_DIST) * (dark ? 0.25 : 0.12);
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(${lineBase},${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      // nodes
-      nodes.forEach(n => {
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = nodeColor;
-        ctx.fill();
-      });
-
-      if (!window._neuralPaused) animId = requestAnimationFrame(draw);
-    }
-
-    function start() {
-      resize();
-      initNodes();
-      if (animId) cancelAnimationFrame(animId);
-      draw();
-    }
-
-    window.addEventListener('resize', () => { resize(); });
-    // Restart on theme toggle to pick up color
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      setTimeout(() => {}, 50);
-    });
-
-    start();
-
-    window._neuralPaused = false;
-    window.toggleNeural = function() {
-      window._neuralPaused = !window._neuralPaused;
-      const label = document.getElementById('neural-label');
-      const icon  = document.getElementById('neural-icon');
-      if (window._neuralPaused) {
-        cancelAnimationFrame(animId);
-        label.textContent = 'Network paused';
-        icon.classList.remove('bg-orange-400', 'animate-pulse');
-        icon.classList.add('bg-slate-400');
-      } else {
-        label.textContent = 'Network live';
-        icon.classList.add('bg-orange-400', 'animate-pulse');
-        icon.classList.remove('bg-slate-400');
-        draw();
-      }
-    };
-  })();
 
   // ───── TYPEWRITER — KEEP ADDING, NEVER ERASE ─────
   (function() {
@@ -1950,7 +1701,6 @@
       { id: 'cnt-stat-2', end: 96,   suffix: '%',  prefix: '',  decimals: 0 },
       { id: 'cnt-stat-3', end: 23,   suffix: '%',  prefix: '',  decimals: 0 },
       { id: 'cnt-stat-4', end: 3,    suffix: 'K+', prefix: '',  decimals: 0 },
-      { id: 'cnt-stat-5', end: 10,   suffix: '',   prefix: '',  decimals: 0 },
     ];
 
     // Add IDs to stat-number divs
@@ -1996,22 +1746,6 @@
 
 
 
-  // ───── 3D CARD TILT ─────
-  (function() {
-    const TILT = 10; // max degrees
-    document.querySelectorAll('.glow-card, .stat-card').forEach(card => {
-      card.classList.add('tilt-card');
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width  - 0.5;
-        const y = (e.clientY - r.top)  / r.height - 0.5;
-        card.style.transform = `perspective(600px) rotateY(${x * TILT}deg) rotateX(${-y * TILT}deg) scale(1.02)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)';
-      });
-    });
-  })();
 
 
   // ───── CURSOR SPOTLIGHT (dark mode glow only) ─────
@@ -2176,13 +1910,13 @@
       });
   })();
 
-  // ───── CHAT AUTO-OPEN ON EVERY VISIT ─────
+  // ───── CHAT AUTO-OPEN ON DESKTOP ONLY ─────
   (function() {
-    const isMobile = window.innerWidth < 768;
-    const delay = isMobile ? 30000 : 2800;
-    setTimeout(function() {
-      if (typeof toggleChat === 'function') toggleChat();
-    }, delay);
+    if (window.innerWidth >= 768) {
+      setTimeout(function() {
+        if (typeof toggleChat === 'function') toggleChat();
+      }, 2800);
+    }
   })();
 
 
@@ -2565,7 +2299,7 @@ RULES:
 <!-- ── Currently Building Card ── -->
 <div id="building-card" onclick="this.classList.remove('visible')">
   <div class="bc-title"><div class="bc-dot"></div> Currently Building <span class="bc-close">&times;</span></div>
-  <div>Multimodal voice agent for Prox (YC F25) — hands-free voice, photo diagnosis, multi-agent deliberation</div>
+  <div>Multimodal voice agent for Prox (YC F25). Hands-free voice, photo diagnosis, multi-agent deliberation</div>
 </div>
 
 <!-- ── Command Palette ── -->
