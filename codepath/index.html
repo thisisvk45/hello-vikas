@@ -20,6 +20,28 @@
 <main>
   <h1>Provenance Guard</h1>
   <p>Hey! This is my CodePath AI201 final project. You give it some writing, and it guesses if it was written by a human or AI, or says it's not sure. Thanks for trying it out.</p>
+  <svg viewBox="0 0 600 190" role="img" aria-label="How Provenance Guard works" style="width:100%;height:auto;margin:16px 0 20px" font-family="-apple-system, Helvetica, Arial, sans-serif">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+    <rect x="10" y="55" width="130" height="60" rx="8" fill="#f5f5f5" stroke="#ddd"/>
+    <text x="75" y="81" text-anchor="middle" font-size="15" font-weight="600" fill="#222">Your writing</text>
+    <text x="75" y="100" text-anchor="middle" font-size="12" fill="#666">text goes in</text>
+    <line x1="142" y1="85" x2="200" y2="85" stroke="#999" stroke-width="1.5" marker-end="url(#ar)"/>
+    <rect x="205" y="45" width="170" height="80" rx="8" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+    <text x="290" y="75" text-anchor="middle" font-size="15" font-weight="700" fill="#ea580c">Provenance Guard</text>
+    <text x="290" y="95" text-anchor="middle" font-size="12" fill="#666">GPT-2 + writing style</text>
+    <text x="290" y="111" text-anchor="middle" font-size="12" fill="#666">checks the patterns</text>
+    <line x1="377" y1="85" x2="430" y2="40" stroke="#999" stroke-width="1.5" marker-end="url(#ar)"/>
+    <line x1="377" y1="85" x2="430" y2="85" stroke="#999" stroke-width="1.5" marker-end="url(#ar)"/>
+    <line x1="377" y1="85" x2="430" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#ar)"/>
+    <rect x="435" y="22" width="150" height="34" rx="17" fill="#f5f5f5" stroke="#ddd"/>
+    <text x="510" y="44" text-anchor="middle" font-size="14" fill="#222">Human</text>
+    <rect x="435" y="68" width="150" height="34" rx="17" fill="#f5f5f5" stroke="#ddd"/>
+    <text x="510" y="90" text-anchor="middle" font-size="14" fill="#222">Not sure</text>
+    <rect x="435" y="114" width="150" height="34" rx="17" fill="#f5f5f5" stroke="#ddd"/>
+    <text x="510" y="136" text-anchor="middle" font-size="14" fill="#222">AI</text>
+    <text x="300" y="178" text-anchor="middle" font-size="13" fill="#666">Disagree? You can appeal. Every request is logged, but your writing is never saved.</text>
+  </svg>
+
   <p>Code is on <a href="https://github.com/thisisvk45/ai201-project4-provenance-guard-starter-v2026">GitHub</a>. You'll need Python 3.11 or 3.12.</p>
 
   <h2>1. Download and install</h2>
@@ -42,9 +64,9 @@ python3.11 -m venv .venv
 
   <h2>Good to know</h2>
   <p class="small">The first run downloads a 550 MB model and the first request takes about 10 seconds. After that it's quick. On Windows, use <code>curl.exe</code> and activate with <code>.venv\Scripts\Activate.ps1</code>.</p>
-  <p class="small">Stuck? Ping me on Slack. More detail in the <a href="https://github.com/thisisvk45/ai201-project4-provenance-guard-starter-v2026/blob/main/RUNNING.md">RUNNING.md</a>.</p>
+  <p class="small">Stuck? Ping me on Slack or <a href="https://www.linkedin.com/in/vikas-kumar45/">LinkedIn</a>. More detail in the <a href="https://github.com/thisisvk45/ai201-project4-provenance-guard-starter-v2026/blob/main/RUNNING.md">RUNNING.md</a>.</p>
 
-  <p class="small" style="margin-top:32px">Vikas · <a href="/">helloviks.com</a></p>
+  <p class="small" style="margin-top:32px">Vikas · <a href="https://www.linkedin.com/in/vikas-kumar45/">LinkedIn</a> · <a href="/">helloviks.com</a></p>
 </main>
 </body>
 </html>
