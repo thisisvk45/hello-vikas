@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provenance Guard: Run It | Vikas Kumar</title>
+<meta name="description" content="Setup guide for Provenance Guard, Vikas Kumar's CodePath AI201 capstone project.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --line:#30363d; --text:#e6edf3; --muted:#8b949e; --accent:#f97316; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.6; }
+  main { max-width:760px; margin:0 auto; padding:56px 20px 80px; }
+  .tag { display:inline-block; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+  h1 { font-size:clamp(30px,6vw,44px); font-weight:800; line-height:1.15; margin-bottom:14px; }
+  h1 span { color:var(--accent); }
+  .lead { color:var(--muted); font-size:17px; margin-bottom:28px; }
+  .links { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:44px; }
+  .btn { display:inline-block; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; text-decoration:none; border:1px solid var(--line); color:var(--text); }
+  .btn.primary { background:var(--accent); border-color:var(--accent); color:#0d1117; }
+  h2 { font-size:20px; font-weight:700; margin:40px 0 6px; display:flex; align-items:center; gap:10px; }
+  h2 .n { width:28px; height:28px; border-radius:50%; background:var(--accent); color:#0d1117; font-size:14px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  p.note { color:var(--muted); font-size:15px; margin-bottom:12px; }
+  .code { position:relative; background:var(--card); border:1px solid var(--line); border-radius:10px; margin:10px 0 6px; }
+  .code pre { overflow-x:auto; padding:16px 18px; padding-right:76px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:13.5px; line-height:1.7; color:var(--text); }
+  .code button { position:absolute; top:10px; right:10px; background:transparent; border:1px solid var(--line); color:var(--muted); font:500 12px 'Inter',sans-serif; padding:4px 10px; border-radius:6px; cursor:pointer; }
+  .code button:hover { color:var(--text); border-color:var(--muted); }
+  ul.expect { list-style:none; margin:8px 0 0; }
+  ul.expect li { padding-left:18px; position:relative; color:var(--muted); font-size:15px; margin-bottom:6px; }
+  ul.expect li::before { content:""; position:absolute; left:0; top:10px; width:7px; height:7px; border-radius:50%; background:var(--accent); }
+  code.i { font-family:ui-monospace,Menlo,monospace; font-size:13px; background:var(--card); border:1px solid var(--line); padding:1px 6px; border-radius:5px; color:var(--text); }
+  .box { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:10px; padding:16px 18px; margin-top:44px; }
+  .box h3 { font-size:15px; margin-bottom:8px; }
+  .box p { color:var(--muted); font-size:14.5px; margin-bottom:6px; }
+  footer { margin-top:56px; color:var(--muted); font-size:13px; }
+  footer a { color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<main>
+  <div class="tag">CodePath AI201 · Capstone</div>
+  <h1>Provenance <span>Guard</span></h1>
+  <p class="lead">A local API that estimates whether writing is human, AI, or unsure, explains why, and lets the writer appeal. Every request gets a receipt in a log, and the receipt never stores the writing itself.</p>
+  <div class="links">
+    <a class="btn primary" href="https://github.com/thisisvk45/ai201-project4-provenance-guard-starter-v2026">View on GitHub</a>
+    <a class="btn" href="https://github.com/thisisvk45/ai201-project4-provenance-guard-starter-v2026/blob/main/RUNNING.md">Full RUNNING.md</a>
+  </div>
+
+  <h2><span class="n">1</span>Get the code</h2>
+  <p class="note">Needs Python 3.11 or 3.12. No API key.</p>
+  <div class="code"><pre>git clone https://github.com/thisisvk45/ai201-project4-provenance-guard-starter-v2026.git
+cd ai201-project4-provenance-guard-starter-v2026</pre><button>Copy</button></div>
+
+  <h2><span class="n">2</span>Install</h2>
+  <p class="note">Takes a few minutes. If <code class="i">python3.11</code> is missing, use <code class="i">python3.12</code>.</p>
+  <div class="code"><pre>python3.11 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock</pre><button>Copy</button></div>
+
+  <h2><span class="n">3</span>Start the service</h2>
+  <p class="note">Keep this terminal open. It runs on port 5057.</p>
+  <div class="code"><pre>PORT=5057 AI201_DEBUG=0 .venv/bin/python app.py</pre><button>Copy</button></div>
+
+  <h2><span class="n">4</span>Try it</h2>
+  <p class="note">Open a second terminal in the same folder.</p>
+  <div class="code"><pre>curl http://127.0.0.1:5057/health
+curl http://127.0.0.1:5057/submit -H 'Content-Type: application/json' --data-binary @fixtures/sample_submit.json
+tail -1 logs/requests.jsonl</pre><button>Copy</button></div>
+  <ul class="expect">
+    <li>Health returns <code class="i">"ok":true</code></li>
+    <li>Submit returns <code class="i">"guess":"unsure"</code> with a score of <code class="i">0.71939</code></li>
+    <li>The last log line is the receipt: a <code class="i">request_id</code>, <code class="i">duration_ms</code> and <code class="i">model_duration_ms</code></li>
+  </ul>
+
+  <h2><span class="n">5</span>Bonus: appeal a decision</h2>
+  <p class="note">Replace the ID with the <code class="i">content_id</code> from your submit.</p>
+  <div class="code"><pre>curl http://127.0.0.1:5057/appeal -H 'Content-Type: application/json' -d '{"content_id":"PASTE_ID_HERE","reasoning":"Please review this estimate."}'</pre><button>Copy</button></div>
+
+  <div class="box">
+    <h3>Heads up</h3>
+    <p>The first run downloads GPT-2, about 550 MB. The first request takes around 10 seconds while the model loads. After that, requests take well under a second.</p>
+    <p>On Windows, activate with <code class="i">.venv\Scripts\Activate.ps1</code>, use <code class="i">curl.exe</code>, and keep each command on one line.</p>
+  </div>
+
+  <footer>Built by <a href="/">Vikas Kumar</a> for CodePath AI201, Fall 2026.</footer>
+</main>
+<script>
+  document.querySelectorAll('.code button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.parentElement.querySelector('pre').innerText;
+      try {
+        navigator.clipboard.writeText(t).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); });
+      } catch (e) { b.textContent = 'Select'; }
+    });
+  });
+</script>
+</body>
+</html>
